@@ -41,7 +41,7 @@ export default function AppSidebar({role}: {role: string}) {
             alt=''
             className='h-full w-fit object-contain'
           />
-          <h1 className='font-medium'>Sistem Informasi Inventori</h1>
+          <h1 className='font-medium'>SIENTA (Smart Inventory System)</h1>
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent className='overflow-y-hidden'>
