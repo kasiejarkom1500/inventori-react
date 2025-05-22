@@ -157,6 +157,8 @@ export const Karken = ({ data }: { data: KarkenProps }) => {
   const totalKeluar = data.rows.reduce((sum, item) => sum + parseFloat(item.keluar || '0'), 0);
   // const totalCurrent = data.rows.reduce((sum, item) => sum + parseFloat(item.current_stok || '0'), 0);
   const totalCurrent = parseFloat(data.rows[data.rows.length - 1]?.current_stok || '0');
+  const firstItem = data.rows[0] || {};
+  const totalStokAwal = parseFloat(firstItem.current_stok || '0') - parseFloat(firstItem.masuk || '0') + parseFloat(firstItem.keluar || '0');
 
 
 
@@ -241,7 +243,7 @@ export const Karken = ({ data }: { data: KarkenProps }) => {
               {'Stok Awal'}
             </Text>
             <Text style={[styles.tableCol, { width: '20%' }]}>
-              {totalCurrent}
+              {totalStokAwal}
             </Text>
           </View>
 
