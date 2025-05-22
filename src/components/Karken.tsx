@@ -153,13 +153,12 @@ export interface KarkenProps {
 
 export const Karken = ({ data }: { data: KarkenProps }) => {
 
-  const totalMasuk = data.rows.reduce((sum, item) => sum + parseFloat(item.masuk || '0'), 0);
   const totalKeluar = data.rows.reduce((sum, item) => sum + parseFloat(item.keluar || '0'), 0);
   // const totalCurrent = data.rows.reduce((sum, item) => sum + parseFloat(item.current_stok || '0'), 0);
   const totalCurrent = parseFloat(data.rows[data.rows.length - 1]?.current_stok || '0');
   const firstItem = data.rows[0] || {};
   const totalStokAwal = parseFloat(firstItem.current_stok || '0') - parseFloat(firstItem.masuk || '0') + parseFloat(firstItem.keluar || '0');
-
+  const totalMasuk = data.rows.reduce((sum, item) => sum + parseFloat(item.masuk || '0'), 0) + totalStokAwal;
 
 
   return (
@@ -241,6 +240,12 @@ export const Karken = ({ data }: { data: KarkenProps }) => {
         <View style={styles.tableRow}>
             <Text style={[styles.tableColSpan, { width: '60%'}]}>
               {'Stok Awal'}
+            </Text>
+            <Text style={[styles.tableCol, { width: '20%' }]}>
+              {totalStokAwal}
+            </Text>
+            <Text style={[styles.tableCol, { width: '20%' }]}>
+              {'-'}
             </Text>
             <Text style={[styles.tableCol, { width: '20%' }]}>
               {totalStokAwal}
