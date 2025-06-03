@@ -53,6 +53,7 @@ export const loginUser = (email: string, password: string): User | null => {
 
 export const logoutUser = () => {
   localStorage.removeItem('user');
+  localStorage.removeItem('token');
   // localStorage.removeItem('token');
   window.location.reload();
 };

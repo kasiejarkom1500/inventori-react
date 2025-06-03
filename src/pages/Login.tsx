@@ -53,6 +53,7 @@ export default function Login() {
       // console.log(values);
       const {data} = await base.post('/login', values);
       localStorage.setItem('user', JSON.stringify(data.data));
+      localStorage.setItem('token', data.token);
 
       // console.log(respone);
       // !Development only
