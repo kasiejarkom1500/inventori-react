@@ -13,12 +13,19 @@ import {
 import {Input} from '@/components/ui/input';
 import { useEffect } from 'react';
 import { dataAdmin } from '@/lib/data/admin-dummy';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPegawai } from '@/lib/network/userService';
+import { LoadingSpinner } from './ui/loading';
 
 const userSchema = z.object({
   nama: z
     .string()
     .min(1, {message: 'Nama tidak boleh kosong.'})
     .max(100, {message: 'Nama tidak boleh lebih dari 100 karakter.'}),
+  satker: z
+    .string()
+    .min(1, {message: 'Satker tidak boleh kosong.'})
+    .max(50, {message: 'Satker tidak boleh lebih dari 1500 karakter.'}),
   jabatan: z
     .string()
     .min(1, {message: 'Jabatan tidak boleh kosong.'})
@@ -51,6 +58,7 @@ export default function UserForm({id, type}: {id?: string; type: 'edit' | 'add'}
     defaultValues: {
       nama: '',
       jabatan: '',
+      satker: '',
       ruangan: '',
       username: '',
       password: '',
@@ -58,6 +66,15 @@ export default function UserForm({id, type}: {id?: string; type: 'edit' | 'add'}
   });
 
   const {setValue} = form;
+
+  const {
+      data: dataAllPegawai,
+      isLoading,
+      error,
+    } = useQuery({
+      queryKey: ['pegawai'],
+      queryFn: fetchPegawai,
+    });
 
   useEffect(() => {
       if (id) {
@@ -78,6 +95,11 @@ export default function UserForm({id, type}: {id?: string; type: 'edit' | 'add'}
       console.log('edit', values);
     }
   }
+
+  if (isLoading) return <LoadingSpinner className='mx-auto' size={24} />;
+  if (error) return <div>An error has occurred: {error.message}</div>;
+
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className=' space-y-8'>
@@ -89,6 +111,19 @@ export default function UserForm({id, type}: {id?: string; type: 'edit' | 'add'}
               <FormLabel>Nama</FormLabel>
               <FormControl>
                 <Input placeholder='Nama' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='satker'
+          render={({field}) => (
+            <FormItem>
+              <FormLabel>Satker</FormLabel>
+              <FormControl>
+                <Input placeholder='Satker' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

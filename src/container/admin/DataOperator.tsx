@@ -1,9 +1,9 @@
-import {UserTable} from '@/components/UserTable';
-import {Button} from '@/components/ui/button';
-import {Card} from '@/components/ui/card';
-import {operatorColumns} from '@/lib/columns/pegawai-column';
-import {dataAdmin} from '@/lib/data/admin-dummy';
-import {Download, PlusCircle, Upload} from 'lucide-react';
+import { UserTable } from '@/components/UserTable';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { operatorColumns } from '@/lib/columns/pegawai-column';
+import { dataAdmin } from '@/lib/data/admin-dummy';
+import { Download, PlusCircle, Upload } from 'lucide-react';
 import {
   Tooltip,
   TooltipTrigger,
@@ -18,9 +18,27 @@ import {
 } from '@/components/ui/dialog';
 import UserForm from '@/components/UserForm';
 import useExcel from '@/hooks/use-excel';
+import { fetchUser } from '@/lib/network/userService';
+import { LoadingSpinner } from '@/components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
 
 export default function DataOperator() {
-  const {handleExcel} = useExcel();
+  const { handleExcel } = useExcel();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['data-users'],
+    queryFn: fetchUser,
+  });
+
+  if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+  if (error)
+    return (
+      <div>
+        Error: {error instanceof Error ? error.message : 'Unknown error'}
+      </div>
+    );
+
+  const dataUser = data?.data ?? [];
 
   return (
     <>
@@ -73,7 +91,7 @@ export default function DataOperator() {
             </TooltipProvider>
           </div>
         </div>
-        <UserTable data={dataAdmin} columns={operatorColumns} />
+        <UserTable data={dataUser} columns={operatorColumns} />
       </Card>
     </>
   );
