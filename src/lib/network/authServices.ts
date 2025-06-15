@@ -16,15 +16,12 @@ import { base } from "./base";
 //   token: string;
 // }
 
-export const login = async (
-  email: string,
-  password: string
-) => {
+export const login = async (email: string, password: string) => {
   const formData = new URLSearchParams();
-  formData.append('username', email);
-  formData.append('password', password);
+  formData.append("username", email);
+  formData.append("password", password);
 
-  const data = await base.post('/login', formData);
+  const data = await base.post("/login", formData);
   console.log(data);
   return data;
 };
@@ -38,39 +35,63 @@ interface User {
 
 export const loginUser = (email: string, password: string): User | null => {
   const fakeUsers = [
-    { email: 'admin1@test.com', name:'Rihan Meja' ,password: '12341234', role: 'Admin' },
-    { email: 'admin2@test.com', name:'Naufal Kenalpot' ,password: '12341234', role: 'Admin Pengajuan' },
-    { email: 'admin3@test.com', name:'Hanif Kulkas' ,password: '12341234', role: 'Operator Ruangan' },
+    {
+      email: "admin1@test.com",
+      name: "Rihan Meja",
+      password: "12341234",
+      role: "Admin",
+    },
+    {
+      email: "admin2@test.com",
+      name: "Naufal Kenalpot",
+      password: "12341234",
+      role: "Admin Pengajuan",
+    },
+    {
+      email: "admin3@test.com",
+      name: "Hanif Kulkas",
+      password: "12341234",
+      role: "Operator Ruangan",
+    },
   ];
 
-  const user = fakeUsers.find(u => u.email === email && u.password === password);
+  const user = fakeUsers.find(
+    (u) => u.email === email && u.password === password
+  );
   if (user) {
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
     return user;
   }
   return null;
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem('user');
+  localStorage.removeItem("user");
+  localStorage.removeItem("access-token");
   // localStorage.removeItem('token');
   window.location.reload();
 };
 
 export const getUser = () => {
   try {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     return user ? JSON.parse(user) : null;
   } catch (error) {
-    console.error('Error retrieving user from localStorage:', error);
+    console.error("Error retrieving user from localStorage:", error);
     return null;
   }
 };
 
 export const getUserRole = () => {
-  const user = localStorage.getItem('user');
+  const user = localStorage.getItem("user");
   // const roleParsed = user ? JSON.parse(user) : null;
   // const role = normalizeRole(roleParsed.role);
   const role = user ? JSON.parse(user).role : null;
   return role;
+};
+
+export const getUserToken = () => {
+  const user = localStorage.getItem("user");
+  const token = user ? JSON.parse(user).token : null;
+  return token;
 };
