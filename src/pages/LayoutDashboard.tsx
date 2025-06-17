@@ -1,9 +1,9 @@
-import AppSidebar from '@/components/AppSidebar';
-import Navbar from '@/components/Navbar';
-import {SidebarInset, SidebarProvider} from '@/components/ui/sidebar';
-import {Toaster} from '@/components/ui/toaster';
-import {getUser, getUserRole} from '@/lib/network/authServices';
-import {Outlet} from 'react-router-dom';
+import AppSidebar from "@/components/AppSidebar";
+import Navbar from "@/components/Navbar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
+import { getUser, getUserRole } from "@/lib/network/authServices";
+import { Outlet } from "react-router-dom";
 
 export default function LayoutDashboard() {
   const user = getUser();
@@ -13,10 +13,10 @@ export default function LayoutDashboard() {
   return (
     <SidebarProvider>
       <AppSidebar role={role} />
-      <main className='w-full'>
+      <main className="w-full">
         <SidebarInset>
           <Navbar user={user} />
-          <div className='py-4 px-12'>
+          <div className="py-4 w-11/12 md:w-8/10 mt-6 m-auto">
             <Outlet />
           </div>
           <Toaster />

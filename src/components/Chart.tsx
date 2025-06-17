@@ -1,12 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Rectangle,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,6 +24,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { TrendingUp } from "lucide-react";
 
 export const description = "An interactive bar chart";
 
@@ -236,9 +245,13 @@ export function ChartBarDashboardAtkArk() {
     <Card className="py-0">
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-          <CardTitle>Bar Chart - Interactive</CardTitle>
+          <CardTitle
+            className={`ml-5 text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
+          >
+            Pemakaian Barang
+          </CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            Jumlah barang yang digunakan per bulan
           </CardDescription>
         </div>
         <div className="flex">
@@ -309,6 +322,225 @@ export function ChartBarDashboardAtkArk() {
           </BarChart>
         </ChartContainer>
       </CardContent>
+    </Card>
+  );
+}
+
+const chartDataPerBidang = [
+  { browser: "IPDS", visitors: 187, fill: "var(--color-IPDS)" },
+  { browser: "Distribusi", visitors: 200, fill: "var(--color-Distribusi)" },
+  { browser: "Neraca", visitors: 275, fill: "var(--color-Neraca)" },
+  { browser: "Sosial", visitors: 173, fill: "var(--color-Sosial)" },
+  { browser: "Produksi", visitors: 90, fill: "var(--color-Produksi)" },
+];
+
+const chartConfigPerbidang = {
+  visitors: {
+    label: "Pemakaian Barang",
+  },
+  IPDS: {
+    label: "IPDS",
+    color: "var(--chart-1)",
+  },
+  Distribusi: {
+    label: "Distribusi",
+    color: "var(--chart-2)",
+  },
+  Neraca: {
+    label: "Neraca",
+    color: "var(--chart-3)",
+  },
+  Sosial: {
+    label: "Sosial",
+    color: "var(--chart-4)",
+  },
+  Produksi: {
+    label: "Produksi",
+    color: "var(--chart-5)",
+  },
+} satisfies ChartConfig;
+
+export function ChartBarDashboardPerbidang() {
+  return (
+    <Card className="py-0">
+      <CardHeader className="flex flex-col items-stretch border-b px-2 py-6 sm:flex-row">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+          <CardTitle
+            className={`ml-5 text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
+          >
+            Pemakaian Barang Per Bidang
+          </CardTitle>
+          <CardDescription>
+            Jumlah barang yang digunakan per bulan
+          </CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="px-2 sm:p-6">
+        <ChartContainer
+          config={chartConfigPerbidang}
+          className="aspect-auto h-[250px]"
+        >
+          <BarChart accessibilityLayer data={chartDataPerBidang}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="browser"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) =>
+                chartConfigPerbidang[value as keyof typeof chartConfigPerbidang]
+                  ?.label
+              }
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar
+              dataKey="visitors"
+              strokeWidth={2}
+              radius={8}
+              activeIndex={2}
+              activeBar={({ ...props }) => {
+                return (
+                  <Rectangle
+                    {...props}
+                    fillOpacity={0.8}
+                    stroke={props.payload.fill}
+                    strokeDasharray={4}
+                    strokeDashoffset={4}
+                  />
+                );
+              }}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="text-muted-foreground leading-none">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}
+
+const chartDataFavoriteItem = [
+  { browser: "Pensil", visitors: 275, fill: "var(--color-Pensil)" },
+  { browser: "Kertas A4", visitors: 200, fill: "var(--color-Kertas-A4)" },
+  { browser: "Map", visitors: 187, fill: "var(--color-Map)" },
+  { browser: "Penggaris", visitors: 173, fill: "var(--color-Penggaris)" },
+];
+
+const chartConfigFavoriteItem = {
+  visitors: {
+    label: "Pemakaian Barang",
+  },
+  Pensil: {
+    label: "Pensil",
+    color: "var(--chart-1)",
+  },
+  "Kertas A4": {
+    label: "Kertas A4",
+    color: "var(--chart-2)",
+  },
+  Map: {
+    label: "Map",
+    color: "var(--chart-3)",
+  },
+  Penggaris: {
+    label: "Penggaris",
+    color: "var(--chart-4)",
+  },
+} satisfies ChartConfig;
+
+export function ChartBarDashboardFavoriteItem() {
+  return (
+    <Card className="py-0">
+      <CardHeader className="flex flex-col items-stretch border-b px-2 py-6 sm:flex-row">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+          <CardTitle
+            className={`ml-5 text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-teal-500  before:border-0 before:h-full before:rounded-md`}
+          >
+            Barang yang Paling Sering Diminta
+          </CardTitle>
+          <CardDescription>
+            Jumlah barang yang digunakan per bulan
+          </CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="px-2 sm:p-6">
+        <ChartContainer
+          config={chartConfigFavoriteItem}
+          className="aspect-auto h-[250px]"
+        >
+          <BarChart
+            accessibilityLayer
+            data={chartDataFavoriteItem}
+            layout="vertical"
+            margin={{
+              left: 36,
+            }}
+          >
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              dataKey="browser"
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) =>
+                chartConfigFavoriteItem[
+                  value as keyof typeof chartConfigFavoriteItem
+                ]?.label
+              }
+            />
+            <XAxis dataKey="visitors" type="number" hide />
+            {/* <XAxis
+              dataKey="browser"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) =>
+                chartConfigPerbidang[value as keyof typeof chartConfigPerbidang]
+                  ?.label
+              }
+            /> */}
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar
+              dataKey="visitors"
+              strokeWidth={2}
+              radius={8}
+              activeIndex={2}
+              activeBar={({ ...props }) => {
+                return (
+                  <Rectangle
+                    {...props}
+                    fillOpacity={0.8}
+                    stroke={props.payload.fill}
+                    strokeDasharray={4}
+                    strokeDashoffset={4}
+                  />
+                );
+              }}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="text-muted-foreground leading-none">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
     </Card>
   );
 }

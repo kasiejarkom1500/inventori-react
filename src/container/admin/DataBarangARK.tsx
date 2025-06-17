@@ -1,25 +1,29 @@
-import {Button} from '@/components/ui/button';
-import {Card} from '@/components/ui/card';
-import {Download, PlusCircle, SlidersHorizontal, Upload} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Download, PlusCircle, SlidersHorizontal, Upload } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '@/components/ui/tooltip';
-import {barangARKColumns} from '@/lib/columns/barang-ark-column';
+} from "@/components/ui/tooltip";
+import { barangARKColumns } from "@/lib/columns/barang-ark-column";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import BarangForm from '@/components/BarangForm';
-import useExcel from '@/hooks/use-excel';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm} from 'react-hook-form';
-import {z} from 'zod';
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
+} from "@/components/ui/dialog";
+import BarangForm from "@/components/BarangForm";
+import useExcel from "@/hooks/use-excel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -27,20 +31,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {Input} from '@/components/ui/input';
-import DataTable from '@/components/DataTable';
-import {useQuery} from '@tanstack/react-query';
-import {fetchBarangARK} from '@/lib/network/barangServices';
-import { LoadingSpinner } from '@/components/ui/loading';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import DataTable from "@/components/DataTable";
+import { useQuery } from "@tanstack/react-query";
+import { fetchBarangARK } from "@/lib/network/barangServices";
+import { LoadingSpinner } from "@/components/ui/loading";
 
 const filterSchema = z.object({
   harga_pengajuan: z.number().optional(),
 });
 
-
 export default function DataBarangARK() {
-  const {handleExcel} = useExcel();
+  const { handleExcel } = useExcel();
   const form = useForm<z.infer<typeof filterSchema>>({
     resolver: zodResolver(filterSchema),
     defaultValues: {
@@ -48,16 +51,17 @@ export default function DataBarangARK() {
     },
   });
 
-  const {data, isLoading, error} = useQuery({
-    queryKey: ['data-barang-ark'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["data-barang-ark"],
     queryFn: fetchBarangARK,
   });
   console.log(data);
-  if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+  if (isLoading)
+    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
   if (error)
     return (
       <div>
-        Error: {error instanceof Error ? error.message : 'Unknown error'}
+        Error: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
 
@@ -68,15 +72,15 @@ export default function DataBarangARK() {
   }
   return (
     <>
-      <Card className='p-6'>
-        <div className='flex flex-col lg:flex-row lg:justify-between'>
-          <h1 className='mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md'>
+      <Card className="p-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between">
+          <h1 className="mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md">
             Data Barang ARK (521811)
           </h1>
-          <div className='flex items-center flex-col lg:flex-row gap-2'>
+          <div className="flex items-center flex-col lg:flex-row gap-2">
             <Popover>
               <PopoverTrigger>
-                <span className='flex items-center gap-2'>
+                <span className="flex items-center gap-2">
                   <SlidersHorizontal size={18} /> Filter
                 </span>
               </PopoverTrigger>
@@ -84,18 +88,18 @@ export default function DataBarangARK() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className='space-y-8'
+                    className="space-y-8"
                   >
                     <FormField
                       control={form.control}
-                      name='harga_pengajuan'
-                      render={({field}) => (
+                      name="harga_pengajuan"
+                      render={({ field }) => (
                         <FormItem>
                           <FormLabel>Harga Pengajuan</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder='Harga Pengajuan...'
-                              type='number'
+                              placeholder="Harga Pengajuan..."
+                              type="number"
                               {...field}
                               onChange={(e) =>
                                 field.onChange(e.target.valueAsNumber)
@@ -106,7 +110,7 @@ export default function DataBarangARK() {
                         </FormItem>
                       )}
                     />
-                    <Button type='submit'>Submit</Button>
+                    <Button type="submit">Submit</Button>
                   </form>
                 </Form>
               </PopoverContent>
@@ -114,7 +118,7 @@ export default function DataBarangARK() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <Button variant={'green'}>
+                  <Button variant={"green"}>
                     <Upload /> Import
                   </Button>
                 </TooltipTrigger>
@@ -123,8 +127,8 @@ export default function DataBarangARK() {
               <Tooltip>
                 <TooltipTrigger>
                   <Button
-                    onClick={() => handleExcel(dataBarang, 'data_barang_ark')}
-                    variant={'blue'}
+                    onClick={() => handleExcel(dataBarang, "data_barang_ark")}
+                    variant={"blue"}
                   >
                     <Download /> Download
                   </Button>
@@ -139,11 +143,11 @@ export default function DataBarangARK() {
                         <PlusCircle /> Tambah Barang
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className='max-h-[80%] overflow-auto'>
-                      <DialogTitle className='text-xl font-semibold'>
+                    <DialogContent className="max-h-[80%] overflow-auto">
+                      <DialogTitle className="text-xl font-semibold">
                         Tambah Barang ARK
                       </DialogTitle>
-                      <BarangForm type='add' />
+                      <BarangForm type="add" />
                     </DialogContent>
                   </Dialog>
                 </TooltipTrigger>
@@ -155,8 +159,8 @@ export default function DataBarangARK() {
         <DataTable
           data={dataBarang}
           columns={barangARKColumns}
-          column_name='nama_barang'
-          search_placeholder='nama barang'
+          column_name="nama_barang"
+          search_placeholder="nama barang"
         />
       </Card>
     </>
