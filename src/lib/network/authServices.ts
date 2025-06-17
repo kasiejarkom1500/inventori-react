@@ -16,12 +16,15 @@ import { base } from "./base";
 //   token: string;
 // }
 
-export const login = async (email: string, password: string) => {
+export const login = async (
+  email: string,
+  password: string
+) => {
   const formData = new URLSearchParams();
-  formData.append("username", email);
-  formData.append("password", password);
+  formData.append('username', email);
+  formData.append('password', password);
 
-  const data = await base.post("/login", formData);
+  const data = await base.post('/login', formData);
   console.log(data);
   return data;
 };
@@ -35,31 +38,14 @@ interface User {
 
 export const loginUser = (email: string, password: string): User | null => {
   const fakeUsers = [
-    {
-      email: "admin1@test.com",
-      name: "Rihan Meja",
-      password: "12341234",
-      role: "Admin",
-    },
-    {
-      email: "admin2@test.com",
-      name: "Naufal Kenalpot",
-      password: "12341234",
-      role: "Admin Pengajuan",
-    },
-    {
-      email: "admin3@test.com",
-      name: "Hanif Kulkas",
-      password: "12341234",
-      role: "Operator Ruangan",
-    },
+    { email: 'admin1@test.com', name:'Rihan Meja' ,password: '12341234', role: 'Admin' },
+    { email: 'admin2@test.com', name:'Naufal Kenalpot' ,password: '12341234', role: 'Admin Pengajuan' },
+    { email: 'admin3@test.com', name:'Hanif Kulkas' ,password: '12341234', role: 'Operator Ruangan' },
   ];
 
-  const user = fakeUsers.find(
-    (u) => u.email === email && u.password === password
-  );
+  const user = fakeUsers.find(u => u.email === email && u.password === password);
   if (user) {
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
     return user;
   }
   return null;

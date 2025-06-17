@@ -1664,7 +1664,7 @@ export const dataBarangKeluar: BarangTrans[] = [
 
 export const dataBarangPermintaan: BarangPermintaan[] = [
   {
-    id_permintaan: '29732f75-d165-4d92-80e5-2d8a4066da44',
+    id_permintaan: 5,
     tanggal: '2024-01-30',
     kd_barang: 'BRG8905',
     nama_barang: 'Barang 0',
@@ -1675,7 +1675,7 @@ export const dataBarangPermintaan: BarangPermintaan[] = [
     status: 'Rejected',
   },
   {
-    id_permintaan: 'bc9a51e2-6822-4c72-8a8a-72202d2e242b',
+    id_permintaan: 1,
     tanggal: '2024-04-18',
     kd_barang: 'BRG4445',
     nama_barang: 'Barang 1',
@@ -1686,7 +1686,7 @@ export const dataBarangPermintaan: BarangPermintaan[] = [
     status: 'Approved',
   },
   {
-    id_permintaan: 'b72de49f-5019-4dce-ba91-8d5ab4419049',
+    id_permintaan: 6,
     tanggal: '2024-02-26',
     kd_barang: 'BRG1081',
     nama_barang: 'Barang 2',
@@ -1697,7 +1697,7 @@ export const dataBarangPermintaan: BarangPermintaan[] = [
     status: 'Rejected',
   },
   {
-    id_permintaan: 'e8f8d8db-2f2c-412d-aadd-36f7f46201ad',
+    id_permintaan: 8,
     tanggal: '2024-09-10',
     kd_barang: 'BRG5899',
     nama_barang: 'Barang 3',
@@ -1708,7 +1708,7 @@ export const dataBarangPermintaan: BarangPermintaan[] = [
     status: 'Rejected',
   },
   {
-    id_permintaan: '4fdf88c3-93c7-4484-8488-6c1f836e7339',
+    id_permintaan: 3,
     tanggal: '2024-12-10',
     kd_barang: 'BRG6882',
     nama_barang: 'Barang 4',

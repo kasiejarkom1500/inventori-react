@@ -9,7 +9,7 @@ export const laporanPengajuanColumns: ColumnDef<BarangPengajuan>[] = [
   },
   {
     accessorKey: 'tanggal',
-    header: 'Tanggal Peengajuan',
+    header: 'Tanggal Pengajuan',
   },
   {
     accessorKey: 'kd_barang',

@@ -5,13 +5,23 @@ import {useQuery} from '@tanstack/react-query';
 import {fetchBarangARK} from '@/lib/network/barangServices';
 import {LoadingSpinner} from '@/components/ui/loading';
 
+/**
+ * Component to fetch and display ARK data in a table format.
+ * Utilizes the `useQuery` hook from `react-query` to handle data fetching and loading states.
+ */
 export default function DataBarangARK() {
+  // Fetch data using react-query
   const {data, isLoading, error} = useQuery({
     queryKey: ['data-barang-ark'],
     queryFn: fetchBarangARK,
   });
-  console.log(data);
+
+  console.log(data); // Log fetched data for debugging
+
+  // Display loading spinner while data is being fetched
   if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+
+  // Display error message if there is an error fetching data
   if (error)
     return (
       <div>
@@ -19,6 +29,7 @@ export default function DataBarangARK() {
       </div>
     );
 
+  // Extract data or set default to empty array if data is undefined
   const dataBarang = data?.data ?? [];
 
   return (
@@ -31,7 +42,11 @@ export default function DataBarangARK() {
             Data Barang ARK
           </h1>
         </div>
-        <DataTable data={dataBarang} columns={barangViewColumns} />
+        <DataTable 
+          data={dataBarang} 
+          columns={barangViewColumns}
+          column_name='nama_barang'
+        />
       </Card>
     </>
   );

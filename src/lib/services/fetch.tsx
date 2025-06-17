@@ -24,3 +24,9 @@ export async function fetchAllSumber(){
   const response = await base.get('/get_sumber');
   return response.data;
 }
+
+export async function fetchDataKarken(){
+  const response = await base.post('/generate');
+  console.log("karken",response.data);
+  return response.data;
+}

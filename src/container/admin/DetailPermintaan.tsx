@@ -49,13 +49,13 @@ export default function DetailPermintaan({
   // console.log(dataPermintaanBarang);
 
   function handleDataChange(
-    id: string,
+    id_permintaan: number,
     newJumlah: string | undefined,
     newStatus: string | undefined
   ) {
     setNewData((prev) =>
       prev.map((item) =>
-        item.id_permintaan === id
+        item.id_permintaan === id_permintaan
           ? {
               ...item,
               jumlah: newJumlah !== undefined ? newJumlah : item.jumlah,
@@ -95,7 +95,7 @@ export default function DetailPermintaan({
         columns={barangPermintaanColumns(handleDataChange, newData)}
         data={dataPermintaanBarang} // Use original data here
         search_placeholder='barang'
-        column_name='nama_barang'
+        column_name='nama_barang' 
       />
       <Button className='w-fit px-8 ml-auto' onClick={submitForm}>
         Submit

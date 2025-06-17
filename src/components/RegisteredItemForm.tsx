@@ -33,7 +33,7 @@ const registeredPermintaanSchema = z.object({
   satuan_registered: z.string().min(1, {message: 'Satuan tidak boleh kosong.'}),
   stok_registered: z.coerce
     .number()
-    .positive({message: 'Stok tidak boleh kosong.'}),
+    .nonnegative({message: 'Stok tidak boleh kosong.'}),
   jumlah_registered: z.coerce
     .number()
     .positive({message: 'Jumlah permintaan harus lebih dari 0.'}),

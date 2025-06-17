@@ -14,11 +14,11 @@ import {Input} from '@/components/ui/input';
 
 export const barangPermintaanColumns = (
   handleDataChange: (
-    id_permintaan: string,
+    id_permintaan: number,
     newJumlah: string | undefined,
     newStatus: string | undefined
   ) => void,
-  newData: {id_permintaan: string; jumlah: string; status: string}[]
+  newData: {id_permintaan: number; jumlah: string; status: string}[]
 ): ColumnDef<BarangPermintaan>[] => [
   {
     header: 'No',
@@ -43,6 +43,10 @@ export const barangPermintaanColumns = (
   {
     accessorKey: 'satuan',
     header: 'Satuan',
+  },
+  {
+    accessorKey: 'stok',
+    header: 'Stok',
   },
   {
     accessorKey: 'jumlah',

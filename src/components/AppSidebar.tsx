@@ -1,4 +1,4 @@
-import {admin1Items, admin2Items, admin3Items} from '@/lib/items/sidebar-items';
+import {admin1Items, admin2Items, admin3Items, admin4Items} from '@/lib/items/sidebar-items';
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -29,6 +29,8 @@ export default function AppSidebar({role}: {role: string}) {
     sidebarItems = admin2Items;
   } else if (role === 'user') {
     sidebarItems = admin3Items;
+  } else if (role === 'admin_pembelian') {
+    sidebarItems = admin4Items;
   }
   return (
     <Sidebar collapsible='icon'>
@@ -39,7 +41,7 @@ export default function AppSidebar({role}: {role: string}) {
             alt=''
             className='h-full w-fit object-contain'
           />
-          <h1 className='font-medium'>Sistem Informasi Inventori</h1>
+          <h1 className='font-medium'>SIENTA (Smart Inventory System)</h1>
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent className='overflow-y-hidden'>

@@ -24,7 +24,7 @@ export const summaryPengajuanOperatorColumns: ColumnDef<SummaryPengajuan>[] = [
           className='p-0'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Ruangan
+          Tanggal Pengajuan
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -32,7 +32,7 @@ export const summaryPengajuanOperatorColumns: ColumnDef<SummaryPengajuan>[] = [
   },
   {
     accessorKey: 'jumlah_pengajuan',
-    header: 'Jumlah pengajuan',
+    header: 'Jumlah Barang',
   },
   {
     accessorKey: 'ruangan',

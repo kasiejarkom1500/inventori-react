@@ -1,49 +1,40 @@
 import {ColumnDef} from '@tanstack/react-table';
-import {BarangPermintaan} from '@/lib/types/barang';
-import {Badge} from '@/components/ui/badge';
+import {BarangKarken} from '@/lib/types/barang';
+import { Button } from '@/components/ui/button';
+import { Printer } from 'lucide-react';
 
-export const laporanPermintaanColumns: ColumnDef<BarangPermintaan>[] = [
+export const laporanPermintaanColumns = (
+  printKarkenSatuan: (id_barang: number) => void
+): ColumnDef<BarangKarken>[] => [
   {
     header: 'No',
     cell: (row) => row.row.index + 1,
-  },
-  {
-    accessorKey: 'tanggal',
-    header: 'Tanggal Permintaan',
-  },
-  {
-    accessorKey: 'kd_barang',
-    header: 'Kode Barang',
   },
   {
     accessorKey: 'nama_barang',
     header: 'Nama Barang',
   },
   {
-    accessorKey: 'kategori',
-    header: 'Jenis Barang',
+    accessorKey: 'total_masuk',
+    header: 'Jumlah Masuk',
   },
   {
-    accessorKey: 'satuan',
-    header: 'Satuan',
+    accessorKey: 'total_keluar',
+    header: 'Jumlah Keluar',
   },
   {
-    accessorKey: 'jumlah',
-    header: 'Jumlah Permintaan',
+    accessorKey: 'stok',
+    header: 'Stok Akhir',
   },
   {
-    accessorKey: 'ruangan',
-    header: 'Ruangan',
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
+    header: 'Action',
     cell: (row) => {
-      const status = row.row.original.status;
+      const id = row.row.original.id_barang;
+      // console.log(id);
       return (
-        <Badge variant={status as 'Pending' | 'Approved' | 'Rejected'}>
-          {status}
-        </Badge>
+        <Button onClick={() => printKarkenSatuan(id)} className='bg-green-500'>
+          <Printer />
+        </Button>
       );
     },
   },

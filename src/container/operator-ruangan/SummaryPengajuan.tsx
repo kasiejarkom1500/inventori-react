@@ -19,6 +19,10 @@ import DataTable from '@/components/DataTable';
 import {useQuery} from '@tanstack/react-query';
 import { LoadingSpinner } from '@/components/ui/loading';
 import { fetchPengajuanByUser } from '@/lib/services/pengajuanService';
+<<<<<<< HEAD
+=======
+import { useDialog } from '@/context/dialog';
+>>>>>>> anggit
 
 export default function SummaryPengajuan() {
   const {data, isLoading, error} = useQuery({
@@ -26,6 +30,11 @@ export default function SummaryPengajuan() {
     queryFn: fetchPengajuanByUser,
   });
 
+<<<<<<< HEAD
+=======
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
+
+>>>>>>> anggit
   if (isLoading) {
     return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
   }
@@ -39,6 +48,11 @@ export default function SummaryPengajuan() {
 
   const dataSummaryPengajuan = data?.data ?? [];
 
+<<<<<<< HEAD
+=======
+ 
+
+>>>>>>> anggit
   return (
     <Card className='p-6'>
       <div className='flex flex-col lg:flex-row justify-between items-center'>
@@ -50,7 +64,15 @@ export default function SummaryPengajuan() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className='mr-auto lg:mr-0'>
+<<<<<<< HEAD
               <Dialog>
+=======
+              <Dialog open={isDialogOpen}
+              onOpenChange={(open) => {
+                if (open) openDialog();
+                else closeDialog();
+              }}>
+>>>>>>> anggit
                 <DialogTrigger>
                   <Button>
                     <PlusCircle /> Buat Pengajuan Barang

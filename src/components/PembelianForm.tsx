@@ -41,6 +41,10 @@ export default function PembelianForm() {
 
   const [batchData, setBatchData] = useState<
     Array<{
+<<<<<<< HEAD
+=======
+      id_barang: string;
+>>>>>>> anggit
       nama_barang: string;
       nama_sumber: string;
       jumlah: number;
@@ -48,6 +52,7 @@ export default function PembelianForm() {
   >([]);
 
   const [requestData, setRequestData] = useState<
+<<<<<<< HEAD
     Array<{
       // no_kuitansi: string;
       // id_sumber:string;
@@ -56,6 +61,13 @@ export default function PembelianForm() {
         jumlah: number;
         harga:number;
     }>
+=======
+      Array<{
+          id_barang: string;
+          jumlah: number;
+          harga:number;
+      }>
+>>>>>>> anggit
   >([]);
 
   const [mainData, setMainData] = useState<{
@@ -86,6 +98,7 @@ export default function PembelianForm() {
     queryFn: fetchAllSumber,
   });
 
+<<<<<<< HEAD
   // const user = JSON.parse(localStorage.getItem('user') || '{}') as {
   //   id_user: string;
   //   username: string;
@@ -100,6 +113,8 @@ export default function PembelianForm() {
   //   })
   // );
 
+=======
+>>>>>>> anggit
   const allBarang = dataAllBarang?.data ?? [];
   const barangOptions = allBarang.map(
     (item: {id_barang: string; nama_barang: string}) => ({
@@ -168,7 +183,11 @@ export default function PembelianForm() {
 
   function onSubmit(values: z.infer<typeof pembelianSchema>) {
     const isDuplicate = batchData.some(
+<<<<<<< HEAD
       (item) => item.nama_barang === values.nama_barang
+=======
+      (item) => item.id_barang === values.id_barang
+>>>>>>> anggit
     );
   
     if (isDuplicate) {
@@ -217,7 +236,11 @@ export default function PembelianForm() {
       }];
       console.log('Batch Send Data:', sendData);
   
+<<<<<<< HEAD
       return;
+=======
+      // return;
+>>>>>>> anggit
       const response = await base.post('/tambah_pembelian', sendData, {
         headers: {
           'Content-Type': 'application/json',

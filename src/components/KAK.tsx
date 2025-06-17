@@ -15,22 +15,22 @@ Font.register({
   family: 'Times New Roman',
   fonts: [
     {
-      src: '/src/assets/font/times new roman.ttf',
+      src: '/assets/font/times new roman.ttf',
       fontStyle: 'normal',
       fontWeight: 'normal',
     },
     {
-      src: '/src/assets/font/Times New Roman Bold.ttf',
+      src: '/assets/font/Times New Roman Bold.ttf',
       fontStyle: 'normal',
       fontWeight: 'bold',
     },
     {
-      src: '/src/assets/font/times-new-roman-italic.ttf',
+      src: '/assets/font/times-new-roman-italic.ttf',
       fontStyle: 'italic',
       fontWeight: 'normal',
     },
     {
-      src: '/src/assets/font/times-new-roman-bold-italic.ttf',
+      src: '/assets/font/times-new-roman-bold-italic.ttf',
       fontStyle: 'italic',
       fontWeight: 'bold',
     },

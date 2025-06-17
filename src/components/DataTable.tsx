@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Input } from "@/components/ui/input";
+import {Input} from '@/components/ui/input';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,13 +12,13 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -26,9 +26,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "./ui/button";
-import { ChevronDown } from "lucide-react";
+} from '@/components/ui/table';
+import {Button} from './ui/button';
+import {ChevronDown} from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,8 +40,8 @@ interface DataTableProps<TData, TValue> {
 export default function DataTable<TData, TValue>({
   columns,
   data,
-  column_name = "name",
-  search_placeholder = "nama",
+  column_name= 'name',
+  search_placeholder = 'nama',
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -74,25 +74,23 @@ export default function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex lg:items-center flex-col lg:flex-row lg:justify-between gap-4 py-4">
+      <div className='flex lg:items-center flex-col lg:flex-row lg:justify-between gap-4 py-4'>
         <Input
           placeholder={`Cari ${search_placeholder}...`}
-          value={
-            (table.getColumn(column_name)?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn(column_name)?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn(column_name)?.setFilterValue(event.target.value)
           }
-          className="max-w-md"
+          className='max-w-md'
         />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="mr-auto lg:mr-0">
+            <Button variant='outline' className='mr-auto lg:mr-0'>
               Columns <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -100,7 +98,7 @@ export default function DataTable<TData, TValue>({
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className='capitalize'
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
@@ -113,7 +111,7 @@ export default function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="drop-shadow-none">
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -137,7 +135,7 @@ export default function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                data-state={row.getIsSelected() && 'selected'}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -148,25 +146,25 @@ export default function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className='h-24 text-center'>
                 Belum ada data
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2  pr-8 py-4">
+      <div className='flex items-center justify-end space-x-2  pr-8 py-4'>
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </Button>
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >

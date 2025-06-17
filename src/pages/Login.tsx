@@ -1,10 +1,10 @@
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import {useToast} from '@/hooks/use-toast';
+import {useNavigate} from 'react-router-dom';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
+import {Button} from '@/components/ui/button';
+import {Link} from 'react-router-dom';
 import {
   Form,
   FormControl,
@@ -12,34 +12,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Toaster } from "@/components/ui/toaster";
-import { normalizeRole } from "@/lib/utils";
-import { base } from "@/lib/network/base";
+} from '@/components/ui/card';
+import {Input} from '@/components/ui/input';
+import {Toaster} from '@/components/ui/toaster';
+import {normalizeRole} from '@/lib/utils';
+import {base} from '@/lib/network/base';
 // import {normalizeRole} from '@/lib/utils';
 
 const loginFormSchema = z.object({
-  username: z.string().nonempty({ message: "Username must be filled" }),
-  password: z.string().nonempty({ message: "Password must be filled" }),
+  username: z.string().nonempty({message: 'Username must be filled'}),
+  password: z.string().nonempty({message: 'Password must be filled'}),
 });
 
 export default function Login() {
-  const { toast } = useToast();
+  const {toast} = useToast();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     },
   });
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
@@ -60,58 +60,58 @@ export default function Login() {
       // !Development only
       if (data == null) {
         toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "Invalid email or password",
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'Invalid email or password',
         });
         return;
       }
       const role = normalizeRole(data.data.role);
-      console.log("data ini", role);
+      console.log('data ini', role);
       // console.log(role);
-      navigate(`/${role}/dashboard`, { replace: true });
+      navigate(`/${role}/dashboard`, {replace: true});
     } catch (err) {
-      console.error("Login failed:", err);
-      form.setError("username", { message: "Invalid username or password" });
+      console.error('Login failed:', err);
+      form.setError('username', {message: 'Invalid username or password'});
     }
   };
 
   return (
-    <div className="bg-white flex justify-center items-center h-screen w-full">
-      <Card className="max-w-sm mx-auto">
+    <div className='bg-white flex justify-center items-center h-screen w-full'>
+      <Card className='max-w-sm mx-auto'>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className='text-2xl'>Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Masukkan username dan password untuk masuk ke sistem
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <FormField
                 control={form.control}
-                name="username"
-                render={({ field }) => (
+                name='username'
+                render={({field}) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="rihan1234@mail.com" {...field} />
+                      <Input placeholder='username' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <FormField
                   control={form.control}
-                  name="password"
-                  render={({ field }) => (
+                  name='password'
+                  render={({field}) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
-                          placeholder="********"
+                          type='password'
+                          placeholder='********'
                           {...field}
                         />
                       </FormControl>
@@ -120,14 +120,14 @@ export default function Login() {
                   )}
                 />
                 <Link
-                  to="#"
-                  className="ml-auto text-slate-600 inline-block text-sm underline -mt-4"
+                  to='#'
+                  className='ml-auto text-slate-600 inline-block text-sm underline -mt-4'
                 >
                   Forget password?
                 </Link>
               </div>
 
-              <Button className="w-full" type="submit">
+              <Button className='w-full' type='submit'>
                 Login
               </Button>
             </form>

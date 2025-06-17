@@ -19,12 +19,14 @@ import DataTable from './DataTable';
 import {useState} from 'react';
 import {useToast} from '@/hooks/use-toast';
 import {base} from '@/lib/network/base';
+import { useDialog } from '@/context/dialog';
 
 const permintaanSchema = z.object({
   id_user: z.string(),
   nama: z.string().min(1, {message: 'Nama tidak boleh kosong.'}),
   jabatan: z.string().min(1, {message: 'Jabatan tidak boleh kosong.'}),
   id_ruangan: z.string().min(1, {message: 'Ruangan harus dipilih.'}),
+  ruangan :z.string(),
   tanggal: z.string().min(1, {message: 'Tanggal harus diisi.'}),
   id_barang: z.string().min(1, {message: 'Barang harus dipilih.'}),
   nama_barang: z.string(),
@@ -37,13 +39,18 @@ const permintaanSchema = z.object({
 });
 
 export default function PermintaanForm() {
+  const { closeDialog } = useDialog();
+
   const [batchData, setBatchData] = useState<
     Array<{
+      id_barang : string,
+      id_ruangan: string,
       nama_barang: string;
       kategori: string;
       satuan: string;
       stok: number | string;
       jumlah: number;
+      ruangan:string;
     }>
   >([]);
 
@@ -97,6 +104,7 @@ export default function PermintaanForm() {
       nama: user.username,
       jabatan: user.jabatan,
       id_ruangan: '',
+      ruangan:'',
       tanggal: new Date().toISOString().split('T')[0],
       id_barang: '',
       nama_barang: '',
@@ -134,6 +142,21 @@ export default function PermintaanForm() {
   };
 
   function onSubmit(values: z.infer<typeof permintaanSchema>) {
+
+    const isDuplicate = batchData.some(
+      (item) => item.id_barang === values.id_barang && item.id_ruangan === values.id_ruangan
+    );
+  
+    if (isDuplicate) {
+      toast.toast({
+        variant: 'destructive',
+        title: 'Duplikasi Data',
+        description: 'Barang ini sudah ada di tabel.',
+      });
+      return; // Jangan tambahkan data jika duplikat
+    }
+
+
     const newData = {
       id_barang: values.id_barang,
       id_user: values.id_user,
@@ -142,26 +165,35 @@ export default function PermintaanForm() {
     };
 
     const newBatchData = {
+      id_ruangan: values.id_ruangan,
+      id_barang: values.id_barang,
       nama_barang: values.nama_barang,
       kategori: values.kategori,
       satuan: values.satuan,
       stok: values.stok,
       jumlah: values.jumlah,
+      ruangan: values.ruangan
     };
 
     setRequestData((prev) => [...prev, newData]);
     setBatchData((prev) => [...prev, newBatchData]);
 
-    // form.reset({
-    //   ...form.getValues(),
-    //   id_barang: '',
-    //   nama_barang: '',
-    //   kategori: '',
-    //   satuan: '',
-    //   stok: '',
-    //   jumlah: 0,
-    // });
+    toast.toast({
+      title: 'Berhasil',
+      description: 'Data berhasil ditambahkan ke tabel',
+    });
   }
+
+  const handleDelete = (indexToDelete: number) => {
+    setBatchData((prevBatchData) =>
+      prevBatchData.filter((_, index) => index !== indexToDelete)
+    );
+
+    setRequestData((prevRequestData) =>
+      prevRequestData.filter((_, index) => index !== indexToDelete)
+    );
+  };
+
   const handleSubmitBatch = async () => {
     try {
       console.log('Batch Request Data:', requestData);
@@ -176,6 +208,7 @@ export default function PermintaanForm() {
         description: response.data.message,
       });
       queryClient.invalidateQueries({queryKey: 'data-permintaan-user'});
+      closeDialog();
     } catch (error) {
       console.error('Gagal mengupdate data:', error);
       toast.toast({
@@ -229,11 +262,12 @@ export default function PermintaanForm() {
                   <FormControl>
                     <Select
                       options={ruanganOptions}
-                      onChange={(selectedOption) =>
+                      onChange={(selectedOption) =>{
                         field.onChange(
                           selectedOption ? selectedOption.value : ''
-                        )
-                      }
+                        );
+                        form.setValue('ruangan', selectedOption ? selectedOption.label : '' )
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -344,11 +378,23 @@ export default function PermintaanForm() {
       <div className='w-3/5 pl-4 border-l'>
         <DataTable
           columns={[
+            {header: 'Ruangan', accessorKey: 'ruangan'},
             {header: 'Nama Barang', accessorKey: 'nama_barang'},
             {header: 'Kategori', accessorKey: 'kategori'},
             {header: 'Satuan', accessorKey: 'satuan'},
             {header: 'Stok', accessorKey: 'stok'},
             {header: 'Jumlah', accessorKey: 'jumlah'},
+            {
+              header: 'Aksi',
+              cell: ({ row }) => (
+                <button
+                  onClick={() => handleDelete(row.index)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  Hapus
+                </button>
+              ),
+            },
           ]}
           data={batchData}
           column_name='nama_barang'

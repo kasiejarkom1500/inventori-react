@@ -20,7 +20,7 @@ export type BarangTrans = {
   ruangan: string;
 };
 export type BarangPermintaan = {
-  id_permintaan: string;
+  id_permintaan: number;
   tanggal: string;
   kd_barang: string;
   nama_barang: string;
@@ -29,6 +29,14 @@ export type BarangPermintaan = {
   jumlah: number;
   id_ruangan: string;
   status: string;
+};
+
+export type BarangKarken = {
+  id_barang: number;
+  nama_barang: string;
+  total_masuk: number;
+  total_keluar: number;
+  stok: number;
 };
 
 export type BarangPembelian = {

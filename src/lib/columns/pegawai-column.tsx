@@ -19,6 +19,10 @@ export const operatorColumns: ColumnDef<User>[] = [
     header: 'Nama',
   },
   {
+    accessorKey: 'id_satker',
+    header: 'Satker',
+  },
+  {
     accessorKey: 'jabatan',
     header: 'Jabatan',
   },

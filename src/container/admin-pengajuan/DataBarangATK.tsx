@@ -30,7 +30,11 @@ export default function DataBarangATK() {
             Data Barang ATK
           </h1>
         </div>
-        <DataTable data={dataBarang} columns={barangViewColumns} />
+        <DataTable 
+          data={dataBarang} 
+          columns={barangViewColumns} 
+          column_name='nama_barang'
+        />
       </Card>
     </>
   );

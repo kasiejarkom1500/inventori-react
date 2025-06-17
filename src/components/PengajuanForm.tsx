@@ -8,6 +8,7 @@ import {useState} from 'react';
 import {useToast} from '@/hooks/use-toast';
 import {base} from '@/lib/network/base';
 import {useQueryClient} from '@tanstack/react-query';
+import { useDialog } from '@/context/dialog';
 
 export interface BatchData {
   nama_barang: string;
@@ -28,6 +29,7 @@ export interface RequestData {
 }
 
 export default function PengajuanForm() {
+  const { closeDialog } = useDialog();
   const toast = useToast();
   const queryClient = useQueryClient();
   const [batchData, setBatchData] = useState<BatchData[]>([]);
@@ -63,6 +65,7 @@ export default function PengajuanForm() {
         description: response.data.message,
       });
       queryClient.invalidateQueries({queryKey: 'data-pengajuan-user'});
+      closeDialog();
     } catch (error) {
       console.error('Gagal mengupdate data:', error);
       toast.toast({
@@ -71,6 +74,16 @@ export default function PengajuanForm() {
         description: 'Gagal mengupdate data barang',
       });
     }
+  };
+
+  const handleDelete = (indexToDelete: number) => {
+    setBatchData((prevBatchData) =>
+      prevBatchData.filter((_, index) => index !== indexToDelete)
+    );
+
+    setRequestData((prevRequestData) =>
+      prevRequestData.filter((_, index) => index !== indexToDelete)
+    );
   };
 
   return (
@@ -97,6 +110,17 @@ export default function PengajuanForm() {
             {header: 'Satuan', accessorKey: 'satuan'},
             {header: 'Stok', accessorKey: 'stok'},
             {header: 'Jumlah', accessorKey: 'jumlah'},
+            {
+              header: 'Aksi',
+              cell: ({ row }) => (
+                <button
+                  onClick={() => handleDelete(row.index)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  Hapus
+                </button>
+              ),
+            },
           ]}
           data={batchData}
           column_name='nama_barang'

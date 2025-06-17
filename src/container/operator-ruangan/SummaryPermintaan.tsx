@@ -19,12 +19,22 @@ import PermintaanForm from '@/components/PermintaanForm';
 import {LoadingSpinner} from '@/components/ui/loading';
 import {useQuery} from '@tanstack/react-query';
 import {fetchPermintaanByUser} from '@/lib/services/permintaanService';
+<<<<<<< HEAD
+=======
+import { useDialog } from '@/context/dialog';
+>>>>>>> anggit
 
 export default function PermintaanBarang() {
   const {data, isLoading, error} = useQuery({
     queryKey: ['data-permintaan-user'],
     queryFn: fetchPermintaanByUser,
   });
+<<<<<<< HEAD
+=======
+
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
+
+>>>>>>> anggit
   if (isLoading) {
     return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
   }
@@ -49,7 +59,15 @@ export default function PermintaanBarang() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className='mr-auto lg:mr-0'>
+<<<<<<< HEAD
               <Dialog>
+=======
+              <Dialog open={isDialogOpen}
+              onOpenChange={(open) => {
+                if (open) openDialog();
+                else closeDialog();
+              }}>
+>>>>>>> anggit
                 <DialogTrigger>
                   <Button>
                     <PlusCircle /> Buat Permintaan Barang

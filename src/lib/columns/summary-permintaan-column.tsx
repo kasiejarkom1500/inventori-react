@@ -114,7 +114,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
             </DialogTrigger>
             <DialogContent>
               <DialogHeader className='text-2xl font-semibold'>
-                Blanko Pengajuan
+                Tanggal Penyerahan
               </DialogHeader>
               <BlankoForm
                 ruanganID={id_ruangan}
