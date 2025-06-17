@@ -1,26 +1,30 @@
-import {Button} from '@/components/ui/button';
-import {Card} from '@/components/ui/card';
-import {Download, PlusCircle, SlidersHorizontal, Upload} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Download, PlusCircle, SlidersHorizontal, Upload } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 
-import {barangATKColumns} from '@/lib/columns/barang-atk-column';
+import { barangATKColumns } from "@/lib/columns/barang-atk-column";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import BarangForm from '@/components/BarangForm';
-import useExcel from '@/hooks/use-excel';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm} from 'react-hook-form';
-import {z} from 'zod';
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
+} from "@/components/ui/dialog";
+import BarangForm from "@/components/BarangForm";
+import useExcel from "@/hooks/use-excel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -28,27 +32,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {Input} from '@/components/ui/input';
-import DataTable from '@/components/DataTable';
-<<<<<<< HEAD
-import {useQuery} from '@tanstack/react-query';
-import {fetchBarangATK} from '@/lib/network/barangServices';
-import { LoadingSpinner } from '@/components/ui/loading';
-=======
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {fetchBarangATK} from '@/lib/network/barangServices';
-import { LoadingSpinner } from '@/components/ui/loading';
-import { useToast } from '@/hooks/use-toast';
-import { base } from '@/lib/network/base';
->>>>>>> anggit
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import DataTable from "@/components/DataTable";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchBarangATK } from "@/lib/network/barangServices";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { useToast } from "@/hooks/use-toast";
+import { base } from "@/lib/network/base";
 
 const filterSchema = z.object({
   harga_pengajuan: z.number().optional(),
 });
 
 export default function DataBarangATK() {
-  const {handleExcel} = useExcel();
+  const { handleExcel } = useExcel();
   const form = useForm<z.infer<typeof filterSchema>>({
     resolver: zodResolver(filterSchema),
     defaultValues: {
@@ -56,24 +54,22 @@ export default function DataBarangATK() {
     },
   });
 
-  const {data, isLoading, error} = useQuery({
-    queryKey: ['data-barang-atk'],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["data-barang-atk"],
     queryFn: fetchBarangATK,
   });
-<<<<<<< HEAD
-=======
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [file, setFile] = useState<File | null>(null);
   const toast = useToast();
   const queryClient = useQueryClient();
 
->>>>>>> anggit
-  if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+  if (isLoading)
+    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
   if (error)
     return (
       <div>
-        Error: {error instanceof Error ? error.message : 'Unknown error'}
+        Error: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
 
@@ -84,33 +80,31 @@ export default function DataBarangATK() {
     console.log(values);
   }
 
-<<<<<<< HEAD
-=======
   // Fungsi untuk mengirim file Excel ke API
   const handleImportExcel = async (file: File) => {
     const formData = new FormData();
-    formData.append('file', file); // Tambahkan file ke FormData
+    formData.append("file", file); // Tambahkan file ke FormData
 
     try {
-      const response = await base.post('/import_excel', formData, {
+      const response = await base.post("/import_excel", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Set header untuk file upload
+          "Content-Type": "multipart/form-data", // Set header untuk file upload
         },
       });
-      console.log('File imported successfully:', response.data);
+      console.log("File imported successfully:", response.data);
 
       toast.toast({
-        title: 'Berhasil',
+        title: "Berhasil",
         description: response.data.message,
       });
       // Optional: Refetch data setelah import berhasil
-      queryClient.invalidateQueries({queryKey: 'data-barang-atk'});
+      queryClient.invalidateQueries({ queryKey: "data-barang-atk" });
     } catch (error) {
-      console.error('Error importing file:', error);
+      console.error("Error importing file:", error);
       toast.toast({
-        variant: 'destructive',
-        title: 'Gagal Import Data',
-        description: 'Tidak berhasil mengimport data',
+        variant: "destructive",
+        title: "Gagal Import Data",
+        description: "Tidak berhasil mengimport data",
       });
     }
   };
@@ -124,20 +118,17 @@ export default function DataBarangATK() {
     }
   };
 
-
-
->>>>>>> anggit
   return (
     <>
-      <Card className='p-6'>
-        <div className='flex flex-col lg:flex-row lg:justify-between'>
-          <h1 className='mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md'>
+      <Card className="p-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between">
+          <h1 className="mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md">
             Data Barang ATK (521811)
           </h1>
-          <div className='flex items-center flex-col lg:flex-row gap-2'>
+          <div className="flex items-center flex-col lg:flex-row gap-2">
             <Popover>
               <PopoverTrigger>
-                <span className='flex items-center gap-2'>
+                <span className="flex items-center gap-2">
                   <SlidersHorizontal size={18} /> Filter
                 </span>
               </PopoverTrigger>
@@ -145,18 +136,18 @@ export default function DataBarangATK() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className='space-y-8'
+                    className="space-y-8"
                   >
                     <FormField
                       control={form.control}
-                      name='harga_pengajuan'
-                      render={({field}) => (
+                      name="harga_pengajuan"
+                      render={({ field }) => (
                         <FormItem>
                           <FormLabel>Harga Pengajuan</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder='Harga Pengajuan...'
-                              type='number'
+                              placeholder="Harga Pengajuan..."
+                              type="number"
                               {...field}
                               onChange={(e) =>
                                 field.onChange(e.target.valueAsNumber)
@@ -167,7 +158,7 @@ export default function DataBarangATK() {
                         </FormItem>
                       )}
                     />
-                    <Button type='submit'>Submit</Button>
+                    <Button type="submit">Submit</Button>
                   </form>
                 </Form>
               </PopoverContent>
@@ -175,30 +166,29 @@ export default function DataBarangATK() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-<<<<<<< HEAD
-                  <Button variant={'green'}>
-                    <Upload /> Import
-                  </Button>
-=======
-                  <Button variant={'green'} onClick={() => document.getElementById('fileInput')?.click()}>
+                  <Button
+                    variant={"green"}
+                    onClick={() =>
+                      document.getElementById("fileInput")?.click()
+                    }
+                  >
                     <Upload /> Import
                   </Button>
                   <input
                     id="fileInput"
                     type="file"
-                    accept='.xlsx, .xls'
-                    style={{ display: 'none' }}
+                    accept=".xlsx, .xls"
+                    style={{ display: "none" }}
                     onChange={handleFileChange}
                   />
->>>>>>> anggit
                 </TooltipTrigger>
                 <TooltipContent>Import Excel</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger>
                   <Button
-                    onClick={() => handleExcel(dataBarang, 'data_barang_atk')}
-                    variant={'blue'}
+                    onClick={() => handleExcel(dataBarang, "data_barang_atk")}
+                    variant={"blue"}
                   >
                     <Download /> Download
                   </Button>
@@ -213,11 +203,11 @@ export default function DataBarangATK() {
                         <PlusCircle /> Tambah Barang
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className='max-h-[80%] overflow-auto'>
-                      <DialogTitle className='text-xl font-semibold'>
+                    <DialogContent className="max-h-[80%] overflow-auto">
+                      <DialogTitle className="text-xl font-semibold">
                         Tambah Barang ATK
                       </DialogTitle>
-                      <BarangForm type='add' />
+                      <BarangForm type="add" />
                     </DialogContent>
                   </Dialog>
                 </TooltipTrigger>
@@ -229,8 +219,8 @@ export default function DataBarangATK() {
         <DataTable
           data={dataBarang}
           columns={barangATKColumns}
-          column_name='nama_barang'
-          search_placeholder='nama barang'
+          column_name="nama_barang"
+          search_placeholder="nama barang"
         />
       </Card>
     </>

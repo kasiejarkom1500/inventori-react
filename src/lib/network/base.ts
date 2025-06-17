@@ -1,19 +1,18 @@
 import axios from "axios";
-import { toast } from "@/hooks/use-toast"
-
+import { toast } from "@/hooks/use-toast";
 
 export const base = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
-    'Content-Type': 'multipart/form-data',
+    "Content-Type": "multipart/form-data",
   },
 });
 
 // Tambahkan interceptor untuk sisipkan token tiap request
 base.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access-token');
+  const token = localStorage.getItem("access-token");
   if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });
@@ -27,16 +26,16 @@ base.interceptors.response.use(
         title: "Session expired",
         description: "Please login again.",
         variant: "destructive",
-      })
+      });
 
-      localStorage.removeItem('user')
-      localStorage.removeItem('access-token')
+      localStorage.removeItem("user");
+      localStorage.removeItem("access-token");
 
       setTimeout(() => {
-        window.location.href = '/login'
-      }, 2000)
+        window.location.href = "/login";
+      }, 2000);
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);

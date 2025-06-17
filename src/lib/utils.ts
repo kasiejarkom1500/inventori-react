@@ -1,45 +1,50 @@
-import {clsx, type ClassValue} from 'clsx';
-import {twMerge} from 'tailwind-merge';
-import * as XLSX from 'xlsx';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import * as XLSX from "xlsx";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function convertToSlug(text: string){
+export function convertToSlug(text: string) {
   return text
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]/g, '');
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "");
 }
 
-export function toTitleCase(text: string): string {
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Returns a string with the first letter of each word capitalized.
+ * @param {string} text The string to be converted
+ * @returns {string} The string with the first letter of each word capitalized
+ * @example
+ * toTitleCase('hello world') // 'Hello World'
+ */
+/*******  15f726db-d6c7-45ab-98bf-755da8147824  *******/ export function toTitleCase(
+  text: string
+): string {
   return text
-    .split(' ') 
-    .map(
-      (word) =>
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() 
-    )
-    .join(' '); 
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
-
-export function normalizeRole(role: string){
-  if (role === 'admin') {
-    return 'admin';
-  } else if (role === 'admin_pengajuan') {
-    return 'admin-pengajuan';
-  } else if (role === 'admin_pembelian') {
-    return 'admin-pembelian';
-  } else{
-    return 'operator-ruangan';
+export function normalizeRole(role: string) {
+  if (role === "admin") {
+    return "admin";
+  } else if (role === "admin_pengajuan") {
+    return "admin-pengajuan";
+  } else if (role === "admin_pembelian") {
+    return "admin-pembelian";
+  } else {
+    return "operator-ruangan";
   }
 }
 export const downloadExcel = (data: object[], fileName: string) => {
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  XLSX.writeFile(wb, fileName + '.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  XLSX.writeFile(wb, fileName + ".xlsx");
 };
-
