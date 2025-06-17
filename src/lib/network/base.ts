@@ -10,8 +10,9 @@ export const base = axios.create({
 
 // Tambahkan interceptor untuk sisipkan token tiap request
 base.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access-token");
+  let token = localStorage.getItem("access-token");
   if (token) {
+    token = token.replace(/"/g, "");
     config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
@@ -31,9 +32,9 @@ base.interceptors.response.use(
       localStorage.removeItem("user");
       localStorage.removeItem("access-token");
 
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.href = "/login";
+      // }, 2000);
     }
 
     return Promise.reject(error);
