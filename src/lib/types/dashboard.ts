@@ -1,9 +1,12 @@
 export type DashboardPermintaan = {
-  id: string;
   tanggal: string;
+  id_user: string;
+  id_ruangan: string;
   ruangan: string;
   jumlah_jenis_barang: string;
-  status: string;
+  Approved: string;
+  Pending: string;
+  Rejected: string;
 };
 
 export interface DashboardHampirHabis {

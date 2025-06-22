@@ -1,12 +1,12 @@
-import DataTable from '@/components/DataTable';
-import {Button} from '@/components/ui/button';
-import {barangPermintaanColumns} from '@/lib/columns/barang-permintaan-column';
-import {useEffect, useState} from 'react';
-import {fetchDetailPermintaaan} from '@/lib/services/fetch';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {LoadingSpinner} from '@/components/ui/loading';
-import {base} from '@/lib/network/base';
-import {useToast} from '@/hooks/use-toast';
+import DataTable from "@/components/DataTable";
+import { Button } from "@/components/ui/button";
+import { barangPermintaanColumns } from "@/lib/columns/barang-permintaan-column";
+import { useEffect, useState } from "react";
+import { fetchDetailPermintaaan } from "@/lib/services/fetch";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { base } from "@/lib/network/base";
+import { useToast } from "@/hooks/use-toast";
 
 export default function DetailPermintaan({
   ruanganID,
@@ -17,8 +17,8 @@ export default function DetailPermintaan({
 }) {
   const queryClient = useQueryClient();
   const toast = useToast();
-  const {data, isLoading, error} = useQuery({
-    queryKey: ['detail-permintaan', ruanganID, tanggal],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["detail-permintaan", ruanganID, tanggal],
     queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal),
   });
 
@@ -37,16 +37,16 @@ export default function DetailPermintaan({
     }
   }, [data]);
 
-  if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+  if (isLoading)
+    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
   if (error) {
     return (
       <div>
-        Error: {error instanceof Error ? error.message : 'Unknown error'}
+        Error: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
   }
   const dataPermintaanBarang = data?.data ?? [];
-  // console.log(dataPermintaanBarang);
 
   function handleDataChange(
     id_permintaan: number,
@@ -64,27 +64,27 @@ export default function DetailPermintaan({
           : item
       )
     );
-    console.log('new data', newData);
+    console.log("new data", newData);
   }
   async function submitForm() {
     try {
-      const response = await base.put('/update_status', newData, {
+      const response = await base.put("/update_status", newData, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      console.log('response', response);
+      console.log("response", response);
       toast.toast({
-        title: 'Berhasil',
-        description: response.data.message || 'Data berhasil diproses.',
+        title: "Berhasil",
+        description: response.data.message || "Data berhasil diproses.",
       });
-      queryClient.invalidateQueries({queryKey: ['data-permintaan']});
+      queryClient.invalidateQueries({ queryKey: ["data-permintaan"] });
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
       toast.toast({
-        variant: 'destructive',
-        title: 'Gagal',
-        description: 'Gagal menyimpan data barang',
+        variant: "destructive",
+        title: "Gagal",
+        description: "Gagal menyimpan data barang",
       });
     }
   }
@@ -94,10 +94,10 @@ export default function DetailPermintaan({
       <DataTable
         columns={barangPermintaanColumns(handleDataChange, newData)}
         data={dataPermintaanBarang} // Use original data here
-        search_placeholder='barang'
-        column_name='nama_barang' 
+        search_placeholder="barang"
+        column_name="nama_barang"
       />
-      <Button className='w-fit px-8 ml-auto' onClick={submitForm}>
+      <Button className="w-fit px-8 ml-auto" onClick={submitForm}>
         Submit
       </Button>
     </>

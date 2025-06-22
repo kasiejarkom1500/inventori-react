@@ -32,9 +32,9 @@ base.interceptors.response.use(
       localStorage.removeItem("user");
       localStorage.removeItem("access-token");
 
-      // setTimeout(() => {
-      //   window.location.href = "/login";
-      // }, 2000);
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
     }
 
     return Promise.reject(error);

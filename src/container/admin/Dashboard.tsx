@@ -6,102 +6,81 @@ import {
   ChartBarDashboardPerbidang,
 } from "@/components/Chart";
 import {
+  CircleAlert,
   Clock,
   LucideProps,
   Package,
   ScrollText,
   TicketCheck,
 } from "lucide-react";
-import {
-  DashboardHampirHabis,
-  DashboardPermintaan,
-} from "@/lib/types/dashboard";
+import { DashboardHampirHabis } from "@/lib/types/dashboard";
 import { DataTable } from "@/components/DashboardTable";
 import {
   dashboardHampirHabisColumn,
   dashboardPerimntaanColumn,
 } from "@/lib/columns/dashboard-column";
+import {
+  fetchBarangPemakaianBulanan,
+  fetchBarangStokMinimal,
+  fetchBarangStokTersedia,
+  fetchBarangTotal,
+} from "@/lib/network/barangServices";
+import { fetchPermintaanBulanan } from "@/lib/network/permintaanService";
+import { fetchBarangPembelianBulanan } from "@/lib/network/pembelianService";
+import { useQuery } from "@tanstack/react-query";
+import { LoadingSpinner } from "@/components/ui/loading";
+import React from "react";
 
 export const cuecard = [
   {
     icon: Package,
     title: "Total Item",
     color: "yellow",
-    value: "526",
     description: "aaaaaaa",
+    key: "total_item",
+    fetcher: () => fetchBarangTotal(),
   },
   {
     icon: Package,
     title: "Total Stok Tersedia",
     color: "violet",
-    value: "229",
     description: "aaaaaaa",
+    key: "total_stok_tersedia",
+    fetcher: () => fetchBarangStokTersedia(),
   },
   {
     icon: Package,
     title: "Total Stok Hampir Habis",
     color: "red",
-    value: "10",
     description: "aaaaaaa",
+    key: "data",
+    fetcher: () => fetchBarangStokMinimal(),
   },
   {
     icon: TicketCheck,
     title: "Permintaan Bulan Ini",
-    color: "lime",
-    value: "5",
+    color: "green",
     description: "aaaaaaa",
+    period: "monthly",
+    key: "data",
+    fetcher: (period: string) => fetchPermintaanBulanan(period),
   },
   {
     icon: ScrollText,
     title: "Pembelian Bulan Ini",
     color: "sky",
-    value: "6",
     description: "aaaaaaa",
+    key: "total",
+    fetcher: () => fetchBarangPembelianBulanan(),
   },
   {
     icon: Clock,
     title: "Permintaan Pending",
-    color: "amber",
-    value: "6",
+    color: "yellow",
     description: "aaaaaaa",
-  },
-];
-
-export const permintaan: DashboardPermintaan[] = [
-  {
-    id: "1",
-    ruangan: "IPDS",
-    tanggal: "2023-08-01",
-    jumlah_jenis_barang: "8",
-    status: "Pending",
-  },
-  {
-    id: "2",
-    ruangan: "Neraca",
-    tanggal: "2023-08-01",
-    jumlah_jenis_barang: "12",
-    status: "Disetujui",
-  },
-  {
-    id: "3",
-    ruangan: "Distribusi",
-    tanggal: "2023-08-01",
-    jumlah_jenis_barang: "16",
-    status: "Ditolak",
-  },
-  {
-    id: "4",
-    ruangan: "Sosial",
-    tanggal: "2023-08-01",
-    jumlah_jenis_barang: "3",
-    status: "Disetujui",
-  },
-  {
-    id: "5",
-    ruangan: "IPDS",
-    tanggal: "2023-08-01",
-    jumlah_jenis_barang: "15",
-    status: "Disetujui",
+    period: "yearly",
+    key: "data",
+    fetcher: (period: string) => fetchBarangPemakaianBulanan(period),
   },
 ];
 
@@ -133,68 +112,225 @@ export const barangHampirHabis: DashboardHampirHabis[] = [
 ];
 
 export const Cuecard = ({
-  data,
+  d,
 }: {
-  data: {
+  d: {
     icon: React.ForwardRefExoticComponent<
       Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
     >;
     title: string;
     color: string;
-    value: string;
     description: string;
+    period?: string;
+    key: string;
+    fetcher: (period: string) => Promise<any>;
   };
 }) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: [`cuecard-${d.title}`, d.period],
+    queryFn: () => {
+      let period = "";
+      if (d.period) {
+        if (d.period === "yearly") {
+          period = new Date().getFullYear().toString();
+        } else if (d.period === "monthly") {
+          const today = new Date();
+          const month = (today.getMonth() + 1).toString().padStart(2, "0");
+          const year = today.getFullYear();
+          period = `${year}-${month}`;
+        }
+      }
+      return d.fetcher(period);
+    },
+  });
+  // default value
+  let value = "0";
+  if (data) {
+    if (data[d.key] && Array.isArray(data[d.key])) {
+      value = data[d.key].length;
+    } else {
+      value = data[d.key];
+    }
+  }
+
   return (
     <Card className="flex items-center gap-4 p-3">
-      <figure className={`rounded-lg p-4 bg-${data.color}-200/40 h-fit`}>
-        <data.icon
+      <figure className={`rounded-lg p-1 lg:p-4 bg-${d.color}-200/40 h-fit`}>
+        <d.icon
           size={18}
-          className={`rounded-lg text-white bg-${data.color}-500 p-1.5 box-content`}
+          className={`rounded-lg text-white bg-${d.color}-500 p-1.5 box-content`}
         />
       </figure>
-      <div className="">
-        <p className="text-base text-slate-500/70 font-medium ">{data.title}</p>
-        <p className="text-2xl font-semibold">{data.value}</p>
+      <div className="w-full">
+        <p className="text-xs lg:text-base text-slate-500/70 font-medium ">
+          {d.title}
+        </p>
+        {isLoading ? (
+          <LoadingSpinner size={24} className="ml-4" />
+        ) : // <p className="text-2xl font-semibold">{data && data.status===true ? JSON.stringify(data) : "0"}{JSON.stringify(data)}</p>
+        error ? (
+          <div className="text-sm text-red-500 rounded-lg flex gap-2 items-start">
+            <CircleAlert size={24} className="text-red-500"></CircleAlert>Gagal
+            mengambil data
+          </div>
+        ) : (
+          <p className="text-sm lg:text-2xl font-semibold">{value}</p>
+        )}
       </div>
     </Card>
   );
 };
+
 export default function Dashboard() {
+  const today = new Date();
+  const month = (today.getMonth() + 1).toString().padStart(2, "0");
+  const year = today.getFullYear();
+  const periodTahun = year.toString();
+  const periodBulan = `${year}-${month}`;
+
+  const {
+    data: dataPeruangan,
+    isLoading: isLoadingPeruangan,
+    error: errorPeruangan,
+  } = useQuery({
+    queryKey: ["permintaan_bulanan_peruangan", periodBulan],
+    queryFn: () => {
+      return fetchPermintaanBulanan(periodBulan);
+    },
+  });
+
+  const {
+    data: pemakaianBarangATK,
+    isLoading: isLoadingPemakaianBarangATK,
+    error: errorPemakaianBarangATK,
+  } = useQuery({
+    queryKey: ["permintaan_bulanan_peruangan", periodBulan],
+    queryFn: () => {
+      // untuk sekarang make ini dulu, selanjutnya make endpoint dashboard_permintaan
+      return fetchBarangPemakaianBulanan(periodTahun);
+    },
+  });
+  // dummy
+  const pemakaianBarangARK: { data: any[] } = {
+    data: [
+      {
+        tanggal: "2023-01-01",
+        jumlah_jenis_barang: "10",
+      },
+    ],
+  };
+  const pemakaianATKARK = React.useMemo(() => {
+    if (isLoadingPemakaianBarangATK) return [];
+
+    let finalRes: { date: string; atk: number; ark: number }[] = [];
+    let chartData = [
+      ...pemakaianBarangATK.data.map((item: any) => ({ ...item, type: "atk" })),
+      ...pemakaianBarangARK.data.map((item: any) => ({ ...item, type: "ark" })),
+    ];
+    const uniqueDate: string[] = [
+      ...new Set(chartData.map((item: { tanggal: string }) => item.tanggal)),
+    ];
+
+    uniqueDate.forEach((d) => {
+      const atk = chartData
+        .filter((item: any) => item.tanggal === d && item.type === "atk")
+        .reduce((acc, curr) => acc + Number(curr.jumlah_jenis_barang), 0);
+      const ark = chartData
+        .filter((item: any) => item.tanggal === d && item.type === "ark")
+        .reduce((acc, curr) => acc + Number(curr.jumlah_jenis_barang), 0);
+      finalRes.push({ date: d, atk, ark });
+    });
+
+    return finalRes;
+  }, [isLoadingPemakaianBarangATK, pemakaianBarangATK]);
+
+  const {
+    data: pemakaian,
+    isLoading: isLoadingPemakaian,
+    error: errorPemakaian,
+  } = useQuery({
+    queryKey: ["permintaan_bulanan_peruangan", periodBulan],
+    queryFn: () => {
+      return fetchPermintaanBulanan(periodBulan);
+    },
+  });
+
+  const pemakaianPeruangan = React.useMemo(() => {
+    if (isLoadingPemakaian) return [];
+    if (!pemakaian) return [];
+    const uniqueBidang: any = [
+      ...new Set(
+        pemakaian.data.map((item: { ruangan: string }) => item.ruangan)
+      ),
+    ];
+
+    return uniqueBidang.map((bidang: string) => {
+      return {
+        bidang: bidang,
+        pemakaian: pemakaian.data
+          .filter((item: any) => item.ruangan === bidang)
+          .reduce(
+            (acc: any, curr: any) => acc + Number(curr.jumlah_jenis_barang),
+            0
+          ),
+      };
+    });
+  }, [isLoadingPemakaian, pemakaian]);
+  console.log("pemakaian peruangan", pemakaianPeruangan);
   return (
     <div className="space-y-6">
-      <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4">
         {cuecard.map((data, index) => (
-          <Cuecard key={index} data={data} />
+          <Cuecard key={index} d={data} />
         ))}
       </div>
       <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle
-            className={`ml-5 text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
+            className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
           >
             Permintaan Bulan Ini
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs lg:text-base">
             Jumlah permintaan bulan ini per bidang
           </CardDescription>
         </div>
-
-        <DataTable columns={dashboardPerimntaanColumn} data={permintaan} />
+        {isLoadingPeruangan ? (
+          <LoadingSpinner size={24} className="ml-4" />
+        ) : errorPeruangan ? (
+          <div className="text-sm text-red-500 rounded-lg flex gap-2 items-start">
+            <CircleAlert size={24} className="text-red-500"></CircleAlert>Gagal
+            mengambil data
+          </div>
+        ) : (
+          <DataTable
+            columns={dashboardPerimntaanColumn}
+            data={dataPeruangan.data}
+          />
+        )}
       </Card>
-      <ChartBarDashboardAtkArk />
-      <ChartBarDashboardPerbidang />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      <ChartBarDashboardAtkArk
+        data={pemakaianATKARK}
+        loading={isLoadingPemakaianBarangATK}
+        error={errorPemakaianBarangATK}
+      />
+      <ChartBarDashboardPerbidang
+        data={pemakaianPeruangan}
+        loading={isLoadingPemakaian}
+        error={errorPemakaian}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartBarDashboardFavoriteItem />
         <Card className="space-y-4 bg-white rounded-lg p-4">
           <div className="space-y-2">
             <CardTitle
-              className={`ml-5 text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-red-500  before:border-0 before:h-full before:rounded-md`}
+              className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-red-500  before:border-0 before:h-full before:rounded-md`}
             >
               Barang Hampir Habis
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs lg:text-base">
               Jumlah permintaan bulan ini per bidang
             </CardDescription>
           </div>

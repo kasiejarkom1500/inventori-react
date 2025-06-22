@@ -1,6 +1,6 @@
-import {ColumnDef} from '@tanstack/react-table';
-import {BarangPermintaan} from '@/lib/types/barang';
-import {Badge} from '@/components/ui/badge';
+import { ColumnDef } from "@tanstack/react-table";
+import { BarangPermintaan } from "@/lib/types/barang";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectTrigger,
@@ -9,48 +9,50 @@ import {
   SelectGroup,
   SelectLabel,
   SelectItem,
-} from '@/components/ui/select';
-import {Input} from '@/components/ui/input';
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 export const barangPermintaanColumns = (
   handleDataChange: (
     id_permintaan: number,
     newJumlah: string | undefined,
     newStatus: string | undefined
+    // is_automatic_application: boolean
   ) => void,
-  newData: {id_permintaan: number; jumlah: string; status: string}[]
+  newData: { id_permintaan: number; jumlah: string; status: string }[]
 ): ColumnDef<BarangPermintaan>[] => [
   {
-    header: 'No',
+    header: "No",
     cell: (row) => row.row.index + 1,
   },
   {
-    accessorKey: 'tanggal',
-    header: 'Tanggal Permintaan',
+    accessorKey: "tanggal",
+    header: "Tanggal Permintaan",
   },
   {
-    accessorKey: 'kd_barang',
-    header: 'Kode Barang',
+    accessorKey: "kd_barang",
+    header: "Kode Barang",
   },
   {
-    accessorKey: 'nama_barang',
-    header: 'Nama Barang',
+    accessorKey: "nama_barang",
+    header: "Nama Barang",
   },
   {
-    accessorKey: 'kategori',
-    header: 'Jenis Barang',
+    accessorKey: "kategori",
+    header: "Jenis Barang",
   },
   {
-    accessorKey: 'satuan',
-    header: 'Satuan',
+    accessorKey: "satuan",
+    header: "Satuan",
   },
   {
-    accessorKey: 'stok',
-    header: 'Stok',
+    accessorKey: "stok",
+    header: "Stok",
   },
   {
-    accessorKey: 'jumlah',
-    header: 'Jumlah',
+    accessorKey: "jumlah",
+    header: "Jumlah",
     cell: (row) => {
       const currentJumlah = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
@@ -58,7 +60,7 @@ export const barangPermintaanColumns = (
       // console.log('currentJumlah', currentJumlah);
       return (
         <Input
-          type='number'
+          type="number"
           defaultValue={currentJumlah}
           onBlur={(e) =>
             handleDataChange(
@@ -72,25 +74,25 @@ export const barangPermintaanColumns = (
     },
   },
   {
-    accessorKey: 'id_ruangan',
-    header: 'Ruangan',
+    accessorKey: "id_ruangan",
+    header: "Ruangan",
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: "status",
+    header: "Status",
     cell: (row) => {
       const status = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
       )?.status;
       return (
-        <Badge variant={status as 'Pending' | 'Approved' | 'Rejected'}>
+        <Badge variant={status as "Pending" | "Approved" | "Rejected"}>
           {status}
         </Badge>
       );
     },
   },
   {
-    header: 'Pilih Status',
+    header: "Pilih Status",
     cell: (row) => {
       const currentStatus = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
@@ -107,17 +109,33 @@ export const barangPermintaanColumns = (
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder='Pilih status' />
+            <SelectValue placeholder="Pilih status" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Ubah Status</SelectLabel>
-              <SelectItem value='Approved'>Approved</SelectItem>
-              <SelectItem value='Rejected'>Rejected</SelectItem>
-              <SelectItem value='Pending'>Pending</SelectItem>
+              <SelectItem value="Approved">Approved</SelectItem>
+              <SelectItem value="Rejected">Rejected</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
+      );
+    },
+  },
+  {
+    accessorKey: "is_automatic_application",
+    header: "Pengajuan Otomatis",
+    cell: (row) => {
+      console.log(row);
+      // const status = newData.find(
+      //   (item) => item.id_permintaan === row.row.original.id_permintaan
+      // )?.status;
+      return (
+        // <Badge variant={status as "Pending" | "Approved" | "Rejected"}>
+        //   {status}
+        // </Badge>
+        <Switch />
       );
     },
   },
