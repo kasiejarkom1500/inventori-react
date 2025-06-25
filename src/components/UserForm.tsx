@@ -13,15 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { dataAdmin } from "@/lib/data/admin-dummy";
-<<<<<<< HEAD
-import { useQuery } from "@tanstack/react-query";
-import { fetchPegawai } from "@/lib/network/userService";
-import { LoadingSpinner } from "./ui/loading";
-=======
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchPegawai } from "@/lib/network/userService";
 // import { LoadingSpinner } from "./ui/loading";
->>>>>>> 0471feec3328a53db580cc3d3babdec9e24e0fa0
 
 const userSchema = z.object({
   nama: z
@@ -109,13 +103,8 @@ export default function UserForm({
     }
   }
 
-<<<<<<< HEAD
-  if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
-  if (error) return <div>An error has occurred: {error.message}</div>;
-=======
   // if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
   // if (error) return <div>An error has occurred: {error.message}</div>;
->>>>>>> 0471feec3328a53db580cc3d3babdec9e24e0fa0
 
   return (
     <Form {...form}>
