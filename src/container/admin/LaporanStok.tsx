@@ -59,7 +59,7 @@ export default function LaporanStok() {
             name="nama"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nama Barang</FormLabel>
+                <FormLabel>Nama Barang Agar Deploy</FormLabel>
                 <FormControl>
                   <Input placeholder="Nama Barang" {...field} />
                 </FormControl>
