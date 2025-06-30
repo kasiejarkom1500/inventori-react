@@ -71,7 +71,10 @@ export const adminPengajuan = [
   {
     label: " Laporan",
     icon: FileText,
-    contents: [{ title: "Laporan Pengajuan", url: "laporan-pengajuan" }],
+    contents: [
+      { title: "Laporan Pengajuan", url: "laporan-pengajuan" },
+      { title: "Kartu Kendali", url: "kartu-kendali" },
+    ],
   },
 ];
 export const user = [

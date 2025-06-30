@@ -31,7 +31,7 @@ export default function InputBarangMasuk() {
       <h1
         className={`mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
       >
-        Data Pembelian Barang
+        Data Barang Masuk
       </h1>
       <TooltipProvider>
         <Tooltip>
@@ -43,18 +43,18 @@ export default function InputBarangMasuk() {
               }}>
               <DialogTrigger>
                 <Button onClick={openDialog}>
-                  <PlusCircle /> Buat Pembelian Barang
+                  <PlusCircle /> Tambahkan Barang Masuk
                 </Button>
               </DialogTrigger>
               <DialogContent className='max-h-[80%] max-w-[90%] overflow-auto'>
                 <DialogHeader className='text-xl font-semibold'>
-                  Pembelian Barang
+                  Barang Masuk
                 </DialogHeader>
                 <PembelianForm />
               </DialogContent>
             </Dialog>
           </TooltipTrigger>
-          <TooltipContent>Buat Pembelian Barang</TooltipContent>
+          <TooltipContent>Input Barang Masuk</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <DataTable

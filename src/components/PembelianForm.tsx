@@ -322,11 +322,11 @@ export default function PembelianForm() {
               name="jumlah"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jumlah Pembelian</FormLabel>
+                  <FormLabel>Jumlah Masuk</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Jumlah Pembelian"
+                      placeholder="Jumlah Masuk"
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
