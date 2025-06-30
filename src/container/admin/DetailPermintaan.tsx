@@ -28,8 +28,9 @@ export default function DetailPermintaan({
     if (data?.data) {
       const formattedData = data.data.map((item: any) => ({
         id_permintaan: item.id_permintaan,
-        jumlah: item.jumlah,
+        jumlah_approved: item.jumlah_approved,
         status: item.status,
+        is_buat_pengajuan: item.is_buat_pengajuan == 0 ? false : true,
       }));
       // console.log('data:' ,data.data);
       // console.log('formated',formattedData);
@@ -47,37 +48,58 @@ export default function DetailPermintaan({
     );
   }
   const dataPermintaanBarang = data?.data ?? [];
+  // console.log(dataPermintaanBarang);
 
   function handleDataChange(
     id_permintaan: number,
     newJumlah: string | undefined,
-    newStatus: string | undefined
+    newStatus: string | undefined,
+    newIsBuatPengajuan: boolean | undefined
   ) {
     setNewData((prev) =>
       prev.map((item) =>
         item.id_permintaan === id_permintaan
           ? {
               ...item,
-              jumlah: newJumlah !== undefined ? newJumlah : item.jumlah,
+              jumlah_approved:
+                newJumlah !== undefined ? newJumlah : item.jumlah_approved,
               status: newStatus !== undefined ? newStatus : item.status,
+              is_buat_pengajuan:
+                newIsBuatPengajuan !== undefined
+                  ? newIsBuatPengajuan
+                  : item.is_buat_pengajuan,
             }
           : item
       )
     );
-    console.log("new data", newData);
+    console.log("new data disini", newData);
   }
   async function submitForm() {
     try {
-      const response = await base.put("/update_status", newData, {
+      const dataToSubmit = newData.map((item) => ({
+        ...item,
+        is_buat_pengajuan: item.is_buat_pengajuan ? 1 : 0,
+      }));
+
+      const response = await base.put("/update_status", dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log("response", response);
-      toast.toast({
-        title: "Berhasil",
-        description: response.data.message || "Data berhasil diproses.",
-      });
+      // console.log("response", response);
+      if (response.data.status == "Gagal") {
+        toast.toast({
+          variant: "destructive",
+          title: "Gagal",
+          description: response.data.message || "Data berhasil diproses.",
+        });
+      } else {
+        toast.toast({
+          title: "Berhasil",
+          description: response.data.message || "Data berhasil diproses.",
+        });
+      }
+
       queryClient.invalidateQueries({ queryKey: ["data-permintaan"] });
     } catch (error) {
       console.log("error", error);

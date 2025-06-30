@@ -27,8 +27,10 @@ export type BarangPermintaan = {
   kategori: string;
   satuan: string;
   jumlah: number;
+  jumlah_approved: number;
   id_ruangan: string;
   status: string;
+  is_buat_pengajuan: boolean;
 };
 
 export type BarangKarken = {

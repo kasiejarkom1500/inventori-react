@@ -17,10 +17,15 @@ export const barangPermintaanColumns = (
   handleDataChange: (
     id_permintaan: number,
     newJumlah: string | undefined,
-    newStatus: string | undefined
-    // is_automatic_application: boolean
+    newStatus: string | undefined,
+    is_buat_pengajuan: boolean | undefined
   ) => void,
-  newData: { id_permintaan: number; jumlah: string; status: string }[]
+  newData: {
+    id_permintaan: number;
+    jumlah_approved: string;
+    status: string;
+    is_buat_pengajuan: boolean;
+  }[]
 ): ColumnDef<BarangPermintaan>[] => [
   {
     header: "No",
@@ -52,12 +57,16 @@ export const barangPermintaanColumns = (
   },
   {
     accessorKey: "jumlah",
-    header: "Jumlah",
+    header: "Jumlah Permintaan",
+  },
+  {
+    accessorKey: "jumlah_approved",
+    header: "Jumlah Approved",
     cell: (row) => {
       const currentJumlah = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
-      )?.jumlah;
-      // console.log('currentJumlah', currentJumlah);
+      )?.jumlah_approved;
+      console.log('currentJumlah', currentJumlah);
       return (
         <Input
           type="number"
@@ -66,6 +75,7 @@ export const barangPermintaanColumns = (
             handleDataChange(
               row.row.original.id_permintaan,
               e.target.value,
+              undefined,
               undefined
             )
           }
@@ -104,7 +114,8 @@ export const barangPermintaanColumns = (
             handleDataChange(
               row.row.original.id_permintaan,
               undefined,
-              newStatus
+              newStatus,
+              undefined
             )
           }
         >
@@ -124,18 +135,26 @@ export const barangPermintaanColumns = (
     },
   },
   {
-    accessorKey: "is_automatic_application",
+    accessorKey: "is_buat_pengajuan",
     header: "Pengajuan Otomatis",
     cell: (row) => {
-      console.log(row);
-      // const status = newData.find(
-      //   (item) => item.id_permintaan === row.row.original.id_permintaan
-      // )?.status;
+      // Find the current is_buat_pengajuan value from newData
+      const currentIsBuatPengajuan = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      )?.is_buat_pengajuan;
+      // console.log("currentIsBuatPengajuan", currentIsBuatPengajuan);
       return (
-        // <Badge variant={status as "Pending" | "Approved" | "Rejected"}>
-        //   {status}
-        // </Badge>
-        <Switch />
+        <Switch
+          checked={currentIsBuatPengajuan} // Convert to boolean
+          onCheckedChange={(newIsBuatPengajuan) =>
+            handleDataChange(
+              row.row.original.id_permintaan,
+              undefined,
+              undefined,
+              newIsBuatPengajuan // Convert boolean to number
+            )
+          }
+        ></Switch>
       );
     },
   },
