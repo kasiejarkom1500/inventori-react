@@ -87,7 +87,7 @@ export interface Desc {
 
 export interface DataItem {
   id_permintaan: string;
-  jumlah: number;
+  jumlah_approved: number;
   satuan: string;
   nama_barang: string;
   keterangan: string;
@@ -148,7 +148,7 @@ export const Blanko = ({ data, desc }: BlankoProps) => (
               {data.indexOf(item) + 1}
             </Text>
             <Text style={[styles.tableCol, { width: "20%" }]}>
-              {item.jumlah} {item.satuan}
+              {item.jumlah_approved} {item.satuan}
             </Text>
             <Text style={[styles.tableCol, { width: "37.5%" }]}>
               {toTitleCase(item.nama_barang)}
