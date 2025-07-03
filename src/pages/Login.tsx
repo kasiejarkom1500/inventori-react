@@ -44,13 +44,6 @@ export default function Login() {
   });
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
-      // const user = await login(values.username, values.password);
-
-      // localStorage.setItem('token', response.token);
-
-      // const role = normalizeRole(response.role);
-      // const role = response.role;
-      // console.log(values);
       const { data } = await base.post("/login", values);
       console.log("datdata", data);
       localStorage.setItem("user", JSON.stringify(data.data));

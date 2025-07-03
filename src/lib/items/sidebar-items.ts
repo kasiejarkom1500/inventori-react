@@ -19,11 +19,12 @@ export const superAdmin = [
     ],
   },
   {
-    label: "Permintaan & Pengajuan",
+    label: "Transaksi",
     icon: ScrollText,
     contents: [
       // {title: 'Barang Masuk', url: 'barang-masuk'},
       // {title: 'Barang Keluar', url: 'barang-keluar'},
+      { title: "Input Barang Masuk", url: "input-barang-masuk" },
       { title: "Pengajuan Barang", url: "pengajuan-barang" },
       { title: "Permintaan Barang", url: "permintaan-barang" },
     ],
@@ -99,5 +100,12 @@ export const adminPembelian = [
       // {title: 'Data Barang ARK', url: 'data-barang-ark'},
       { title: "Input Barang Masuk", url: "input-barang-masuk" },
     ],
+  },
+];
+export const viewer = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    contents: [{ title: "Dashboard Kepala", url: "dashboard" }],
   },
 ];

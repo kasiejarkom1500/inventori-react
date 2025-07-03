@@ -3,6 +3,7 @@ import {
   adminPengajuan,
   user,
   adminPembelian,
+  viewer
 } from "@/lib/items/sidebar-items";
 import {
   Collapsible,
@@ -36,6 +37,8 @@ export default function AppSidebar({ role }: { role: string }) {
     sidebarItems = user;
   } else if (role === "admin_pembelian") {
     sidebarItems = adminPembelian;
+  } else if (role === "viewer") {
+    sidebarItems = viewer;
   }
   return (
     <Sidebar collapsible="icon">
