@@ -11,7 +11,7 @@ import {
 
 Font.register({
   family: "Times New Roman",
-  src: "/src/assets/font/times new roman.ttf",
+  src: "/assets/font/times-new-roman.ttf",
 });
 
 const styles = StyleSheet.create({
