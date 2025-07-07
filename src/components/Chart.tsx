@@ -201,7 +201,7 @@ export function ChartBarDashboardAtkArk({
                 {loading ? (
                   <LoadingSpinner size={24} className="ml-4" />
                 ) : error ? (
-                  <div className="text-sm text-red-500 rounded-lg flex gap-2 items-start">
+                  <div className="text-xs md:text-sm text-red-500 rounded-lg flex gap-2 items-start">
                     <CircleAlert
                       size={24}
                       className="text-red-500"

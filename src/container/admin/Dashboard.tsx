@@ -25,7 +25,10 @@ import {
   fetchBarangStokTersedia,
   fetchBarangTotal,
 } from "@/lib/network/barangServices";
-import { fetchPermintaanBulanan } from "@/lib/network/permintaanService";
+import {
+  fetchPermintaanBulanan,
+  fetchPermintaanBulananPending,
+} from "@/lib/network/permintaanService";
 import { fetchBarangPembelianBulanan } from "@/lib/network/pembelianService";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
@@ -78,9 +81,9 @@ export const cuecard = [
     title: "Permintaan Pending",
     color: "yellow",
     description: "aaaaaaa",
-    period: "yearly",
+    period: "monthly",
     key: "data",
-    fetcher: (period: string) => fetchBarangPemakaianBulanan(period),
+    fetcher: (period: string) => fetchPermintaanBulananPending(period),
   },
 ];
 
