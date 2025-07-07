@@ -78,7 +78,7 @@ export const cuecard = [
   },
   {
     icon: Clock,
-    title: "Permintaan Pending",
+    title: "Permintaan Diproses",
     color: "yellow",
     description: "aaaaaaa",
     period: "monthly",
