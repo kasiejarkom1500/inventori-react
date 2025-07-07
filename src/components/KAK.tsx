@@ -421,43 +421,6 @@ export const KAK = ({ data }: { data: KAKProps }) => {
         >
           RENCANA ANGGARAN BIAYA
         </Text>
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Program</Text>
-            <Text style={{ width: "60%" }}>
-              : (WA) Program Dukungan Manajemen
-            </Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Kegiatan</Text>
-            <Text style={{ width: "60%" }}>
-              : (2886) Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya
-              BPS Provinsi
-            </Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>
-              Klasifikasi Rincian Output (KRO)
-            </Text>
-            <Text style={{ width: "60%" }}>
-              : (EBA) Layanan Dukungan Manajemen Internal
-            </Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Rincian Output (RO)</Text>
-            <Text style={{ width: "60%" }}>: (994) Layanan Perkantoran</Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Komponen</Text>
-            <Text style={{ width: "60%" }}>
-              : (002) Operasional dan Pemeliharaan Kantor
-            </Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Sub Komponen</Text>
-            <Text style={{ width: "60%" }}>: (A) Tanpa Sub Komponen</Text>
-          </View>
-        </View>
 
         <View style={styles.table}>
           <View style={styles.tableRowHeader}>
