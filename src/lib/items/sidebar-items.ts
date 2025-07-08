@@ -35,6 +35,7 @@ export const superAdmin = [
     contents: [
       { title: "Laporan Pengajuan", url: "laporan-pengajuan" },
       { title: "Kartu Kendali", url: "kartu-kendali" },
+      { title: "Laporan Stok", url: "laporan-stok" },
     ],
   },
 ];

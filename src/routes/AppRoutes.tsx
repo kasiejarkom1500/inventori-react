@@ -23,6 +23,7 @@ import PengajuanBarang from "@/container/admin-pengajuan/PengajuanBarang";
 import SummaryPermintaan from "@/container/operator-ruangan/SummaryPermintaan";
 import SummaryPengajuan from "@/container/operator-ruangan/SummaryPengajuan";
 import InputBarangMasuk from "@/container/admin-pengajuan/InputBarangMasuk";
+import LaporanStok from "@/container/admin/LaporanStok";
 
 const router = createBrowserRouter(
   [
@@ -59,6 +60,7 @@ const router = createBrowserRouter(
 
                 { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
                 { path: "kartu-kendali", element: <LaporanPermintaan /> },
+                {path: "laporan-stok", element: <LaporanStok />},
               ],
             },
           ],
