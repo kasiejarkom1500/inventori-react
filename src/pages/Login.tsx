@@ -65,7 +65,7 @@ export default function Login() {
       navigate(`/${role}/dashboard`, { replace: true });
     } catch (err) {
       console.error("Login failed:", err);
-      form.setError("username", { message: "Invalid username or password" });
+      form.setError("username", { message: "Invalid username or passwords" });
     }
   };
 
