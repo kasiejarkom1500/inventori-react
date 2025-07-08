@@ -1,21 +1,25 @@
-import {ColumnDef} from '@tanstack/react-table';
-import {Barang} from '@/lib/types/barang';
+import { ColumnDef } from "@tanstack/react-table";
+import { Barang } from "@/lib/types/barang";
 
 export const barangOperatorColumns: ColumnDef<Barang>[] = [
   {
-    header: 'No',
+    header: "No",
     cell: (row) => row.row.index + 1,
   },
   {
-    accessorKey: 'kd_barang',
-    header: 'Kode Barang',
+    accessorKey: "kd_barang",
+    header: "Kode Barang",
   },
   {
-    accessorKey: 'nama_barang',
-    header: 'Nama',
+    accessorKey: "nama_barang",
+    header: "Nama",
   },
   {
-    accessorKey: 'satuan',
-    header: 'Satuan',
+    accessorKey: "satuan",
+    header: "Satuan",
+  },
+  {
+    accessorKey: "stok",
+    header: "Stok",
   },
 ];
