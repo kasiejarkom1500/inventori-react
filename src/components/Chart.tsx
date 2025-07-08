@@ -342,7 +342,7 @@ export function ChartBarDashboardPerbidang({
             Pemakaian Barang Per Bidang
           </CardTitle>
           <CardDescription className="text-xs lg:text-base">
-            Jumlah barang yang digunakan per bulan. Data yang ditampilkan adalah
+            Jumlah barang yang digunakan per tahun. Data yang ditampilkan adalah
             jumlah jenis barang yang diajukan
           </CardDescription>
         </div>
@@ -419,7 +419,6 @@ const chartConfigFavoriteItem = {
 } satisfies ChartConfig;
 
 export function ChartBarDashboardFavoriteItem() {
-  
   const [data, setData] = React.useState<
     { jenis: string; value: number; fill: string }[]
   >([]);
@@ -434,7 +433,6 @@ export function ChartBarDashboardFavoriteItem() {
         // if (!res.ok) throw new Error("Gagal fetch data");
         // const json = await res.json();
         const json = res.data;
-        console.log("json", json);
 
         if (json.status && Array.isArray(json.data)) {
           const transformedData = json.data.map((item: any) => ({
@@ -463,7 +461,7 @@ export function ChartBarDashboardFavoriteItem() {
           <CardTitle className="ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-teal-500 before:border-0 before:h-full before:rounded-md">
             Barang yang Paling Sering Diminta
           </CardTitle>
-          <CardDescription className="text-xs md:text-base">
+          <CardDescription className="text-xs lg:text-base">
             Jumlah barang yang digunakan per bulan
           </CardDescription>
         </div>

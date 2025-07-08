@@ -47,7 +47,6 @@ export function normalizeRole(role: string) {
   } else {
     return "operator-ruangan";
   }
-  
 }
 export const downloadExcel = (data: object[], fileName: string) => {
   const ws = XLSX.utils.json_to_sheet(data);
@@ -92,7 +91,7 @@ export const IndonesiaMonthToNum = (month: string) => {
   return months[month as keyof typeof months];
 };
 
-export const Months = {
+export const MONTHS = {
   "01": "Januari",
   "02": "Februari",
   "03": "Maret",

@@ -1,6 +1,12 @@
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 // import { dataDashboard } from "@/lib/data/dashboard-dummy";
-import { CircleAlert, LucideProps, Package, ScrollText } from "lucide-react";
+import {
+  CircleAlert,
+  ListFilter,
+  LucideProps,
+  Package,
+  ScrollText,
+} from "lucide-react";
 import { DashboardHampirHabis } from "@/lib/types/dashboard";
 import { DataTable } from "@/components/DashboardTable";
 import { dashboardPembelianColumn } from "@/lib/columns/dashboard-column";
@@ -13,6 +19,16 @@ import {
   fetchDetailPembelianByBulan,
   fetchPembelianByBulan,
 } from "@/lib/services/pembelianService";
+import { MONTHS } from "@/lib/utils";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export const cuecard = [
   {
@@ -32,40 +48,6 @@ export const cuecard = [
     key: "total_stok_tersedia",
     fetcher: () => fetchBarangStokTersedia(),
   },
-  // {
-  //   icon: Package,
-  //   title: "Total Stok Hampir Habis",
-  //   color: "red",
-  //   description: "aaaaaaa",
-  //   key: "data",
-  //   fetcher: () => fetchBarangStokMinimal(),
-  // },
-  // {
-  //   icon: TicketCheck,
-  //   title: "Permintaan Bulan Ini",
-  //   color: "green",
-  //   description: "aaaaaaa",
-  //   period: "monthly",
-  //   key: "data",
-  //   fetcher: (period: string) => fetchPermintaanBulanan(period),
-  // },
-  // {
-  //   icon: ScrollText,
-  //   title: "Pembelian Bulan Ini",
-  //   color: "sky",
-  //   description: "aaaaaaa",
-  //   key: "total",
-  //   fetcher: () => fetchBarangPembelianBulanan(),
-  // },
-  // {
-  //   icon: Clock,
-  //   title: "Permintaan Pending",
-  //   color: "yellow",
-  //   description: "aaaaaaa",
-  //   period: "monthly",
-  //   key: "data",
-  //   fetcher: (period: string) => fetchPermintaanBulananPending(period),
-  // },
 ];
 
 export const barangHampirHabis: DashboardHampirHabis[] = [
@@ -170,12 +152,9 @@ export default function DashboardOperator() {
   const month = (today.getMonth() + 1).toString().padStart(2, "0");
   const year = today.getFullYear();
   const user = getUser();
-  // console.log(user);
-  // const periodTahun = year.toString();
-  // const periodBulan = `${year}-${month}`;
-  // const [periodTahun, setPeriodTahun] = useState(year.toString());
-  // const [periodBulan, setPeriodBulan] = useState(`${year}-${month}`);
-  const [periodBulan, _1] = useState(`${year}-${month}`);
+  const [periodTahun, setPeriodTahun] = useState(year.toString());
+  const [periodBulanUi, setPeriodBulanUi] = useState(`${month}`);
+  const [periodBulan, setPeriodBulan] = useState(`${periodTahun}-${month}`);
 
   const {
     data: dataPembelianDetail,
@@ -183,13 +162,19 @@ export default function DashboardOperator() {
     error: errorPembelianDetail,
   } = useQuery({
     queryKey: ["permintaan_bulanan_peruangan", periodBulan, user],
-    queryFn: () => {
+    queryFn: async () => {
       return fetchDetailPembelianByBulan(periodBulan).then((res) => {
         return res;
       });
     },
   });
-  console.log(dataPembelianDetail);
+  const years = React.useMemo(() => {
+    let x = [];
+    for (let i = year; i >= year - 10; i--) {
+      x.push(i);
+    }
+    return x;
+  }, []);
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4">
@@ -197,7 +182,8 @@ export default function DashboardOperator() {
           <Cuecard key={index} d={data} />
         ))}
       </div>
-      {/* <Card className="space-y-4 bg-white rounded-lg p-4">
+
+      <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle
             className={`text-base  font-medium flex gap-2 items-center`}
@@ -206,36 +192,80 @@ export default function DashboardOperator() {
             Filter periode
           </CardTitle>
         </div>
-        <CardContent className="grid">
-          <Select
-            value={periodBulan}
-            onValueChange={(value) => setPeriodBulan(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Pilih Periode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="2023-01">Januari 2023</SelectItem>
-                <SelectItem value="2023-02">Februari 2023</SelectItem>
-                <SelectItem value="2023-03">Maret 2023</SelectItem>
-                <SelectItem value="2023-04">April 2023</SelectItem>
-                <SelectItem value="2023-05">Mei 2023</SelectItem>
-                <SelectItem value="2023-06">Juni 2023</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card> */}
+        <div className="grid grid-cols-2 gap-4 w-fit">
+          <div className="w-full lg:w-48">
+            <Label>Tahun</Label>
+            <Select
+              value={periodTahun}
+              onValueChange={(value) => {
+                setPeriodTahun(value);
+                setPeriodBulan(`${value}-${periodBulanUi}`);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder="Pilih Periode"
+                  defaultValue={periodTahun}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full lg:w-48">
+            <Label>Bulan</Label>
+            <Select
+              value={periodBulanUi}
+              onValueChange={(value) => {
+                setPeriodBulan(`${periodTahun}-${value}`);
+                setPeriodBulanUi(value);
+              }}
+              defaultValue={MONTHS[month as keyof typeof MONTHS]}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder="Pilih Periode"
+                  defaultValue={MONTHS[month as keyof typeof MONTHS]}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Object.keys(MONTHS)
+                    .sort((a, b) => Number(a) - Number(b))
+                    .map((m, i) => (
+                      <SelectItem key={i} value={m}>
+                        {MONTHS[m as keyof typeof MONTHS]}
+                      </SelectItem>
+                    ))}
+                  {/* <SelectItem value="2023-01">Januari 2023</SelectItem>
+                  <SelectItem value="2023-02">Februari 2023</SelectItem>
+                  <SelectItem value="2023-03">Maret 2023</SelectItem>
+                  <SelectItem value="2023-04">April 2023</SelectItem>
+                  <SelectItem value="2023-05">Mei 2023</SelectItem>
+                  <SelectItem value="2023-06">Juni 2023</SelectItem> */}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </Card>
       <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle
             className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
           >
-            Barang Masuk Bulan ini
+            Barang Masuk Bulan
           </CardTitle>
           <CardDescription className="text-xs lg:text-base">
-            Jumlah barang yang masuk bulan ini
+            Jumlah barang yang masuk bulan{" "}
+            {MONTHS[periodBulanUi as keyof typeof MONTHS] + " " + periodTahun}{" "}
           </CardDescription>
         </div>
         {isLoadingPembelianDetail ? (

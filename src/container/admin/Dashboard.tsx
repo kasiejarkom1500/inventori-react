@@ -1,9 +1,4 @@
-import {
-  Card,
-  // CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 // import { dataDashboard } from "@/lib/data/dashboard-dummy";
 import {
   ChartBarDashboardAtkArk,
@@ -13,6 +8,7 @@ import {
 import {
   CircleAlert,
   Clock,
+  ListFilter,
   // ListFilter,
   LucideProps,
   Package,
@@ -26,6 +22,7 @@ import {
 } from "@/lib/columns/dashboard-column";
 import {
   fetchBarangPemakaianBulanan,
+  fetchBarangPemakaianRuangan,
   fetchBarangStokMinimal,
   fetchBarangStokTersedia,
   fetchBarangTotal,
@@ -38,6 +35,16 @@ import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
 import React, { useState } from "react";
 import { fetchPembelianByBulan } from "@/lib/services/pembelianService";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { MONTHS } from "@/lib/utils";
 
 export const cuecard = [
   {
@@ -92,33 +99,6 @@ export const cuecard = [
     fetcher: (period: string) => fetchPermintaanBulananPending(period),
   },
 ];
-
-// export const barangHampirHabis: DashboardHampirHabis[] = [
-//   {
-//     id: "1",
-//     barang: "Buku",
-//     sisa_stok: "10",
-//     stok_minimum: "5",
-//   },
-//   {
-//     id: "2",
-//     barang: "Pensil",
-//     sisa_stok: "5",
-//     stok_minimum: "3",
-//   },
-//   {
-//     id: "3",
-//     barang: "Tinta Printer",
-//     sisa_stok: "5",
-//     stok_minimum: "3",
-//   },
-//   {
-//     id: "4",
-//     barang: "Kertas A4",
-//     sisa_stok: "5",
-//     stok_minimum: "3",
-//   },
-// ];
 
 export const Cuecard = ({
   d,
@@ -194,8 +174,9 @@ export default function Dashboard() {
   const today = new Date();
   const month = (today.getMonth() + 1).toString().padStart(2, "0");
   const year = today.getFullYear();
-  const [periodTahun, _] = useState(year.toString());
-  const [periodBulan, _1] = useState(`${year}-${month}`);
+  const [periodTahun, setPeriodTahun] = useState(year.toString());
+  const [periodBulanUi, setPeriodBulanUi] = useState(`${month}`);
+  const [periodBulan, setPeriodBulan] = useState(`${periodTahun}-${month}`);
 
   const {
     data: barangHampirHabisData,
@@ -222,7 +203,7 @@ export default function Dashboard() {
     isLoading: isLoadingPemakaianBarangATK,
     error: errorPemakaianBarangATK,
   } = useQuery({
-    queryKey: ["permintaan_bulanan_peruangan", periodBulan],
+    queryKey: ["pemakaian_barang_atk", periodTahun],
     queryFn: () => {
       // untuk sekarang make ini dulu, selanjutnya make endpoint dashboard_permintaan
       return fetchBarangPemakaianBulanan(periodTahun);
@@ -233,34 +214,38 @@ export default function Dashboard() {
   const pemakaianBarangARK: { data: any[] } = {
     data: [
       {
-        tanggal: "2023-01-01",
-        jumlah_jenis_barang: "10",
+        bulan_tahun: "2024-01",
+        total_pemakaian: "10",
       },
     ],
   };
   const pemakaianATKARK = React.useMemo(() => {
     if (isLoadingPemakaianBarangATK) return [];
-
     let finalRes: { date: string; atk: number; ark: number }[] = [];
     let chartData = [
       ...pemakaianBarangATK.data.map((item: any) => ({ ...item, type: "atk" })),
       ...pemakaianBarangARK.data.map((item: any) => ({ ...item, type: "ark" })),
     ];
-    const uniqueDate: string[] = [
-      ...new Set(chartData.map((item: { tanggal: string }) => item.tanggal)),
+    const uniqueMonth: string[] = [
+      ...new Set(
+        chartData.map((item: { bulan_tahun: string }) => item.bulan_tahun)
+      ),
     ];
-
-    uniqueDate.forEach((d) => {
+    uniqueMonth.forEach((d) => {
       const atk = chartData
-        .filter((item: any) => item.tanggal === d && item.type === "atk")
-        .reduce((acc, curr) => acc + Number(curr.jumlah_jenis_barang), 0);
+        .filter((item: any) => item.bulan_tahun === d && item.type === "atk")
+        .reduce((acc, curr) => acc + Number(curr.total_pemakaian), 0);
       const ark = chartData
-        .filter((item: any) => item.tanggal === d && item.type === "ark")
-        .reduce((acc, curr) => acc + Number(curr.jumlah_jenis_barang), 0);
+        .filter((item: any) => item.bulan_tahun === d && item.type === "ark")
+        .reduce((acc, curr) => acc + Number(curr.total_pemakaian), 0);
       finalRes.push({ date: d, atk, ark });
     });
 
-    return finalRes;
+    return finalRes.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA.getTime() - dateB.getTime();
+    });
   }, [isLoadingPemakaianBarangATK, pemakaianBarangATK]);
 
   const {
@@ -268,9 +253,9 @@ export default function Dashboard() {
     isLoading: isLoadingPemakaian,
     error: errorPemakaian,
   } = useQuery({
-    queryKey: ["permintaan_bulanan_peruangan", periodBulan],
+    queryKey: ["pemakaian_bulanan_peruangan", periodTahun],
     queryFn: () => {
-      return fetchPermintaanBulanan(periodBulan);
+      return fetchBarangPemakaianRuangan(periodTahun);
     },
   });
 
@@ -289,13 +274,21 @@ export default function Dashboard() {
         pemakaian: pemakaian.data
           .filter((item: any) => item.ruangan === bidang)
           .reduce(
-            (acc: any, curr: any) => acc + Number(curr.jumlah_jenis_barang),
+            (acc: any, curr: any) => acc + Number(curr.total_pemakaian),
             0
           ),
       };
     });
   }, [isLoadingPemakaian, pemakaian]);
-  console.log("pemakaian peruangan", pemakaianPeruangan);
+
+  const years = React.useMemo(() => {
+    let x = [];
+    for (let i = year; i >= year - 10; i--) {
+      x.push(i);
+    }
+    return x;
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4">
@@ -303,7 +296,7 @@ export default function Dashboard() {
           <Cuecard key={index} d={data} />
         ))}
       </div>
-      {/* <Card className="space-y-4 bg-white rounded-lg p-4">
+      <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle
             className={`text-base  font-medium flex gap-2 items-center`}
@@ -312,36 +305,81 @@ export default function Dashboard() {
             Filter periode
           </CardTitle>
         </div>
-        <CardContent className="grid">
-          <Select
-            value={periodBulan}
-            onValueChange={(value) => setPeriodBulan(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Pilih Periode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="2023-01">Januari 2023</SelectItem>
-                <SelectItem value="2023-02">Februari 2023</SelectItem>
-                <SelectItem value="2023-03">Maret 2023</SelectItem>
-                <SelectItem value="2023-04">April 2023</SelectItem>
-                <SelectItem value="2023-05">Mei 2023</SelectItem>
-                <SelectItem value="2023-06">Juni 2023</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card> */}
+        <div className="grid grid-cols-2 gap-4 w-fit">
+          <div className="w-full lg:w-48">
+            <Label>Tahun</Label>
+            <Select
+              value={periodTahun}
+              onValueChange={(value) => {
+                setPeriodTahun(value);
+                setPeriodBulan(`${value}-${periodBulanUi}`);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder="Pilih Periode"
+                  defaultValue={periodTahun}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full lg:w-48">
+            <Label>Bulan</Label>
+            <Select
+              value={periodBulanUi}
+              onValueChange={(value) => {
+                setPeriodBulan(`${periodTahun}-${value}`);
+                setPeriodBulanUi(value);
+              }}
+              defaultValue={MONTHS[month as keyof typeof MONTHS]}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder="Pilih Periode"
+                  defaultValue={MONTHS[month as keyof typeof MONTHS]}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Object.keys(MONTHS)
+                    .sort((a, b) => Number(a) - Number(b))
+                    .map((m, i) => (
+                      <SelectItem key={i} value={m}>
+                        {MONTHS[m as keyof typeof MONTHS]}
+                      </SelectItem>
+                    ))}
+                  {/* <SelectItem value="2023-01">Januari 2023</SelectItem>
+                  <SelectItem value="2023-02">Februari 2023</SelectItem>
+                  <SelectItem value="2023-03">Maret 2023</SelectItem>
+                  <SelectItem value="2023-04">April 2023</SelectItem>
+                  <SelectItem value="2023-05">Mei 2023</SelectItem>
+                  <SelectItem value="2023-06">Juni 2023</SelectItem> */}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </Card>
       <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle
             className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
           >
-            Permintaan Bulan Ini
+            Permintaan Bulanan
           </CardTitle>
           <CardDescription className="text-xs lg:text-base">
-            Jumlah permintaan bulan ini per bidang
+            Jumlah permintaan bulan{" "}
+            {MONTHS[periodBulanUi as keyof typeof MONTHS] + " " + periodTahun}{" "}
+            per bidang
           </CardDescription>
         </div>
         {isLoadingPeruangan ? (
@@ -377,11 +415,8 @@ export default function Dashboard() {
             <CardTitle
               className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-red-500  before:border-0 before:h-full before:rounded-md`}
             >
-              Barang Hampir Habis
+              Barang Hampir Habis{" "}
             </CardTitle>
-            <CardDescription className="text-xs lg:text-base">
-              Jumlah permintaan bulan ini per bidang
-            </CardDescription>
           </div>
 
           {isLoadingHampirHabis ? (

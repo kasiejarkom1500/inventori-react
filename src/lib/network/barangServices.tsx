@@ -39,5 +39,6 @@ export const fetchBarangPemakaianBulanan = async (periodeTahun: string) => {
   const response = await base.get(
     `/total_pemakaian_bulanan/${periodeTahun}/ATK`
   );
+  console.log("total pemakaian bulanan", response.data);
   return response.data;
 };
