@@ -63,6 +63,7 @@ export type BarangPengajuan = {
   harga_satuan: string;
   total_harga: string;
   temp: string;
+  kd_subkategori: string;
 };
 
 export type SummaryPermintaan = {

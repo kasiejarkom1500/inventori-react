@@ -30,3 +30,10 @@ export async function fetchDataKarken(){
   console.log("karken",response.data);
   return response.data;
 }
+
+export async function fetchSubkategori(){
+  const response = await base.get('/get_subkategori');
+  console.log("subkategori",response.data);
+  return response.data;
+}
+

@@ -1,9 +1,7 @@
-// import { laporanPermintaanColumns } from "@/lib/columns/laporan-permintaan-column";
-// import { dataBarangPermintaan } from "@/lib/data/barang";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
+import {Button} from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -11,118 +9,122 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-// import DataTable from "@/components/DataTable";
+} from '@/components/ui/form';
+import {format} from 'date-fns';
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
+import {CalendarIcon, Printer} from 'lucide-react';
+import {Calendar} from '@/components/ui/calendar';
+import {Card} from '@/components/ui/card';
+import DataTable from '@/components/DataTable';
+// import {generateKAK} from '@/lib/services/pengajuanService';
+import {useState} from 'react';
+import {generateBASO} from '@/lib/services/pengajuanService';
+import { Barang } from '@/lib/types/barang';
+import { BASOProps } from '@/components/BASO';
+import { fetchAllBarang } from '@/lib/services/fetch';
+import { barangBASOColumns } from '@/lib/columns/barang-baso-column';
 
 const laporanSchema = z.object({
-  nama: z.string(),
-  jenis: z.string(),
-  ruangan: z.string(),
+  tgl_cetak: z.date({
+    required_error: 'Tanggal Mulai tidak boleh kosong.',
+  }),
 });
 
+
+
 export default function LaporanStok() {
+  const [dataTable, setDataTable] = useState<BASOProps>({ rows: [] });
+
   const form = useForm<z.infer<typeof laporanSchema>>({
     resolver: zodResolver(laporanSchema),
     defaultValues: {
-      nama: "",
-      jenis: "",
-      ruangan: "",
+      tgl_cetak: new Date()
     },
   });
 
-  function onSubmit(values: z.infer<typeof laporanSchema>) {
-    console.log(values);
+  async function onSubmit() {
+    const responseTable = await fetchAllBarang();
+    console.log('responseTable', responseTable);
+    //filter data where stok is not 0
+    const filteredData = responseTable.data.filter((item: Barang) => item.stok != 0);
+    console.log('filteredData', filteredData);
+    //map data to BASOProps
+    const dataForTable: BASOProps = {
+      rows: filteredData.map((item: Barang) => ({
+        nama_barang: item.nama_barang,
+        satuan: item.satuan,
+        total_persediaan: item.stok,
+        harga_satuan: item.harga_satuan
+      })),
+    };
+    setDataTable(dataForTable);
   }
+  // console.log('data for table', dataForTable);
+
+  function printBASO() {
+    // const dataBASO = {
+    //   dataBASO: dataTable
+    // } ; // Bungkus data ke dalam objek
+    // console.log('data for KAK', dataKAK);
+    generateBASO(dataTable);
+  }
+
   return (
-    <Card className="p-6">
+    <Card className='p-6'>
       <h1
         className={`mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
       >
-        Laporan Pengajuan Barang
+        Berita Acara Stok Opname (BASO) Barang
       </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className=" flex justify-center space-x-8 items-end w-full mb-4"
+          className=' flex justify-center space-x-8 items-end w-full mb-4'
         >
           <FormField
             control={form.control}
-            name="nama"
-            render={({ field }) => (
+            name='tgl_cetak'
+            render={({field}) => (
               <FormItem>
-                <FormLabel>Nama Barang Agar Deploy</FormLabel>
+                <FormLabel>Tanggal Cetak</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nama Barang" {...field} />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={'outline'}
+                        className='flex justify-start font-normal'
+                      >
+                        <CalendarIcon />
+                        {field.value ? (
+                          format(field.value, 'yyyy-MM-dd')
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className='w-auto p-0'>
+                      <Calendar
+                        mode='single'
+                        selected={field.value}
+                        onSelect={(date) => field.onChange(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="jenis"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Jenis Barang</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Jenis Barang" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="ATK">ATK</SelectItem>
-                    <SelectItem value="ARK">ARK</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ruangan"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ruangan</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Ruangan" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
+          <div className='flex gap-2'>
+            <Button type='submit'>Submit</Button>
+            <Button onClick={printBASO} className='bg-green-500'>
+              <Printer />
+            </Button>
+          </div>
         </form>
       </Form>
-      {/* <DataTable
-        columns={laporanPermintaanColumns}
-        data={dataBarangPermintaan}
-      /> */}
+      <DataTable columns={barangBASOColumns} data={dataTable.rows} column_name='nama_barang'/>
     </Card>
   );
 }
