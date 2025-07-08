@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
 export interface ListBarang {
   id_pengajuan: string;
   kd_barang: string;
+  kd_subkategori: string;
   tanggal: string;
   harga_pengajuan: number;
   status: string;
