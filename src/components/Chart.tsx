@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/chart";
 import { CircleAlert } from "lucide-react";
 import { LoadingSpinner } from "./ui/loading";
+import { base } from "@/lib/network/base";
 
 export const description = "An interactive bar chart";
 
@@ -401,32 +402,16 @@ export function ChartBarDashboardPerbidang({
   );
 }
 
-const chartDataFavoriteItem = [
-  { jenis: "Pensil", value: 275, fill: "var(--color-Pensil)" },
-  { jenis: "Kertas_A4", value: 200, fill: "var(--color-Kertas_A4)" },
-  { jenis: "Map", value: 187, fill: "var(--color-Map)" },
-  { jenis: "Penggaris", value: 173, fill: "var(--color-Penggaris)" },
-];
+// const chartDataFavoriteItem = [
+//   { jenis: "Pensil", value: 275, fill: "var(--color-Pensil)" },
+//   { jenis: "Kertas_A4", value: 200, fill: "var(--color-Kertas_A4)" },
+//   { jenis: "Map", value: 187, fill: "var(--color-Map)" },
+//   { jenis: "Penggaris", value: 173, fill: "var(--color-Penggaris)" },
+// ];
 
 const chartConfigFavoriteItem = {
   value: {
     label: "Pemakaian Barang",
-  },
-  Pensil: {
-    label: "Pensil",
-    color: "var(--chart-1)",
-  },
-  Kertas_A4: {
-    label: "Kertas_A4",
-    color: "var(--chart-2)",
-  },
-  Map: {
-    label: "Map",
-    color: "var(--chart-3)",
-  },
-  Penggaris: {
-    label: "Penggaris",
-    color: "var(--chart-4)",
   },
   label: {
     color: "#ffffff",
@@ -434,13 +419,48 @@ const chartConfigFavoriteItem = {
 } satisfies ChartConfig;
 
 export function ChartBarDashboardFavoriteItem() {
+  
+  const [data, setData] = React.useState<
+    { jenis: string; value: number; fill: string }[]
+  >([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  React.useEffect(() => {
+    const year = new Date().getFullYear();
+    const fetchData = async () => {
+      try {
+        const res = await base.get(`/barang_terbanyak/${year}`);
+        // if (!res.ok) throw new Error("Gagal fetch data");
+        // const json = await res.json();
+        const json = res.data;
+        console.log("json", json);
+
+        if (json.status && Array.isArray(json.data)) {
+          const transformedData = json.data.map((item: any) => ({
+            jenis: item.nama_barang.replaceAll(" ", "_"),
+            value: parseInt(item.total_jumlah, 10),
+            fill: `var(--color-${item.nama_barang.replaceAll(" ", "_")})`,
+          }));
+          setData(transformedData);
+        } else {
+          throw new Error("Format data tidak valid");
+        }
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Card className="py-0">
       <CardHeader className="flex flex-col items-stretch border-b px-2 py-6 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-2 pt-4 pb-3 sm:!py-0">
-          <CardTitle
-            className={`ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-teal-500  before:border-0 before:h-full before:rounded-md`}
-          >
+          <CardTitle className="ml-5 text-base lg:text-xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-teal-500 before:border-0 before:h-full before:rounded-md">
             Barang yang Paling Sering Diminta
           </CardTitle>
           <CardDescription className="text-xs md:text-base">
@@ -449,55 +469,60 @@ export function ChartBarDashboardFavoriteItem() {
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
-        <ChartContainer config={chartConfigFavoriteItem}>
-          <BarChart
-            accessibilityLayer
-            data={chartDataFavoriteItem}
-            layout="vertical"
-            margin={{
-              right: 24,
-            }}
-          >
-            <CartesianGrid horizontal={false} />
-            <YAxis
-              dataKey="jenis"
-              type="category"
-              tickLine={false}
-              tickMargin={2}
-              axisLine={false}
-              tickSize={6}
-              tickFormatter={(value) => value.slice(0, 3)}
-
-              // hide
-            />
-            <XAxis dataKey="value" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            <Bar
-              dataKey="value"
+        {loading ? (
+          <LoadingSpinner size={24} className="ml-4" />
+        ) : error ? (
+          <div className="text-sm text-red-500 rounded-lg flex gap-2 items-start">
+            <CircleAlert size={24} className="text-red-500" />
+            Gagal mengambil data
+          </div>
+        ) : (
+          <ChartContainer config={chartConfigFavoriteItem}>
+            <BarChart
+              accessibilityLayer
+              data={data}
               layout="vertical"
-              fill="var(--color-value)"
-              radius={4}
+              margin={{ right: 24 }}
             >
-              <LabelList
+              <CartesianGrid horizontal={false} />
+              <YAxis
                 dataKey="jenis"
-                position="insideLeft"
-                offset={8}
-                className="fill-(--color-label)"
-                fontSize={12}
+                type="category"
+                tickLine={false}
+                tickMargin={2}
+                axisLine={false}
+                tickFormatter={(value) => value.replace(/_/g, " ").slice(0, 10)}
               />
-              <LabelList
+              <XAxis dataKey="value" type="number" hide />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="line" />}
+              />
+              <Bar
                 dataKey="value"
-                position="right"
-                offset={8}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+                layout="vertical"
+                fill="var(--color-value)"
+                radius={4}
+              >
+                <LabelList
+                  dataKey="jenis"
+                  position="insideLeft"
+                  offset={8}
+                  className="fill-[--color-label]"
+                  fontSize={12}
+                  formatter={(value: string) => value.replace(/_/g, " ")}
+                />
+                <LabelList
+                  dataKey="value"
+                  position="right"
+                  offset={8}
+                  className="fill-foreground"
+                  fontSize={12}
+                />
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );

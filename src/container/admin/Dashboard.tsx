@@ -19,7 +19,6 @@ import {
   ScrollText,
   TicketCheck,
 } from "lucide-react";
-import { DashboardHampirHabis } from "@/lib/types/dashboard";
 import { DataTable } from "@/components/DashboardTable";
 import {
   dashboardHampirHabisColumn,
@@ -35,10 +34,10 @@ import {
   fetchPermintaanBulanan,
   fetchPermintaanBulananPending,
 } from "@/lib/network/permintaanService";
-import { fetchBarangPembelianBulanan } from "@/lib/network/pembelianService";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
 import React, { useState } from "react";
+import { fetchPembelianByBulan } from "@/lib/services/pembelianService";
 
 export const cuecard = [
   {
@@ -79,8 +78,9 @@ export const cuecard = [
     title: "Pembelian Bulan Ini",
     color: "sky",
     description: "aaaaaaa",
-    key: "total",
-    fetcher: () => fetchBarangPembelianBulanan(),
+    period: "monthly",
+    key: "total_pembelian",
+    fetcher: (period: string) => fetchPembelianByBulan(period),
   },
   {
     icon: Clock,
@@ -93,32 +93,32 @@ export const cuecard = [
   },
 ];
 
-export const barangHampirHabis: DashboardHampirHabis[] = [
-  {
-    id: "1",
-    barang: "Buku",
-    sisa_stok: "10",
-    stok_minimum: "5",
-  },
-  {
-    id: "2",
-    barang: "Pensil",
-    sisa_stok: "5",
-    stok_minimum: "3",
-  },
-  {
-    id: "3",
-    barang: "Tinta Printer",
-    sisa_stok: "5",
-    stok_minimum: "3",
-  },
-  {
-    id: "4",
-    barang: "Kertas A4",
-    sisa_stok: "5",
-    stok_minimum: "3",
-  },
-];
+// export const barangHampirHabis: DashboardHampirHabis[] = [
+//   {
+//     id: "1",
+//     barang: "Buku",
+//     sisa_stok: "10",
+//     stok_minimum: "5",
+//   },
+//   {
+//     id: "2",
+//     barang: "Pensil",
+//     sisa_stok: "5",
+//     stok_minimum: "3",
+//   },
+//   {
+//     id: "3",
+//     barang: "Tinta Printer",
+//     sisa_stok: "5",
+//     stok_minimum: "3",
+//   },
+//   {
+//     id: "4",
+//     barang: "Kertas A4",
+//     sisa_stok: "5",
+//     stok_minimum: "3",
+//   },
+// ];
 
 export const Cuecard = ({
   d,
@@ -196,6 +196,15 @@ export default function Dashboard() {
   const year = today.getFullYear();
   const [periodTahun, _] = useState(year.toString());
   const [periodBulan, _1] = useState(`${year}-${month}`);
+
+  const {
+    data: barangHampirHabisData,
+    isLoading: isLoadingHampirHabis,
+    error: errorHampirHabis,
+  } = useQuery({
+    queryKey: ["barang_hampir_habis"],
+    queryFn: fetchBarangStokMinimal,
+  });
 
   const {
     data: dataPeruangan,
@@ -375,10 +384,26 @@ export default function Dashboard() {
             </CardDescription>
           </div>
 
-          <DataTable
-            columns={dashboardHampirHabisColumn}
-            data={barangHampirHabis}
-          />
+          {isLoadingHampirHabis ? (
+            <LoadingSpinner size={24} className="ml-4" />
+          ) : errorHampirHabis ? (
+            <div className="text-sm text-red-500 rounded-lg flex gap-2 items-start">
+              <CircleAlert size={24} className="text-red-500" />
+              Gagal mengambil data
+            </div>
+          ) : (
+            <DataTable
+              columns={dashboardHampirHabisColumn}
+              data={
+                barangHampirHabisData?.data.map((item: any) => ({
+                  id: item.id_barang,
+                  barang: item.nama_barang,
+                  sisa_stok: item.stok,
+                  stok_minimum: item.stok_minimum, // perhatikan key dengan spasi
+                })) ?? []
+              }
+            />
+          )}
         </Card>
       </div>
     </div>
