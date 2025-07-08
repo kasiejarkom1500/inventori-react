@@ -40,9 +40,14 @@ export function normalizeRole(role: string) {
     return "admin-pembelian";
   } else if (role === "viewer") {
     return "viewer";
+  } else if (role === "admin_pengadaan") {
+    return "admin-pengadaan";
+  } else if (role === "admin_gudang") {
+    return "admin-gudang";
   } else {
     return "operator-ruangan";
   }
+  
 }
 export const downloadExcel = (data: object[], fileName: string) => {
   const ws = XLSX.utils.json_to_sheet(data);

@@ -60,7 +60,7 @@ const router = createBrowserRouter(
 
                 { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
                 { path: "kartu-kendali", element: <LaporanPermintaan /> },
-                {path: "laporan-stok", element: <LaporanStok />},
+                { path: "laporan-stok", element: <LaporanStok /> },
               ],
             },
           ],
@@ -97,12 +97,7 @@ const router = createBrowserRouter(
                 { path: "data-barang-atk", element: <DataBarangATKOp /> },
                 { path: "data-barang-ark", element: <DataBarangARKOp /> },
                 { path: "permintaan-barang", element: <SummaryPermintaan /> },
-                {
-                  path: "permintaan-barang/detail",
-                  element: <h1>detail 1</h1>,
-                },
                 { path: "pengajuan-barang", element: <SummaryPengajuan /> },
-                { path: "pengajuan-barang/detail", element: <h1>detail 2</h1> },
               ],
             },
           ],
@@ -130,8 +125,45 @@ const router = createBrowserRouter(
             {
               path: "",
               element: <LayoutDashboard />,
+              children: [{ path: "dashboard", element: <Dashboard /> }],
+            },
+          ],
+        },
+        {
+          path: "admin-pengadaan",
+          element: <RoleAuth requiredRole="admin_pengadaan" />,
+          children: [
+            {
+              path: "",
+              element: <LayoutDashboard />,
               children: [
                 { path: "dashboard", element: <Dashboard /> },
+                { path: "data-barang-atk", element: <DataBarangATKView /> },
+                { path: "data-barang-ark", element: <DataBarangARKView /> },
+                { path: "pengajuan-barang", element: <PengajuanBarang /> },
+                { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
+              ],
+            },
+          ],
+        },
+        {
+          path: "admin-gudang",
+          element: <RoleAuth requiredRole="admin_gudang" />,
+          children: [
+            {
+              path: "",
+              element: <LayoutDashboard />,
+              children: [
+                { path: "dashboard", element: <Dashboard /> },
+                { path: "data-barang-atk", element: <DataBarangATK /> },
+                { path: "data-barang-ark", element: <DataBarangARK /> },
+
+                { path: "permintaan-barang", element: <PermintaanBarang /> },
+                { path: "input-barang-masuk", element: <InputBarangMasuk /> },
+
+
+                { path: "kartu-kendali", element: <LaporanPermintaan /> },
+                { path: "laporan-stok", element: <LaporanStok /> },
               ],
             },
           ],
