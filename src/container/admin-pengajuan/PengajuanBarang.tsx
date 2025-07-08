@@ -17,7 +17,7 @@ export default function PengajuanBarang() {
   
 
   const dataSummaryPengajuan = data?.data ?? [];
-  console.log(dataSummaryPengajuan);
+  // console.log(dataSummaryPengajuan);
 
   return (
     <Card className='p-6'>
