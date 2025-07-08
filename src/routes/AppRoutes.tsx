@@ -23,6 +23,8 @@ import PengajuanBarang from "@/container/admin-pengajuan/PengajuanBarang";
 import SummaryPermintaan from "@/container/operator-ruangan/SummaryPermintaan";
 import SummaryPengajuan from "@/container/operator-ruangan/SummaryPengajuan";
 import InputBarangMasuk from "@/container/admin-pengajuan/InputBarangMasuk";
+import DashboardOperator from "@/container/admin/DashboardOperator";
+import DashboardPembelian from "@/container/admin/DashboardPembelian";
 
 const router = createBrowserRouter(
   [
@@ -91,7 +93,7 @@ const router = createBrowserRouter(
               path: "",
               element: <LayoutDashboard />,
               children: [
-                { path: "dashboard", element: <Dashboard /> },
+                { path: "dashboard", element: <DashboardOperator /> },
                 { path: "data-barang-atk", element: <DataBarangATKOp /> },
                 { path: "data-barang-ark", element: <DataBarangARKOp /> },
                 { path: "permintaan-barang", element: <SummaryPermintaan /> },
@@ -113,7 +115,7 @@ const router = createBrowserRouter(
               path: "",
               element: <LayoutDashboard />,
               children: [
-                { path: "dashboard", element: <Dashboard /> },
+                { path: "dashboard", element: <DashboardPembelian /> },
                 { path: "data-barang-atk", element: <DataBarangATKView /> },
                 { path: "data-barang-ark", element: <DataBarangARKView /> },
                 { path: "input-barang-masuk", element: <InputBarangMasuk /> },
@@ -128,9 +130,7 @@ const router = createBrowserRouter(
             {
               path: "",
               element: <LayoutDashboard />,
-              children: [
-                { path: "dashboard", element: <Dashboard /> },
-              ],
+              children: [{ path: "dashboard", element: <Dashboard /> }],
             },
           ],
         },

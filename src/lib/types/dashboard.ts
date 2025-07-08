@@ -15,3 +15,10 @@ export interface DashboardHampirHabis {
   sisa_stok: string;
   stok_minimum: string;
 }
+
+export interface DashboardPembelian {
+  tgl_masuk: string;
+  jumlah_jenis: string;
+  total_barang: string;
+  total_harga: string;
+}

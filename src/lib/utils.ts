@@ -50,3 +50,54 @@ export const downloadExcel = (data: object[], fileName: string) => {
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
   XLSX.writeFile(wb, fileName + ".xlsx");
 };
+
+export const numToIndonesiaMonth = (num: string) => {
+  const months = {
+    "01": "Januari",
+    "02": "Februari",
+    "03": "Maret",
+    "04": "April",
+    "05": "Mei",
+    "06": "Juni",
+    "07": "Juli",
+    "08": "Agustus",
+    "09": "September",
+    "10": "Oktober",
+    "11": "November",
+    "12": "Desember",
+  };
+  return months[num as keyof typeof months];
+};
+
+export const IndonesiaMonthToNum = (month: string) => {
+  const months = {
+    Januari: "01",
+    Februari: "02",
+    Maret: "03",
+    April: "04",
+    Mei: "05",
+    Juni: "06",
+    Juli: "07",
+    Agustus: "08",
+    September: "09",
+    Oktober: "10",
+    November: "11",
+    Desember: "12",
+  };
+  return months[month as keyof typeof months];
+};
+
+export const Months = {
+  "01": "Januari",
+  "02": "Februari",
+  "03": "Maret",
+  "04": "April",
+  "05": "Mei",
+  "06": "Juni",
+  "07": "Juli",
+  "08": "Agustus",
+  "09": "September",
+  "10": "Oktober",
+  "11": "November",
+  "12": "Desember",
+};

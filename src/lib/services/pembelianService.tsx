@@ -1,38 +1,36 @@
-import {base} from '../network/base';
-import {PDFViewer} from '@react-pdf/renderer';
-import {KAK, KAKProps} from '@/components/KAK';
-import ReactDOM from 'react-dom';
-import { getUser } from './userServices';
+import { base } from "../network/base";
+import { PDFViewer } from "@react-pdf/renderer";
+import { KAK, KAKProps } from "@/components/KAK";
+import ReactDOM from "react-dom";
+import { getUser } from "./userServices";
 
 export async function fetchPembelian() {
-  const response = await base.get('/get_pembelian');
+  const response = await base.get("/get_pembelian");
   return response.data;
 }
 
 export async function fetchPengajuanByUser() {
-  const response = await base.get('/get_transaksi_pengajuan');
+  const response = await base.get("/get_transaksi_pengajuan");
 
   const user = getUser();
   // Filter the data based on user.data_ruangan
   const userRuanganIds = user.data_ruangan.map((r) => r.id_ruangan); // Extract ruangan IDs
-  const filteredData = response.data.data.filter((item: {id_ruangan: string}) =>
-    userRuanganIds.includes(item.id_ruangan)
+  const filteredData = response.data.data.filter(
+    (item: { id_ruangan: string }) => userRuanganIds.includes(item.id_ruangan)
   );
 
   console.log(filteredData);
-  return {...response, data: filteredData}; // Return filtered data
+  return { ...response, data: filteredData }; // Return filtered data
 }
 
 export async function fetchDetailPembelian(id_pembelian: number) {
-  const response = await base.get(
-    `/detail_pembelian/${id_pembelian}`
-  );
+  const response = await base.get(`/detail_pembelian/${id_pembelian}`);
   return response.data;
 }
 
-export function generateKAK({dataKAK}: {dataKAK: KAKProps}) {
-  console.log('dataKAK', dataKAK);
-  const newWindow = window.open('', '_blank');
+export function generateKAK({ dataKAK }: { dataKAK: KAKProps }) {
+  console.log("dataKAK", dataKAK);
+  const newWindow = window.open("", "_blank");
   if (newWindow) {
     newWindow.document.write(`
         <html>
@@ -45,19 +43,29 @@ export function generateKAK({dataKAK}: {dataKAK: KAKProps}) {
         </html>
       `);
 
-    const container = newWindow.document.getElementById('pdf-viewer');
+    const container = newWindow.document.getElementById("pdf-viewer");
     if (container) {
-      const root = newWindow.document.createElement('div');
-      root.style.width = '100%';
-      root.style.height = '100%';
+      const root = newWindow.document.createElement("div");
+      root.style.width = "100%";
+      root.style.height = "100%";
       container.appendChild(root);
 
       ReactDOM.render(
-        <PDFViewer width='100%' height='100%'>
+        <PDFViewer width="100%" height="100%">
           <KAK data={dataKAK} />
         </PDFViewer>,
         root
       );
     }
   }
+}
+
+export async function fetchPembelianByBulan(periodBulan: string) {
+  const response = await base.get(`/pembelian_bulan/${periodBulan}`);
+  return response.data.data;
+}
+
+export async function fetchDetailPembelianByBulan(periodBulan: string) {
+  const response = await base.get(`/pembelian_detail/${periodBulan}`);
+  return response.data;
 }

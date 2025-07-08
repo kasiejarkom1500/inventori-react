@@ -1,4 +1,9 @@
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  // CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 // import { dataDashboard } from "@/lib/data/dashboard-dummy";
 import {
   ChartBarDashboardAtkArk,
@@ -8,6 +13,7 @@ import {
 import {
   CircleAlert,
   Clock,
+  // ListFilter,
   LucideProps,
   Package,
   ScrollText,
@@ -32,7 +38,7 @@ import {
 import { fetchBarangPembelianBulanan } from "@/lib/network/pembelianService";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
-import React from "react";
+import React, { useState } from "react";
 
 export const cuecard = [
   {
@@ -188,8 +194,8 @@ export default function Dashboard() {
   const today = new Date();
   const month = (today.getMonth() + 1).toString().padStart(2, "0");
   const year = today.getFullYear();
-  const periodTahun = year.toString();
-  const periodBulan = `${year}-${month}`;
+  const [periodTahun, _] = useState(year.toString());
+  const [periodBulan, _1] = useState(`${year}-${month}`);
 
   const {
     data: dataPeruangan,
@@ -213,6 +219,7 @@ export default function Dashboard() {
       return fetchBarangPemakaianBulanan(periodTahun);
     },
   });
+
   // dummy
   const pemakaianBarangARK: { data: any[] } = {
     data: [
@@ -287,6 +294,36 @@ export default function Dashboard() {
           <Cuecard key={index} d={data} />
         ))}
       </div>
+      {/* <Card className="space-y-4 bg-white rounded-lg p-4">
+        <div className="space-y-2">
+          <CardTitle
+            className={`text-base  font-medium flex gap-2 items-center`}
+          >
+            <ListFilter size={20}></ListFilter>
+            Filter periode
+          </CardTitle>
+        </div>
+        <CardContent className="grid">
+          <Select
+            value={periodBulan}
+            onValueChange={(value) => setPeriodBulan(value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Pilih Periode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="2023-01">Januari 2023</SelectItem>
+                <SelectItem value="2023-02">Februari 2023</SelectItem>
+                <SelectItem value="2023-03">Maret 2023</SelectItem>
+                <SelectItem value="2023-04">April 2023</SelectItem>
+                <SelectItem value="2023-05">Mei 2023</SelectItem>
+                <SelectItem value="2023-06">Juni 2023</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card> */}
       <Card className="space-y-4 bg-white rounded-lg p-4">
         <div className="space-y-2">
           <CardTitle

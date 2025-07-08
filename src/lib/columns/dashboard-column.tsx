@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DashboardHampirHabis,
+  DashboardPembelian,
   DashboardPermintaan,
 } from "@/lib/types/dashboard";
 import { Badge } from "@/components/ui/badge";
@@ -78,6 +79,41 @@ export const dashboardPerimntaanColumn: ColumnDef<DashboardPermintaan>[] = [
         >
           <span className="text-white text-xs font-normal">{status}</span>
         </Badge>
+      );
+    },
+  },
+];
+
+export const dashboardPembelianColumn: ColumnDef<DashboardPembelian>[] = [
+  {
+    header: "No",
+    cell: (row) => row.row.index + 1,
+  },
+  {
+    accessorKey: "tgl_masuk",
+    header: "Tanggal Masuk",
+  },
+  {
+    accessorKey: "jumlah_jenis",
+    header: "Jumlah Jenis",
+  },
+  {
+    accessorKey: "total_barang",
+    header: "Total Barang",
+  },
+  {
+    accessorKey: "total_harga",
+    header: "Total Harga",
+    cell: (row) => {
+      // const harga = row.row.original.total_harga;
+      const formatter = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      });
+      return (
+        <span className="text-right">
+          {formatter.format(Number(row.row.original.total_harga))}
+        </span>
       );
     },
   },
