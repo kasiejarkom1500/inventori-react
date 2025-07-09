@@ -66,7 +66,7 @@ export default function LaporanPengajuan() {
   function printKAK() {
     const dataKAK = {
       dataKAK: dataForKAK 
-    } ; // Bungkus data ke dalam objek
+    } ; 
     console.log('data for KAK', dataKAK);
     generateKAK(dataKAK);
   }
