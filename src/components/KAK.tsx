@@ -199,26 +199,6 @@ export const KAK = ({ data }: { data: KAKProps }) => {
               : DIPA NOMOR: SP-DIDA 054.01.2.428145/2024
             </Text>
           </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Program</Text>
-            <Text style={{ width: "60%" }}>
-              : (WA) PROGRAM DUKUNGAN MANAJEMEN
-            </Text>
-          </View>
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Kegiatan</Text>
-            <Text style={{ width: "60%" }}>
-              : (2886) DUKUNGAN MANAJEMEN DAN PELAKSANAAN TUGAS TEKNIS LAINNYA
-              BPS PROVINSI (2886)
-            </Text>
-          </View>
-
-          <View style={styles.headerRow}>
-            <Text style={{ width: "40%" }}>Penanggung Jawab</Text>
-            <Text style={{ width: "60%" }}>
-              : TIM RUMAH TANGGA, KEARSIPAN DAN PENGELOLAAN BMN
-            </Text>
-          </View>
         </View>
         <View style={styles.footer}>
           <Image src="/logo-bps-with-title.png" style={styles.logo} />
@@ -390,8 +370,6 @@ export const KAK = ({ data }: { data: KAKProps }) => {
       </Page>
       <Page size="A4" style={styles.page}>
         <View style={{ marginTop: 48 }}>
-          <Text style={{ textAlign: "right" }}>Jambi, {date}</Text>
-
           <View style={styles.signatureSection}>
             <View style={styles.signatureColumn}>
               <Text>Menyetujui</Text>
@@ -399,9 +377,10 @@ export const KAK = ({ data }: { data: KAKProps }) => {
               <Text style={styles.signatureText}>Gafur, S.ST, M.Si.</Text>
             </View>
             <View style={styles.signatureColumn}>
+              <Text style={{ textAlign: "right" }}>Jambi, {date}</Text>
               <Text>Yang Mengajukan</Text>
-              <Text>Tim Ruta, Kearsipan dan Pengelolaan BMN</Text>
-              <Text style={styles.signatureText}>Sutino, SE</Text>
+              <Text>Tim PBJ</Text>
+              <Text style={styles.signatureText}>Sunandar, SE</Text>
             </View>
           </View>
         </View>
@@ -454,28 +433,6 @@ export const KAK = ({ data }: { data: KAKProps }) => {
               style={[styles.tableCol, styles.tableHeader, { width: "15%" }]}
             >
               JUMLAH (Rp)
-            </Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCol, { width: "10%" }]}>521811</Text>
-            <Text style={[styles.tableCol, { width: "30%" }]}>
-              Belanja barang persediaan barang konsumsi
-            </Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCol, { width: "10%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "30%" }]}>
-              Alat Tulis Kantor
-            </Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}>
-              {data.total}
             </Text>
           </View>
           <View style={styles.tableRow}>
