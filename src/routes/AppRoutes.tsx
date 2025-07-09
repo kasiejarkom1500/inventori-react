@@ -139,7 +139,7 @@ const router = createBrowserRouter(
               path: "",
               element: <LayoutDashboard />,
               children: [
-                { path: "dashboard", element: <Dashboard /> },
+                { path: "dashboard", element: <DashboardPembelian /> },
                 { path: "data-barang-atk", element: <DataBarangATKView /> },
                 { path: "data-barang-ark", element: <DataBarangARKView /> },
                 { path: "pengajuan-barang", element: <PengajuanBarang /> },
