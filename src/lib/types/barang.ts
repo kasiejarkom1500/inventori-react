@@ -31,6 +31,7 @@ export type BarangPermintaan = {
   id_ruangan: string;
   status: string;
   is_buat_pengajuan: boolean;
+  kd_subkategori: string;
 };
 
 export type BarangKarken = {
@@ -70,12 +71,14 @@ export type SummaryPermintaan = {
   id_permintaan: string;
   id_user: number;
   id_ruangan: string;
+  id_transaksi: string;
   tanggal: string;
   ruangan: string;
   jumlah_permintaan: number;
   Approved: number;
   Pending: number;
   Rejected: number;
+  Pengadaan: number;
 };
 export type SummaryPengajuan = {
   id_user: number;

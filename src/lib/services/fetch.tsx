@@ -2,10 +2,11 @@ import {base} from '../network/base';
 
 export async function fetchDetailPermintaaan(
   ruangnaID: string,
-  tanggal: string
+  tanggal: string,
+  id_transaksi: string
 ) {
   const response = await base.get(
-    `/get_detail_permintaan/${ruangnaID}/${tanggal}`
+    `/get_detail_permintaan/${ruangnaID}/${tanggal}/${id_transaksi}`
   );
   return response.data;
 }

@@ -59,6 +59,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
           Approved: row.row.original.Approved,
           Pending: row.row.original.Pending,
           Rejected: row.row.original.Rejected,
+          Pengadaan: row.row.original.Pengadaan,
         };
         return (
           <ul className='list-disc list-inside first:marker:text-green-500 [&:nth-child(2)]:marker:text-yellow-500 last:marker:text-red-500'>

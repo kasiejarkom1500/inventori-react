@@ -2,7 +2,7 @@ import DataTable from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { barangPermintaanColumns } from "@/lib/columns/barang-permintaan-column";
 import { useEffect, useState } from "react";
-import { fetchDetailPermintaaan } from "@/lib/services/fetch";
+import { fetchDetailPermintaaan, fetchSubkategori } from "@/lib/services/fetch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { base } from "@/lib/network/base";
@@ -11,16 +11,25 @@ import { useToast } from "@/hooks/use-toast";
 export default function DetailPermintaan({
   ruanganID,
   tanggal,
+  id_transaksi,
 }: {
   ruanganID: string;
   tanggal: string;
+  id_transaksi: string;
 }) {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { data, isLoading, error } = useQuery({
-    queryKey: ["detail-permintaan", ruanganID, tanggal],
-    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal),
+    queryKey: ["detail-permintaan", ruanganID, tanggal, id_transaksi],
+    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal, id_transaksi),
   });
+
+  const { data: subkategoriList = [], isLoading: subkategoriLoading } =
+    useQuery({
+      queryKey: ["subkategori"],
+      queryFn: fetchSubkategori,
+      select: (res) => res.data,
+    });
 
   const [newData, setNewData] = useState<any[]>([]);
 
@@ -31,9 +40,9 @@ export default function DetailPermintaan({
         jumlah_approved: item.jumlah_approved,
         status: item.status,
         is_buat_pengajuan: item.is_buat_pengajuan == 0 ? false : true,
+        kd_subkategori: item.kd_subkategori,
       }));
-      // console.log('data:' ,data.data);
-      // console.log('formated',formattedData);
+
       setNewData(formattedData);
     }
   }, [data]);
@@ -47,14 +56,19 @@ export default function DetailPermintaan({
       </div>
     );
   }
+
   const dataPermintaanBarang = data?.data ?? [];
   // console.log(dataPermintaanBarang);
+
+  if (subkategoriLoading)
+    return <LoadingSpinner size={40} className="mx-auto mt-10" />;
 
   function handleDataChange(
     id_permintaan: number,
     newJumlah: string | undefined,
     newStatus: string | undefined,
-    newIsBuatPengajuan: boolean | undefined
+    newIsBuatPengajuan: boolean | undefined,
+    newKdSubkategori: string | undefined
   ) {
     setNewData((prev) =>
       prev.map((item) =>
@@ -68,6 +82,10 @@ export default function DetailPermintaan({
                 newIsBuatPengajuan !== undefined
                   ? newIsBuatPengajuan
                   : item.is_buat_pengajuan,
+              kd_subkategori:
+                newKdSubkategori !== undefined
+                  ? newKdSubkategori
+                  : item.kd_subkategori,
             }
           : item
       )
@@ -114,7 +132,11 @@ export default function DetailPermintaan({
   return (
     <>
       <DataTable
-        columns={barangPermintaanColumns(handleDataChange, newData)}
+        columns={barangPermintaanColumns(
+          handleDataChange,
+          newData,
+          subkategoriList
+        )}
         data={dataPermintaanBarang} // Use original data here
         search_placeholder="barang"
         column_name="nama_barang"

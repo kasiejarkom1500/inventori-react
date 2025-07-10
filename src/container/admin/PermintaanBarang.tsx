@@ -27,7 +27,7 @@ export default function PermintaanBarang() {
   }
 
   const dataSummaryPermintaan = data?.data ?? [];
-  console.log(dataSummaryPermintaan);
+  // console.log(dataSummaryPermintaan);
   return (
     <Card className='p-6'>
       <h1

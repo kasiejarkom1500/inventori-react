@@ -33,16 +33,18 @@ export default function BlankoForm({
   ruanganID,
   tanggal,
   ruangan,
+  id_transaksi,
   noSurat,
 }: {
   ruanganID: string;
   tanggal: string;
   ruangan: string;
+  id_transaksi: string;
   noSurat: string;
 }) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["detail-permintaan", ruanganID, tanggal],
-    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal),
+    queryKey: ["detail-permintaan", ruanganID, tanggal, id_transaksi],
+    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal,id_transaksi),
   });
   const form = useForm<z.infer<typeof blankoSchema>>({
     resolver: zodResolver(blankoSchema),
@@ -68,7 +70,7 @@ export default function BlankoForm({
       noSurat: noSurat,
     };
     const filteredDetail = dataDetailPermintaan.filter(
-      (item: { status: string }) => item.status === "Approved"
+      (item: { status: string, jumlah_approved: number }) => item.status === "Approved" && item.jumlah_approved > 0
     );
     // console.log('Formatted Data:', formattedData);
     // console.log('Detail Permintaan:', filteredDetail);

@@ -28,12 +28,16 @@ export const detailPermintaanOperatorColumns: ColumnDef<BarangPermintaan>[] = [
     header: 'Jumlah Permintaan',
   },
   {
+    accessorKey: 'jumlah_approved',
+    header: 'Jumlah Approved',
+  },
+  {
     accessorKey: 'status',
     header: 'Status',
     cell: (row) => {
       const status = row.row.original.status;
       return (
-        <Badge variant={status as 'Pending' | 'Approved' | 'Rejected'}>
+        <Badge variant={status as "Pending" | "Approved" | "Rejected" | "Pengadaan"}>
           {status}
         </Badge>
       );

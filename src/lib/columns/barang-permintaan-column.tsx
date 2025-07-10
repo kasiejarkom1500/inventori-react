@@ -18,14 +18,17 @@ export const barangPermintaanColumns = (
     id_permintaan: number,
     newJumlah: string | undefined,
     newStatus: string | undefined,
-    is_buat_pengajuan: boolean | undefined
+    is_buat_pengajuan: boolean | undefined,
+    newKdSubkategori: string | undefined
   ) => void,
   newData: {
     id_permintaan: number;
     jumlah_approved: string;
     status: string;
     is_buat_pengajuan: boolean;
-  }[]
+    kd_subkategori: string;
+  }[],
+  subkategoriList: { kd_subkategori: string; sub_kategori: string }[]
 ): ColumnDef<BarangPermintaan>[] => [
   {
     header: "No",
@@ -46,6 +49,49 @@ export const barangPermintaanColumns = (
   {
     accessorKey: "kategori",
     header: "Jenis Barang",
+  },
+  {
+    header: "Sub Kategori",
+    cell: (row) => {
+      const currentSubKategori = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      )?.kd_subkategori;
+
+      return (
+        <Select
+          value={currentSubKategori}
+          onValueChange={(newKdSubKategori) => {
+            console.log("newSubKategori", newKdSubKategori);
+            handleDataChange(
+              row.row.original.id_permintaan,
+              undefined,
+              undefined,
+              undefined,
+              newKdSubKategori
+            );
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Pilih jenis barang" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {subkategoriList.map((sub) => {
+                // console.log("sub", sub); // Cek tiap item
+                return (
+                  <SelectItem
+                    key={sub.kd_subkategori}
+                    value={sub.kd_subkategori}
+                  >
+                    {sub.sub_kategori}
+                  </SelectItem>
+                );
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      );
+    },
   },
   {
     accessorKey: "satuan",
@@ -76,6 +122,7 @@ export const barangPermintaanColumns = (
               row.row.original.id_permintaan,
               e.target.value,
               undefined,
+              undefined,
               undefined
             )
           }
@@ -95,7 +142,7 @@ export const barangPermintaanColumns = (
         (item) => item.id_permintaan === row.row.original.id_permintaan
       )?.status;
       return (
-        <Badge variant={status as "Pending" | "Approved" | "Rejected"}>
+        <Badge variant={status as "Pending" | "Approved" | "Rejected" | "Pengadaan"}>
           {status}
         </Badge>
       );
@@ -115,6 +162,7 @@ export const barangPermintaanColumns = (
               row.row.original.id_permintaan,
               undefined,
               newStatus,
+              undefined,
               undefined
             )
           }
@@ -128,6 +176,7 @@ export const barangPermintaanColumns = (
               <SelectItem value="Approved">Approved</SelectItem>
               <SelectItem value="Rejected">Rejected</SelectItem>
               <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Pengadaan">Pengadaan</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -151,7 +200,8 @@ export const barangPermintaanColumns = (
               row.row.original.id_permintaan,
               undefined,
               undefined,
-              newIsBuatPengajuan // Convert boolean to number
+              newIsBuatPengajuan,
+              undefined // Convert boolean to number
             )
           }
         ></Switch>

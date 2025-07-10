@@ -110,7 +110,7 @@ export const user = [
       // {title: 'Barang Masuk', url: 'barang-masuk'},
       // {title: 'Barang Keluar', url: 'barang-keluar'},
       // { title: "Input Barang Masuk", url: "input-barang-masuk" },
-      { title: "Pengajuan Barang", url: "pengajuan-barang" },
+      // { title: "Pengajuan Barang", url: "pengajuan-barang" },
       { title: "Permintaan Barang", url: "permintaan-barang" },
     ],
   },
@@ -169,13 +169,13 @@ export const adminPengadaan = [
     contents: [
       // {title: 'Barang Masuk', url: 'barang-masuk'},
       // {title: 'Barang Keluar', url: 'barang-keluar'},
-      { title: "Pengajuan Barang", url: "pengajuan-barang" },
+      { title: "Pengadaan Barang", url: "pengajuan-barang" },
     ],
   },
   {
     label: " Laporan",
     icon: FileText,
-    contents: [{ title: "Laporan Pengajuan", url: "laporan-pengajuan" }],
+    contents: [{ title: "KAK", url: "laporan-pengajuan" }],
   },
 ];
 

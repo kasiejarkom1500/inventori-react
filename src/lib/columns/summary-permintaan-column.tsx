@@ -69,6 +69,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         Approved: row.row.original.Approved,
         Pending: row.row.original.Pending,
         Rejected: row.row.original.Rejected,
+        Pengadaan: row.row.original.Pengadaan,
       };
       return (
         <ul className="list-disc list-inside first:marker:text-green-500 [&:nth-child(2)]:marker:text-yellow-500 last:marker:text-red-500">
@@ -85,10 +86,12 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
     header: "Action",
     cell: (row) => {
       const hasPending = row.row.original.Pending > 0;
+      const hasPengadaan = row.row.original.Pengadaan > 0;
       const id_ruangan = row.row.original.id_ruangan;
       const ruangan = row.row.original.ruangan;
       const tanggal = row.row.original.tanggal;
       const id_permintaan = row.row.original.id_permintaan;
+      const id_transaksi = row.row.original.id_transaksi;
       return (
         <div className="flex space-x-3 justify-center items-center">
           <Dialog>
@@ -99,14 +102,14 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
               <DialogHeader className="text-2xl font-semibold">
                 Detail Permintaan
               </DialogHeader>
-              <DetailPermintaan ruanganID={id_ruangan} tanggal={tanggal} />
+              <DetailPermintaan ruanganID={id_ruangan} tanggal={tanggal} id_transaksi={id_transaksi}/>
             </DialogContent>
           </Dialog>
           <Dialog>
             <DialogTrigger
-              disabled={hasPending}
+              disabled={hasPending || hasPengadaan}
               className={`bg-violet-500 p-1 rounded-md hover:bg-yellow-900/90 ${
-                hasPending &&
+                (hasPending || hasPengadaan) &&
                 "cursor-not-allowed bg-violet-500/40 hover:bg-violet-500/40"
               }`}
             >
@@ -120,6 +123,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
                 ruanganID={id_ruangan}
                 tanggal={tanggal}
                 ruangan={ruangan}
+                id_transaksi={id_transaksi}
                 noSurat={id_permintaan}
               />
             </DialogContent>
