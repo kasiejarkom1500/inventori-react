@@ -7,15 +7,17 @@ import { useQuery} from '@tanstack/react-query';
 export default function DetailPermintaan({
   ruanganID,
   tanggal,
+  id_transaksi
 }: {
   ruanganID: string;
   tanggal: string;
+  id_transaksi: string;
 }) {
 
 
   const {data, isLoading, error} = useQuery({
-    queryKey: ['detail-permintaan', ruanganID, tanggal],
-    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal),
+    queryKey: ['detail-permintaan', ruanganID, tanggal, id_transaksi],
+    queryFn: () => fetchDetailPermintaaan(ruanganID, tanggal, id_transaksi),
   });
 
  

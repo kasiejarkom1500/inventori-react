@@ -45,7 +45,7 @@ export default function Login() {
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
       const { data } = await base.post("/login", values);
-      console.log("datdata", data);
+      // console.log("datdata", data);
       localStorage.setItem("user", JSON.stringify(data.data));
       localStorage.setItem("access-token", JSON.stringify(data.token));
 
@@ -60,11 +60,11 @@ export default function Login() {
         return;
       }
       const role = normalizeRole(data.data.role);
-      console.log("data ini", role);
+      // console.log("data ini", role);
       // console.log(role);
       navigate(`/${role}/dashboard`, { replace: true });
     } catch (err) {
-      console.error("Login failed:", err);
+      // console.error("Login failed:", err);
       form.setError("username", { message: "Invalid username or passwords" });
     }
   };

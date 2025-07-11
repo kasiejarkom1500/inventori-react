@@ -20,12 +20,14 @@ import { LoadingSpinner } from "@/components/ui/loading";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPermintaanByUser } from "@/lib/services/permintaanService";
 import { useDialog } from "@/context/dialog";
+import {getUser} from '@/lib/network/authServices';
 
 export default function PermintaanBarang() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["data-permintaan-user"],
     queryFn: fetchPermintaanByUser,
   });
+const user = getUser();
 
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
 
@@ -50,7 +52,7 @@ export default function PermintaanBarang() {
         >
           Data Permintaan Barang
         </h1>
-        <TooltipProvider>
+        {user.role === "user" &&         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className="mr-auto lg:mr-0">
               <Dialog
@@ -75,7 +77,8 @@ export default function PermintaanBarang() {
             </TooltipTrigger>
             <TooltipContent>Buat Permintaan Barang</TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider>}
+
       </div>
       <DataTable
         columns={summaryPermintaanOperatorColumns}

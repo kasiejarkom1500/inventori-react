@@ -105,6 +105,23 @@ const router = createBrowserRouter(
           ],
         },
         {
+          path: "ketua-tim",
+          element: <RoleAuth requiredRole="ketua_tim" />,
+          children: [
+            {
+              path: "",
+              element: <LayoutDashboard />,
+              children: [
+                { path: "dashboard", element: <DashboardOperator /> },
+                { path: "data-barang-atk", element: <DataBarangATKOp /> },
+                { path: "data-barang-ark", element: <DataBarangARKOp /> },
+                { path: "permintaan-barang", element: <SummaryPermintaan /> },
+                { path: "pengajuan-barang", element: <SummaryPengajuan /> },
+              ],
+            },
+          ],
+        },
+        {
           path: "admin-pembelian",
           element: <RoleAuth requiredRole="admin_pembelian" />,
           children: [
@@ -169,6 +186,7 @@ const router = createBrowserRouter(
             },
           ],
         },
+        
       ],
     },
   ],

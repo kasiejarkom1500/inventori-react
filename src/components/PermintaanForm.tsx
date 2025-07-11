@@ -12,11 +12,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchAllBarang } from "@/lib/services/fetch";
+import {
+  fetchAllBarang,
+  fetchAllKegiatan,
+  fetchAllKomponen,
+  fetchAllKRO,
+  fetchAllProgram,
+  fetchAllRO,
+} from "@/lib/services/fetch";
 import Select from "react-select";
 import { LoadingSpinner } from "./ui/loading";
 import DataTable from "./DataTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { base } from "@/lib/network/base";
 import { useDialog } from "@/context/dialog";
@@ -28,7 +35,10 @@ const permintaanSchema = z.object({
   id_ruangan: z.string().min(1, { message: "Ruangan harus dipilih." }),
   ruangan: z.string(),
   tanggal: z.string().min(1, { message: "Tanggal harus diisi." }),
-  id_barang: z.string().min(1, { message: "Barang harus dipilih." }).default('0'),
+  id_barang: z
+    .string()
+    .min(1, { message: "Barang harus dipilih." })
+    .default("0"),
   nama_barang: z.string(),
   kategori: z.string().min(1, { message: "Jenis barang tidak boleh kosong." }),
   satuan: z.string().min(1, { message: "Satuan tidak boleh kosong." }),
@@ -36,6 +46,11 @@ const permintaanSchema = z.object({
   jumlah: z
     .number()
     .positive({ message: "Jumlah permintaan harus lebih dari 0." }),
+  kd_program: z.string().optional(),
+  kd_kegiatan: z.string().optional(),
+  kd_kro: z.string().optional(),
+  kd_ro: z.string().optional(),
+  kd_komponen: z.string().optional(),
 });
 
 function BarangInputSwitcher({
@@ -185,6 +200,83 @@ export default function PermintaanForm() {
     queryFn: fetchAllBarang,
   });
 
+  const {
+    data: dataProgram,
+    isLoading: loadingProgram,
+    error: errorProgram,
+  } = useQuery({
+    queryKey: ["program"],
+    queryFn: async () => {
+      return fetchAllProgram().then((res) => {
+        return res.data
+          ? res.data.map((item: { kd_program: string; nama: string }) => ({
+              value: item.kd_program,
+              label: item.nama,
+            }))
+          : [];
+      });
+      // fetchAllProgram();
+    },
+  });
+
+  // const programOptions = dataProgram
+  //   ? dataProgram.map((item: { kd_program: string; nama: string }) => ({
+  //       value: item.kd_program,
+  //       label: item.nama,
+  //     }))
+  //   : [];
+
+  console.log("programOptions", programOptions);
+
+  // const {
+  //   data: dataKegiatan,
+  //   isLoading: loadingKegiatan,
+  //   error: errorKegiatan,
+  // } = useQuery({
+  //   queryKey: ["kegiatan"],
+  //   queryFn: fetchAllKegiatan,
+  // });
+
+  // const {
+  //   data: dataKRO,
+  //   isLoading: loadingKRO,
+  //   error: errorKRO,
+  // } = useQuery({
+  //   queryKey: ["kro"],
+  //   queryFn: fetchAllKRO,
+  // });
+
+  // const {
+  //   data: dataRO,
+  //   isLoading: loadingRO,
+  //   error: errorRO,
+  // } = useQuery({
+  //   queryKey: ["ro"],
+  //   queryFn: fetchAllRO,
+  // });
+
+  // const {
+  //   data: dataKomponen,
+  //   isLoading: loadingKomponen,
+  //   error: errorKomponen,
+  // } = useQuery({
+  //   queryKey: ["komponen"],
+  //   queryFn: fetchAllKomponen,
+  // });
+
+  const loadingStates = [
+    loadingProgram,
+    // loadingKegiatan,
+    // loadingKRO,
+    // loadingRO,
+    // loadingKomponen,
+  ];
+
+  const hasError = errorProgram;
+  // || errorKegiatan || errorKRO || errorRO || errorKomponen;
+
+  const isLoadingAll = loadingStates.some(Boolean);
+
   const user = JSON.parse(localStorage.getItem("user") || "{}") as {
     id_user: string;
     username: string;
@@ -198,6 +290,8 @@ export default function PermintaanForm() {
       label: item.ruangan,
     })
   );
+
+  // console.log("ruanganOptions", ruanganOptions);
 
   const allBarang = dataAllBarang?.data ?? [];
   const barangOptions = allBarang.map(
@@ -224,32 +318,6 @@ export default function PermintaanForm() {
       jumlah: 0,
     },
   });
-
-  // Fungsi untuk menangani perubahan barang yang dipilih
-  // const handleBarangChange = (
-  //   selectedOption: { value: string; label: string } | null
-  // ) => {
-  //   const barangId = selectedOption?.value;
-  //   const selectedBarang = allBarang.find(
-  //     (item: { id_barang: string }) => item.id_barang === barangId
-  //   );
-
-  //   // Jika barang ditemukan, update kategori, satuan, dan stok
-  //   if (selectedBarang) {
-  //     form.setValue("nama_barang", selectedBarang.nama_barang || "");
-  //     form.setValue("kategori", selectedBarang.kategori || "");
-  //     form.setValue("satuan", selectedBarang.satuan || "");
-  //     form.setValue("stok", selectedBarang.stok || 0);
-  //   } else {
-  //     form.setValue("nama_barang", "");
-  //     form.setValue("kategori", "");
-  //     form.setValue("satuan", "");
-  //     form.setValue("stok", "");
-  //   }
-
-  //   // Update nilai barang yang dipilih
-  //   form.setValue("id_barang", selectedOption?.value || "");
-  // };
 
   function onSubmit(values: z.infer<typeof permintaanSchema>) {
     // kalau barang custom, buat fake id_barang supaya tidak kosong
@@ -336,7 +404,85 @@ export default function PermintaanForm() {
   };
 
   if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
+  if (isLoadingAll) return <LoadingSpinner className="mx-auto" size={24} />;
   if (error) return <div>An error has occurred: {error.message}</div>;
+  if (hasError) return <div>An error has occurred: {hasError.message}</div>;
+
+  const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedKegiatan, setSelectedKegiatan] = useState("");
+  const [selectedKRO, setSelectedKRO] = useState("");
+  const [selectedRO, setSelectedRO] = useState("");
+
+  const [kegiatanOptions, setKegiatanOptions] = useState([]);
+  const [kroOptions, setKroOptions] = useState([]);
+  const [roOptions, setRoOptions] = useState([]);
+  const [komponenOptions, setKomponenOptions] = useState([]);
+
+  useEffect(() => {
+    if (selectedProgram) {
+      fetchAllKegiatan(selectedProgram).then((data) => {
+        setKegiatanOptions(
+          data.map((item) => ({
+            value: item.kd_kegiatan,
+            label: item.nama,
+          }))
+        );
+      });
+    } else {
+      setKegiatanOptions([]);
+    }
+    setSelectedKegiatan("");
+    setSelectedKRO("");
+    setSelectedRO("");
+  }, [selectedProgram]);
+
+  // useEffect(() => {
+  //   if (selectedKegiatan) {
+  //     fetchAllKRO(selectedKegiatan).then((data) => {
+  //       setKroOptions(
+  //         data.map((item) => ({
+  //           value: item.kd_kro,
+  //           label: item.nama,
+  //         }))
+  //       );
+  //     });
+  //   } else {
+  //     setKroOptions([]);
+  //   }
+  //   setSelectedKRO("");
+  //   setSelectedRO("");
+  // }, [selectedKegiatan]);
+
+  // useEffect(() => {
+  //   if (selectedKRO) {
+  //     fetchAllRO(selectedKRO).then((data) => {
+  //       setRoOptions(
+  //         data.map((item) => ({
+  //           value: item.kd_ro,
+  //           label: item.nama,
+  //         }))
+  //       );
+  //     });
+  //   } else {
+  //     setRoOptions([]);
+  //   }
+  //   setSelectedRO("");
+  // }, [selectedKRO]);
+
+  // useEffect(() => {
+  //   if (selectedRO) {
+  //     fetchAllKomponen(selectedRO).then((data) => {
+  //       setKomponenOptions(
+  //         data.map((item) => ({
+  //           value: item.kd_komponen,
+  //           label: item.nama,
+  //         }))
+  //       );
+  //     });
+  //   } else {
+  //     setKomponenOptions([]);
+  //   }
+  // }, [selectedRO]);
 
   return (
     <div className="flex">
@@ -406,6 +552,123 @@ export default function PermintaanForm() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="kd_program"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Program</FormLabel>
+                  <FormControl>
+                    <Select
+                      options={programOptions}
+                      value={programOptions.find(
+                        (item) => item.value === field.value
+                      )}
+                      onChange={(selectedOption) => {
+                        const value = selectedOption
+                          ? selectedOption.value
+                          : "";
+                        field.onChange(value);
+                        form.setValue("kd_program", value);
+                        setSelectedProgram(value); // ✅ ini dia yang kurang
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* <FormField
+              control={form.control}
+              name="kd_kegiatan"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kegiatan</FormLabel>
+                  <FormControl>
+                    <Select
+                      options={kegiatanOptions}
+                      value={kegiatanOptions.find(
+                        (item) => item.value === field.value
+                      )}
+                      onChange={(selected) => {
+                        field.onChange(selected?.value || "");
+                        setSelectedKegiatan(selected?.value || "");
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="kd_kro"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>KRO</FormLabel>
+                  <FormControl>
+                    <Select
+                      options={kroOptions}
+                      value={kroOptions.find(
+                        (item) => item.value === field.value
+                      )}
+                      onChange={(selected) => {
+                        field.onChange(selected?.value || "");
+                        setSelectedKRO(selected?.value || "");
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="kd_ro"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>RO</FormLabel>
+                  <FormControl>
+                    <Select
+                      options={roOptions}
+                      value={roOptions.find(
+                        (item) => item.value === field.value
+                      )}
+                      onChange={(selected) => {
+                        field.onChange(selected?.value || "");
+                        setSelectedRO(selected?.value || "");
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="kd_komponen"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Komponen</FormLabel>
+                  <FormControl>
+                    <Select
+                      options={komponenOptions}
+                      value={komponenOptions.find(
+                        (item) => item.value === field.value
+                      )}
+                      onChange={(selected) => {
+                        field.onChange(selected?.value || "");
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+
             <BarangInputSwitcher
               isCustomBarang={isCustomBarang}
               setIsCustomBarang={setIsCustomBarang}
@@ -434,25 +697,6 @@ export default function PermintaanForm() {
                   <FormLabel>Satuan</FormLabel>
                   <FormControl>
                     <Input disabled placeholder="Satuan" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stok"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stok</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled
-                      type="number"
-                      placeholder="Stok"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

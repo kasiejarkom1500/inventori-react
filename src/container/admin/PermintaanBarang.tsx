@@ -10,6 +10,8 @@ async function fetchPermintaan() {
   return response.data;
 }
 
+
+
 export default function PermintaanBarang() {
   const {data, isLoading, error} = useQuery({
     queryKey: ['data-permintaan'],
@@ -26,7 +28,7 @@ export default function PermintaanBarang() {
     );
   }
 
-  const dataSummaryPermintaan = data?.data ?? [];
+  const dataSummaryPermintaan = data?.data.filter((item: any) => item.approve_tim !== '0') ?? [];
   // console.log(dataSummaryPermintaan);
   return (
     <Card className='p-6'>
