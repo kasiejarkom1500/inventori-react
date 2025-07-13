@@ -8,6 +8,7 @@ type BarangBASORow = {
   satuan: string;
   total_persediaan: number;
   harga_satuan: number;
+  total_harga: number;
 };
 
 export const barangBASOColumns: ColumnDef<BarangBASORow>[] = [

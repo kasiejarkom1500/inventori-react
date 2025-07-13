@@ -105,3 +105,15 @@ export type PermintaanFormType = {
   id_ruangan: string;
   jumlah: number;
 };
+
+export type BarangBASO = {
+  id_barang: string;
+  kd_barang: string;
+  nama_barang: string;
+  stok: number;
+  stok_dasar: number;
+  satuan: string;
+  harga_satuan: number;
+  harga_pengajuan: number;
+  total_harga:number
+};

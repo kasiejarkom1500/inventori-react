@@ -92,6 +92,7 @@ export interface BASOProps {
     satuan: string;
     total_persediaan: number;
     harga_satuan: number;
+    total_harga: number;
   }>;
 }
 
@@ -173,13 +174,15 @@ export const formatTanggalLengkap = (tanggal = new Date()): string => {
   )}, kami telah melaksanakan opname fisik barang persediaan dengan hasil rincian sebagai berikut :`;
 };
 
+
 export const BASO = ({ data }: { data: BASOProps }) => {
   const date = format(new Date(), "dd MMMM yyyy", { locale: id });
+  console.log(data);
 
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
-        <Text style={styles.title}>BERITA ACARA HASIL OPNAME FISIK (STOCK OPNAME) PERSEDIAAN</Text>
+        <Text style={styles.title}>DAFTAR BARANG PERSEDIAAN</Text>
 
         <Text style={{ marginBottom: 15 }}>{formatTanggalLengkap()}</Text>
 
@@ -219,7 +222,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
             >
               Satuan
             </Text>
-            <Text
+            {/* <Text
               style={[
                 styles.tableColSpanRowAtas,
                 styles.boldText,
@@ -227,12 +230,12 @@ export const BASO = ({ data }: { data: BASOProps }) => {
               ]}
             >
               Harga Beli Satuan (Rupiah)
-            </Text>
+            </Text> */}
             <Text
               style={[
                 styles.tableColSpanRowAtas,
                 styles.boldText,
-                { width: "35%", textAlign: "center" },
+                { width: "50%", textAlign: "center" },
               ]}
             >
               Total Persediaan
@@ -245,14 +248,14 @@ export const BASO = ({ data }: { data: BASOProps }) => {
             <Text style={[styles.tableColSpanRow, { width: "5%" }]}></Text>
             <Text style={[styles.tableColSpanRow, { width: "35%" }]}></Text>
             <Text style={[styles.tableColSpanRow, { width: "10%" }]}></Text>
-            <Text style={[styles.tableColSpanRow, { width: "15%" }]}></Text>
+            {/* <Text style={[styles.tableColSpanRow, { width: "15%" }]}></Text> */}
 
             {/* Subkolom dari "Total Persediaan" */}
             <Text
               style={[
                 styles.tableCol,
                 styles.boldText,
-                { width: "15%", textAlign: "center" },
+                { width: "20%", textAlign: "center" },
               ]}
             >
               Stok
@@ -261,7 +264,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
               style={[
                 styles.tableCol,
                 styles.boldText,
-                { width: "20%", textAlign: "center" },
+                { width: "30%", textAlign: "center" },
               ]}
             >
               Harga Total
@@ -275,6 +278,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
                 satuan: string;
                 total_persediaan: number;
                 harga_satuan: number;
+                total_harga: number;
               },
               idx: number
             ) => (
@@ -288,16 +292,14 @@ export const BASO = ({ data }: { data: BASOProps }) => {
                 <Text style={[styles.tableCol, { width: "10%" }]}>
                   {item.satuan}
                 </Text>
-                <Text style={[styles.tableCol, { width: "15%" }]}>
-                  {item.harga_satuan.toLocaleString("id-ID")}
-                </Text>
-                <Text style={[styles.tableCol, { width: "15%" }]}>
+                {/* <Text style={[styles.tableCol, { width: "15%" }]}> */}
+                  {/* {item.harga_satuan.toLocaleString("id-ID")} */}
+                {/* </Text> */}
+                <Text style={[styles.tableCol, { width: "20%" }]}>
                   {item.total_persediaan}
                 </Text>
-                <Text style={[styles.tableCol, { width: "20%" }]}>
-                  {(item.total_persediaan * item.harga_satuan).toLocaleString(
-                    "id-ID"
-                  )}
+                <Text style={[styles.tableCol, { width: "30%" }]}>
+                  {item.total_harga}
                 </Text>
               </View>
             )
@@ -308,7 +310,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
               style={[
                 styles.tableColSpanRowAtas,
                 styles.boldText,
-                { width: "80%", textAlign: "center" },
+                { width: "70%", textAlign: "center" },
               ]}
             >
               Total
@@ -317,7 +319,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
               style={[
                 styles.tableCol,
                 styles.boldText,
-                { width: "20%", textAlign: "center" },
+                { width: "30%", textAlign: "center" },
               ]}
             >
               {data.rows

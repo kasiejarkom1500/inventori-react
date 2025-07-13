@@ -104,8 +104,8 @@ export function generateKarken({ dataKarken }: { dataKarken: KarkenProps[] }) {
 }
 
 export function generateBASO(dataBASO: BASOProps) {
-  console.log("Test");
-  console.log("dataBASO", dataBASO);
+  // console.log("Test");
+  // console.log("dataBASO", dataBASO);
   const newWindow = window.open("", "_blank");
   if (newWindow) {
     newWindow.document.write(`
