@@ -17,11 +17,11 @@ import {Calendar} from '@/components/ui/calendar';
 import {Card} from '@/components/ui/card';
 import DataTable from '@/components/DataTable';
 // import {generateKAK} from '@/lib/services/pengajuanService';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {generateBASO} from '@/lib/services/pengajuanService';
-import { Barang } from '@/lib/types/barang';
+import { Barang, BarangBASO } from '@/lib/types/barang';
 import { BASOProps } from '@/components/BASO';
-import { fetchAllBarang } from '@/lib/services/fetch';
+import { fetchAllBASO } from '@/lib/services/fetch';
 import { barangBASOColumns } from '@/lib/columns/barang-baso-column';
 
 const laporanSchema = z.object({
@@ -35,37 +35,59 @@ const laporanSchema = z.object({
 export default function LaporanStok() {
   const [dataTable, setDataTable] = useState<BASOProps>({ rows: [] });
 
-  const form = useForm<z.infer<typeof laporanSchema>>({
-    resolver: zodResolver(laporanSchema),
-    defaultValues: {
-      tgl_cetak: new Date()
-    },
-  });
+  // const form = useForm<z.infer<typeof laporanSchema>>({
+  //   resolver: zodResolver(laporanSchema),
+  //   defaultValues: {
+  //     tgl_cetak: new Date()
+  //   },
+  // });
 
-  async function onSubmit() {
-    const responseTable = await fetchAllBarang();
-    console.log('responseTable', responseTable);
-    //filter data where stok is not 0
-    const filteredData = responseTable.data.filter((item: Barang) => item.stok != 0);
-    console.log('filteredData', filteredData);
-    //map data to BASOProps
+  // async function onSubmit() {
+  //   const responseTable = await fetchAllBASO();
+  //   console.log('responseTable', responseTable);
+  //   //filter data where stok is not 0
+  //   const filteredData = responseTable.data.filter((item: BarangBASO) => item.stok != 0);
+  //   console.log('filteredData', filteredData);
+  //   //map data to BASOProps
+  //   const dataForTable: BASOProps = {
+  //     rows: filteredData.map((item: BarangBASO) => ({
+  //       nama_barang: item.nama_barang,
+  //       satuan: item.satuan,
+  //       total_persediaan: item.stok,
+  //       harga_satuan: item.harga_satuan,
+  //       total_harga: item.total_harga
+  //     })),
+  //   };
+  //   setDataTable(dataForTable);
+  // }
+  // console.log('data for table', dataForTable);
+
+  useEffect(() => {
+  async function fetchDataAndSetTable() {
+    const responseTable = await fetchAllBASO();
+    // console.log('responseTable', responseTable);
+
+    const filteredData = responseTable.data.filter((item: BarangBASO) => item.stok !== 0);
+    // console.log('filteredData', filteredData);
+
     const dataForTable: BASOProps = {
-      rows: filteredData.map((item: Barang) => ({
+      rows: filteredData.map((item: BarangBASO) => ({
         nama_barang: item.nama_barang,
         satuan: item.satuan,
         total_persediaan: item.stok,
-        harga_satuan: item.harga_satuan
+        harga_satuan: item.harga_satuan,
+        total_harga: item.total_harga,
       })),
     };
+
     setDataTable(dataForTable);
   }
-  // console.log('data for table', dataForTable);
+
+  fetchDataAndSetTable(); // jalankan saat komponen muncul
+}, []);
 
   function printBASO() {
-    // const dataBASO = {
-    //   dataBASO: dataTable
-    // } ; // Bungkus data ke dalam objek
-    // console.log('data for KAK', dataKAK);
+    // console.log(dataTable);
     generateBASO(dataTable);
   }
 
@@ -74,14 +96,13 @@ export default function LaporanStok() {
       <h1
         className={`mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
       >
-        Berita Acara Stok Opname (BASO) Barang
+        Daftar Stok Barang
       </h1>
-      <Form {...form}>
+      {/* <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
           className=' flex justify-center space-x-8 items-end w-full mb-4'
-        >
-          <FormField
+        > */}
+          {/* <FormField
             control={form.control}
             name='tgl_cetak'
             render={({field}) => (
@@ -115,15 +136,15 @@ export default function LaporanStok() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <div className='flex gap-2'>
-            <Button type='submit'>Submit</Button>
+            {/* <Button type='submit'>Submit</Button> */}
             <Button onClick={printBASO} className='bg-green-500'>
               <Printer />
             </Button>
           </div>
-        </form>
-      </Form>
+        {/* </form> */}
+      {/* </Form> */}
       <DataTable columns={barangBASOColumns} data={dataTable.rows} column_name='nama_barang'/>
     </Card>
   );

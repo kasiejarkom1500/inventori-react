@@ -67,3 +67,8 @@ export async function fetchAllKomponen(kd_ro: string) {
   console.log("komponen", response.data);
   return response.data.data;
 }
+
+export async function fetchAllBASO() {
+  const response = await base.get("/get_baso");
+  return response.data;
+}
