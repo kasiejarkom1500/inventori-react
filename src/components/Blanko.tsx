@@ -176,12 +176,12 @@ export const Blanko = ({ data, desc }: BlankoProps) => (
       </View>
 
       <View style={styles.footer}>
-        <Text>Diketahui oleh:</Text>
-        <Text>Kepala Bagian Umum,</Text>
+        <Text>Disetujui oleh:</Text>
+        <Text>Arsiparis Ahli Madya,</Text>
         <Text style={[styles.underline, { marginTop: 60 }]}>
-          Eko Libri Ardi, S.E., M.M., CA.
+          Sutino, SE.
         </Text>
-        <Text>197309251994031002</Text>
+        <Text>196902101994031006</Text>
       </View>
     </Page>
   </Document>

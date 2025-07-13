@@ -179,7 +179,7 @@ export const BASO = ({ data }: { data: BASOProps }) => {
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
-        <Text style={styles.title}>BERITA ACARA HASIL OPNAME FISIK (STOCK OPNAME) PERSEDIAAN</Text>
+        <Text style={styles.title}>DAFTAR BARANG PERSEDIAAN</Text>
 
         <Text style={{ marginBottom: 15 }}>{formatTanggalLengkap()}</Text>
 
