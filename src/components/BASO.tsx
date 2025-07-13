@@ -187,7 +187,6 @@ export const BASO = ({ data }: { data: BASOProps }) => {
         <Text style={{ marginBottom: 15 }}>{formatTanggalLengkap()}</Text>
 
         <View style={styles.table}>
-          {/* Baris Header */}
           {/* Baris Header 1 */}
           <View style={styles.tableRow}>
             <Text
