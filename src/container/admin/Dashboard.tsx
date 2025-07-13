@@ -357,12 +357,6 @@ export default function Dashboard() {
                         {MONTHS[m as keyof typeof MONTHS]}
                       </SelectItem>
                     ))}
-                  {/* <SelectItem value="2023-01">Januari 2023</SelectItem>
-                  <SelectItem value="2023-02">Februari 2023</SelectItem>
-                  <SelectItem value="2023-03">Maret 2023</SelectItem>
-                  <SelectItem value="2023-04">April 2023</SelectItem>
-                  <SelectItem value="2023-05">Mei 2023</SelectItem>
-                  <SelectItem value="2023-06">Juni 2023</SelectItem> */}
                 </SelectGroup>
               </SelectContent>
             </Select>

@@ -1,6 +1,6 @@
 import { base } from "../network/base";
 import { PDFViewer } from "@react-pdf/renderer";
-import { KAK, KAKProps } from "@/components/KAK";
+import { KAK, KAKLampiran1Props } from "@/components/KAK";
 import ReactDOM from "react-dom";
 import { getUser } from "./userServices";
 import { Karken, KarkenProps } from "@/components/Karken";
@@ -33,8 +33,8 @@ export async function fetchDetailPengajuan(ruangnaID: string, tanggal: string) {
   return response.data;
 }
 
-export function generateKAK({ dataKAK }: { dataKAK: KAKProps }) {
-  console.log("dataKAK", dataKAK);
+export function generateKAK({ dataKAK }: { dataKAK: KAKLampiran1Props[] }) {
+  console.log("dataKAK from generateKAK function", dataKAK);
   const newWindow = window.open("", "_blank");
   if (newWindow) {
     newWindow.document.write(`

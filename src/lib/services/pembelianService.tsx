@@ -1,6 +1,6 @@
 import { base } from "../network/base";
 import { PDFViewer } from "@react-pdf/renderer";
-import { KAK, KAKProps } from "@/components/KAK";
+import { KAK, KAKLampiran1Props } from "@/components/KAK";
 import ReactDOM from "react-dom";
 import { getUser } from "./userServices";
 
@@ -28,7 +28,7 @@ export async function fetchDetailPembelian(id_pembelian: number) {
   return response.data;
 }
 
-export function generateKAK({ dataKAK }: { dataKAK: KAKProps }) {
+export function generateKAK({ dataKAK }: { dataKAK: KAKLampiran1Props[] }) {
   console.log("dataKAK", dataKAK);
   const newWindow = window.open("", "_blank");
   if (newWindow) {

@@ -38,9 +38,27 @@ export async function fetchSubkategori() {
   return response.data;
 }
 
-export async function fetchAllProgram() {
-  const response = await base.get("/program");
-  console.log("program", response.data);
+export async function fetchAllPok({
+  kd_program,
+  kd_kegiatan,
+  kd_ro,
+  kd_kro,
+  kd_komponen,
+}: {
+  kd_program?: string;
+  kd_kegiatan?: string;
+  kd_ro?: string;
+  kd_kro?: string;
+  kd_komponen?: string;
+}) {
+  const response = await base.post("/gabungan_pok", {
+    kd_program: kd_program || "",
+    kd_kegiatan: kd_kegiatan || "",
+    kd_ro: kd_ro || "",
+    kd_kro: kd_kro || "",
+    kd_komponen: kd_komponen || "",
+  });
+  // console.log("program", response.data);
   return response.data.data;
 }
 

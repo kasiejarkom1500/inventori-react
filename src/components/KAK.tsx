@@ -128,6 +128,13 @@ const styles = StyleSheet.create({
   underline: {
     textDecoration: "underline",
   },
+  tableRowNoBorder: {
+    padding: 5,
+    flexDirection: "row",
+  },
+  tableColNoBorder: {
+    textAlign: "left",
+  },
 });
 
 export interface ListBarang {
@@ -147,12 +154,34 @@ export interface ListBarang {
   total_harga: string;
   temp: string;
 }
+
+export interface ListBarangLampiran1 {
+  kd_barang: string;
+  nama_barang: string;
+  kategori: string;
+  satuan: string;
+  harga_satuan: number;
+  stok: string;
+  stok_dasar: string;
+  jumlah: string;
+  total_harga: number;
+}
 export interface KAKProps {
-  total: number;
+  // total: number;
   list_barang: ListBarang[];
 }
+[];
 
-export const KAK = ({ data }: { data: KAKProps }) => {
+export interface KAKLampiran1Props {
+  program: string;
+  kegiatan: string;
+  kro: string;
+  ro: string;
+  komponen: string;
+  list_barang: ListBarangLampiran1[];
+}
+
+export const KAK = ({ data }: { data: KAKLampiran1Props[] }) => {
   const date = format(new Date(), "dd MMMM yyyy", { locale: id });
   const formatedPrice = (number: number) => {
     const formatedNumber = new Intl.NumberFormat("id-ID", {
@@ -163,6 +192,39 @@ export const KAK = ({ data }: { data: KAKProps }) => {
     }).format(number);
     return formatedNumber;
   };
+
+  console.log("data in KAK", data);
+
+  const uniqueBarang = new Map();
+
+  data.forEach((item) => {
+    item.list_barang.forEach((barang) => {
+      if (!uniqueBarang.get(barang.kd_barang)) {
+        uniqueBarang.set(barang.kd_barang, {
+          kd_barang: barang.kd_barang,
+          nama_barang: barang.nama_barang,
+          satuan: barang.satuan,
+          stok: isNaN(Number(barang.stok)) ? 0 : Number(barang.stok),
+          stok_dasar: isNaN(Number(barang.stok_dasar))
+            ? 0
+            : Number(barang.stok_dasar),
+          harga_satuan: barang.harga_satuan,
+          jumlah: isNaN(Number(barang.jumlah)) ? 0 : Number(barang.jumlah),
+          total_harga: barang.total_harga,
+        });
+      } else {
+        const existingBarang = uniqueBarang.get(barang.kd_barang);
+        existingBarang.stok += isNaN(Number(barang.stok))
+          ? 0
+          : Number(barang.stok);
+        existingBarang.jumlah += isNaN(Number(barang.jumlah))
+          ? 0
+          : Number(barang.jumlah);
+        existingBarang.total_harga += barang.total_harga;
+      }
+    });
+  });
+  console.log("unique barang", uniqueBarang);
 
   return (
     <Document>
@@ -401,63 +463,166 @@ export const KAK = ({ data }: { data: KAKProps }) => {
         >
           RENCANA ANGGARAN BIAYA
         </Text>
-
-        <View style={styles.table}>
-          <View style={styles.tableRowHeader}>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "10%" }]}
-            >
-              AKUN
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "30%" }]}
-            >
-              RINCIAN
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "15%" }]}
-            >
-              VOLUME
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "15%" }]}
-            >
-              SATUAN
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "15%" }]}
-            >
-              HARGA SATUAN
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "15%" }]}
-            >
-              JUMLAH (Rp)
-            </Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCol, { width: "10%" }]}>521811</Text>
-            <Text style={[styles.tableCol, { width: "30%" }]}>
-              Belanja barang persediaan barang konsumsi
-            </Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCol, { width: "10%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "30%" }]}>
-              Alat Tulis Kantor
-            </Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}></Text>
-            <Text style={[styles.tableCol, { width: "15%" }]}>
-              {data.total}
-            </Text>
-          </View>
-        </View>
+        {data.map((item, index) => {
+          // console.log(Object.keys(item))
+          return (
+            <View key={index}>
+              <View style={styles.tableRowNoBorder}>
+                <Text style={[styles.tableColNoBorder, { width: "30%" }]}>
+                  Program
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "5%" }]}>
+                  :
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "50%" }]}>
+                  {item.program}
+                </Text>
+              </View>
+              <View style={styles.tableRowNoBorder}>
+                <Text style={[styles.tableColNoBorder, { width: "30%" }]}>
+                  Kegiatan
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "5%" }]}>
+                  :
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "50%" }]}>
+                  {item.kegiatan}
+                </Text>
+              </View>
+              <View style={styles.tableRowNoBorder}>
+                <Text style={[styles.tableColNoBorder, { width: "30%" }]}>
+                  Klasifikasi Rincian Output
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "5%" }]}>
+                  :
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "50%" }]}>
+                  {item.kro}
+                </Text>
+              </View>
+              <View style={styles.tableRowNoBorder}>
+                <Text style={[styles.tableColNoBorder, { width: "30%" }]}>
+                  Rincian Output
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "5%" }]}>
+                  :
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "50%" }]}>
+                  {item.ro}
+                </Text>
+              </View>
+              <View style={styles.tableRowNoBorder}>
+                <Text style={[styles.tableColNoBorder, { width: "30%" }]}>
+                  Komponen
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "5%" }]}>
+                  :
+                </Text>
+                <Text style={[styles.tableColNoBorder, { width: "50%" }]}>
+                  {item.komponen}
+                </Text>
+              </View>
+              <View style={styles.table}>
+                <View style={styles.tableRowHeader}>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "10%" },
+                    ]}
+                  >
+                    AKUN
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "30%" },
+                    ]}
+                  >
+                    RINCIAN
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "15%" },
+                    ]}
+                  >
+                    VOLUME
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "15%" },
+                    ]}
+                  >
+                    SATUAN
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "15%" },
+                    ]}
+                  >
+                    HARGA SATUAN
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCol,
+                      styles.tableHeader,
+                      { width: "25%" },
+                    ]}
+                  >
+                    JUMLAH (Rp)
+                  </Text>
+                </View>
+                <View style={styles.tableRow}>
+                  <Text style={[styles.tableCol, { width: "10%" }]}>
+                    521811
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "30%" }]}>
+                    Belanja barang persediaan barang konsumsi
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "25%" }]}></Text>
+                </View>
+                <View style={styles.tableRow}>
+                  <Text style={[styles.tableCol, { width: "10%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "30%" }]}>
+                    Alat Tulis Kantor
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "15%" }]}></Text>
+                  <Text style={[styles.tableCol, { width: "25%" }]}>
+                    {formatedPrice(
+                      item.list_barang.reduce(
+                        (total, barang) => total + barang.total_harga,
+                        0
+                      )
+                    )}
+                  </Text>
+                </View>
+              </View>
+              {/* <View style={styles.tableRowHeader}>
+                <Text style={[styles.tableCol, styles.tableHeader]}>
+                  {item.program}
+                </Text>
+                <Text style={[styles.tableCol, styles.tableHeader]}>
+                  {item.kegiatan}
+                </Text>
+                <Text style={[styles.tableCol, styles.tableHeader]}>
+                  {item.kro}
+                </Text>
+              </View> */}
+            </View>
+          );
+        })}
 
         <Text style={{ textAlign: "right", fontWeight: "bold", marginTop: 18 }}>
           Lampiran 2
@@ -472,7 +637,14 @@ export const KAK = ({ data }: { data: KAKProps }) => {
           Spesifikasi Teknis
         </Text>
         <Text style={{ fontSize: 14, textAlign: "right", fontWeight: "bold" }}>
-          ({formatedPrice(data.total)})
+          {/* (
+          {formatedPrice(
+            data.list_barang.reduce(
+              (total, barang) => total + barang.total_harga,
+              0
+            )
+          )}
+          ) */}
         </Text>
         <Text style={{ fontWeight: "bold", marginVertical: 18 }}>
           Daftar Barang dan Perlengkapan yang diperlukan:
@@ -512,28 +684,33 @@ export const KAK = ({ data }: { data: KAKProps }) => {
             </Text>
           </View>
           {/* Iterate Here */}
-          {data.list_barang.map((item, index) => (
-            <View style={styles.tableRow}>
-              <Text style={[styles.tableCol, { width: "5%" }]}>
-                {index + 1}
-              </Text>
-              <Text style={[styles.tableCol, { width: "30%" }]}>
-                {toTitleCase(item.nama_barang)}
-              </Text>
-              <Text style={[styles.tableCol, { width: "12%" }]}>
-                {toTitleCase(item.satuan)}
-              </Text>
-              <Text style={[styles.tableCol, { width: "12%" }]}>
-                {item.jumlah}
-              </Text>
-              <Text style={[styles.tableCol, { width: "20%" }]}>
-                {item.harga_satuan}
-              </Text>
-              <Text style={[styles.tableCol, { width: "20%" }]}>
-                {item.total_harga}
-              </Text>
-            </View>
-          ))}
+          {uniqueBarang.size > 0 &&
+            Array.from(uniqueBarang).map((item, index) => {
+              console.log("item", item);
+              const barang = item[1];
+              return (
+                <View style={styles.tableRow}>
+                  <Text style={[styles.tableCol, { width: "5%" }]}>
+                    {index + 1}
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "30%" }]}>
+                    {toTitleCase(barang.nama_barang)}
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "12%" }]}>
+                    {toTitleCase(barang.satuan)}
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "12%" }]}>
+                    {barang.jumlah}
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "20%" }]}>
+                    {formatedPrice(barang.harga_satuan)}
+                  </Text>
+                  <Text style={[styles.tableCol, { width: "20%" }]}>
+                    {formatedPrice(barang.total_harga)}
+                  </Text>
+                </View>
+              );
+            })}
         </View>
       </Page>
     </Document>

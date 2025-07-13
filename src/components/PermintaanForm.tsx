@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchAllBarang,
-  fetchAllKegiatan,
-  fetchAllKomponen,
-  fetchAllKRO,
-  fetchAllProgram,
-  fetchAllRO,
+  // fetchAllKegiatan,
+  // fetchAllKomponen,
+  // fetchAllKRO,
+  fetchAllPok,
+  // fetchAllProgram,
+  // fetchAllRO,
 } from "@/lib/services/fetch";
 import Select from "react-select";
 import { LoadingSpinner } from "./ui/loading";
@@ -44,13 +45,15 @@ const permintaanSchema = z.object({
   satuan: z.string().min(1, { message: "Satuan tidak boleh kosong." }),
   stok: z.string().min(1, { message: "Stok tidak boleh kurang dari 0." }),
   jumlah: z
-    .number()
+    .number({
+      invalid_type_error: "Jumlah permintaan harus berupa bilangan bulat.",
+    })
     .positive({ message: "Jumlah permintaan harus lebih dari 0." }),
-  kd_program: z.string().optional(),
-  kd_kegiatan: z.string().optional(),
-  kd_kro: z.string().optional(),
-  kd_ro: z.string().optional(),
-  kd_komponen: z.string().optional(),
+  kd_program: z.string(),
+  kd_kegiatan: z.string(),
+  kd_kro: z.string(),
+  kd_ro: z.string(),
+  kd_komponen: z.string(),
 });
 
 function BarangInputSwitcher({
@@ -101,6 +104,7 @@ function BarangInputSwitcher({
               <FormItem>
                 <FormControl>
                   <Select
+                    className="text-xs md:text-base"
                     options={barangOptions}
                     onChange={handleBarangChange}
                     value={barangOptions.find(
@@ -185,9 +189,38 @@ export default function PermintaanForm() {
       id_ruangan: string;
       jumlah: number;
       nama_barang: string;
+      kd_program: string;
+      kd_kegiatan: string;
+      kd_kro: string;
+      kd_ro: string;
+      kd_komponen: string;
     }>
   >([]);
+  // const [selectedPok, setSelectedPok] = useState("");
+  // const [allPok, setAllPok] = useState([]);
+  const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedKegiatan, setSelectedKegiatan] = useState("");
+  const [selectedRo, setSelectedRo] = useState("");
+  const [selectedKro, setSelectedKro] = useState("");
+  const [selectedKomponen, setSelectedKomponen] = useState("");
 
+  const [filteredProgramOptions, setFilteredProgramOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [filteredKegiatanOptions, setFilteredKegiatanOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [filteredRoOptions, setFilteredRoOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [filteredKroOptions, setFilteredKroOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [filteredKomponenOptions, setFilteredKomponenOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  // const [filtered];
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -200,82 +233,62 @@ export default function PermintaanForm() {
     queryFn: fetchAllBarang,
   });
 
+  const getUniqueOptionsFromPok = (data: any[], key: string, label: string) => {
+    const uniqueOptions = Array.from(new Set(data.map((item) => item[key])));
+    return uniqueOptions.map((option) => ({
+      value: option,
+      label: data.find((item) => item[key] === option)[label],
+    }));
+  };
+
   const {
-    data: dataProgram,
-    isLoading: loadingProgram,
-    error: errorProgram,
+    data: dataPok,
+    isLoading: loadingPok,
+    error: errorPok,
   } = useQuery({
     queryKey: ["program"],
     queryFn: async () => {
-      return fetchAllProgram().then((res) => {
-        return res.data
-          ? res.data.map((item: { kd_program: string; nama: string }) => ({
-              value: item.kd_program,
-              label: item.nama,
-            }))
-          : [];
+      return fetchAllPok({}).then((res) => {
+        const programOptionsRes = getUniqueOptionsFromPok(
+          res,
+          "kd_program",
+          "nama_program"
+        );
+        const kegiatanOptionsRes = getUniqueOptionsFromPok(
+          res,
+          "kd_kegiatan",
+          "nama_kegiatan"
+        );
+        const roOptionsRes = getUniqueOptionsFromPok(res, "kd_ro", "nama_ro");
+        const kroOptionsRes = getUniqueOptionsFromPok(
+          res,
+          "kd_kro",
+          "nama_kro"
+        );
+        const komponenOptionsRes = getUniqueOptionsFromPok(
+          res,
+          "kd_komponen",
+          "nama_komponen"
+        );
+
+        // setProgramOptions(programOptionsRes);
+        // setKegiatanOptions(kegiatanOptionsRes);
+        // setRoOptions(roOptionsRes);
+        // setKroOptions(kroOptionsRes);
+        // setKomponenOptions(komponenOptionsRes);
+        // setAllPok(res);
+        setFilteredProgramOptions(programOptionsRes);
+        setFilteredKegiatanOptions(kegiatanOptionsRes);
+        setFilteredRoOptions(roOptionsRes);
+        setFilteredKroOptions(kroOptionsRes);
+        setFilteredKomponenOptions(komponenOptionsRes);
+
+        console.log("res", res);
+
+        return res;
       });
-      // fetchAllProgram();
     },
   });
-
-  // const programOptions = dataProgram
-  //   ? dataProgram.map((item: { kd_program: string; nama: string }) => ({
-  //       value: item.kd_program,
-  //       label: item.nama,
-  //     }))
-  //   : [];
-
-  console.log("programOptions", programOptions);
-
-  // const {
-  //   data: dataKegiatan,
-  //   isLoading: loadingKegiatan,
-  //   error: errorKegiatan,
-  // } = useQuery({
-  //   queryKey: ["kegiatan"],
-  //   queryFn: fetchAllKegiatan,
-  // });
-
-  // const {
-  //   data: dataKRO,
-  //   isLoading: loadingKRO,
-  //   error: errorKRO,
-  // } = useQuery({
-  //   queryKey: ["kro"],
-  //   queryFn: fetchAllKRO,
-  // });
-
-  // const {
-  //   data: dataRO,
-  //   isLoading: loadingRO,
-  //   error: errorRO,
-  // } = useQuery({
-  //   queryKey: ["ro"],
-  //   queryFn: fetchAllRO,
-  // });
-
-  // const {
-  //   data: dataKomponen,
-  //   isLoading: loadingKomponen,
-  //   error: errorKomponen,
-  // } = useQuery({
-  //   queryKey: ["komponen"],
-  //   queryFn: fetchAllKomponen,
-  // });
-
-  const loadingStates = [
-    loadingProgram,
-    // loadingKegiatan,
-    // loadingKRO,
-    // loadingRO,
-    // loadingKomponen,
-  ];
-
-  const hasError = errorProgram;
-  // || errorKegiatan || errorKRO || errorRO || errorKomponen;
-
-  const isLoadingAll = loadingStates.some(Boolean);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}") as {
     id_user: string;
@@ -290,8 +303,6 @@ export default function PermintaanForm() {
       label: item.ruangan,
     })
   );
-
-  // console.log("ruanganOptions", ruanganOptions);
 
   const allBarang = dataAllBarang?.data ?? [];
   const barangOptions = allBarang.map(
@@ -316,6 +327,11 @@ export default function PermintaanForm() {
       satuan: "",
       stok: "",
       jumlah: 0,
+      kd_program: "",
+      kd_kegiatan: "",
+      kd_kro: "",
+      kd_ro: "",
+      kd_komponen: "",
     },
   });
 
@@ -346,6 +362,11 @@ export default function PermintaanForm() {
       id_ruangan: values.id_ruangan,
       jumlah: values.jumlah,
       nama_barang: values.nama_barang,
+      kd_program: values.kd_program,
+      kd_kegiatan: values.kd_kegiatan,
+      kd_ro: values.kd_ro,
+      kd_kro: values.kd_kro,
+      kd_komponen: values.kd_komponen,
     };
 
     const newBatchData = {
@@ -357,8 +378,13 @@ export default function PermintaanForm() {
       stok: values.stok,
       jumlah: values.jumlah,
       ruangan: values.ruangan,
+      kd_program: values.kd_program,
+      kd_kegiatan: values.kd_kegiatan,
+      kd_ro: values.kd_ro,
+      kd_kro: values.kd_kro,
+      kd_komponen: values.kd_komponen,
     };
-
+    console.log(newData, newBatchData);
     setRequestData((prev) => [...prev, newData]);
     setBatchData((prev) => [...prev, newBatchData]);
 
@@ -403,86 +429,75 @@ export default function PermintaanForm() {
     }
   };
 
-  if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
-  if (isLoadingAll) return <LoadingSpinner className="mx-auto" size={24} />;
-  if (error) return <div>An error has occurred: {error.message}</div>;
-  if (hasError) return <div>An error has occurred: {hasError.message}</div>;
-
-  const [selectedProgram, setSelectedProgram] = useState("");
-  const [selectedKegiatan, setSelectedKegiatan] = useState("");
-  const [selectedKRO, setSelectedKRO] = useState("");
-  const [selectedRO, setSelectedRO] = useState("");
-
-  const [kegiatanOptions, setKegiatanOptions] = useState([]);
-  const [kroOptions, setKroOptions] = useState([]);
-  const [roOptions, setRoOptions] = useState([]);
-  const [komponenOptions, setKomponenOptions] = useState([]);
-
   useEffect(() => {
     if (selectedProgram) {
-      fetchAllKegiatan(selectedProgram).then((data) => {
-        setKegiatanOptions(
-          data.map((item) => ({
-            value: item.kd_kegiatan,
-            label: item.nama,
-          }))
-        );
-      });
-    } else {
-      setKegiatanOptions([]);
+      let tempAllPok = dataPok;
+      tempAllPok = tempAllPok.filter(
+        (item: any) => item.kd_program === selectedProgram
+      );
+      const kegiatanOptionsRes = getUniqueOptionsFromPok(
+        tempAllPok,
+        "kd_kegiatan",
+        "nama_kegiatan"
+      );
+      setFilteredKegiatanOptions(kegiatanOptionsRes);
+      setSelectedKegiatan("");
+      setSelectedKro("");
+      setSelectedRo("");
+      setSelectedKomponen("");
     }
-    setSelectedKegiatan("");
-    setSelectedKRO("");
-    setSelectedRO("");
   }, [selectedProgram]);
 
-  // useEffect(() => {
-  //   if (selectedKegiatan) {
-  //     fetchAllKRO(selectedKegiatan).then((data) => {
-  //       setKroOptions(
-  //         data.map((item) => ({
-  //           value: item.kd_kro,
-  //           label: item.nama,
-  //         }))
-  //       );
-  //     });
-  //   } else {
-  //     setKroOptions([]);
-  //   }
-  //   setSelectedKRO("");
-  //   setSelectedRO("");
-  // }, [selectedKegiatan]);
+  useEffect(() => {
+    if (selectedKegiatan) {
+      let tempAllPok = dataPok;
+      tempAllPok = tempAllPok.filter(
+        (item: any) => item.kd_kegiatan === selectedKegiatan
+      );
+      const kroOptionsRes = getUniqueOptionsFromPok(
+        tempAllPok,
+        "kd_kro",
+        "nama_kro"
+      );
+      setFilteredKroOptions(kroOptionsRes);
+      setSelectedRo("");
+      setSelectedKomponen("");
+    }
+  }, [selectedKegiatan]);
 
-  // useEffect(() => {
-  //   if (selectedKRO) {
-  //     fetchAllRO(selectedKRO).then((data) => {
-  //       setRoOptions(
-  //         data.map((item) => ({
-  //           value: item.kd_ro,
-  //           label: item.nama,
-  //         }))
-  //       );
-  //     });
-  //   } else {
-  //     setRoOptions([]);
-  //   }
-  //   setSelectedRO("");
-  // }, [selectedKRO]);
+  useEffect(() => {
+    if (selectedKro) {
+      let tempAllPok = dataPok;
+      tempAllPok = tempAllPok.filter(
+        (item: any) => item.kd_kro === selectedKro
+      );
+      const roOptionsRes = getUniqueOptionsFromPok(
+        tempAllPok,
+        "kd_ro",
+        "nama_ro"
+      );
+      setFilteredRoOptions(roOptionsRes);
+      setSelectedKomponen("");
+    }
+  }, [selectedKro]);
 
-  // useEffect(() => {
-  //   if (selectedRO) {
-  //     fetchAllKomponen(selectedRO).then((data) => {
-  //       setKomponenOptions(
-  //         data.map((item) => ({
-  //           value: item.kd_komponen,
-  //           label: item.nama,
-  //         }))
-  //       );
-  //     });
-  //   } else {
-  //     setKomponenOptions([]);
-  //   }
-  // }, [selectedRO]);
+  useEffect(() => {
+    if (selectedRo) {
+      let tempAllPok = dataPok;
+      tempAllPok = tempAllPok.filter((item: any) => item.kd_ro === selectedRo);
+      const komponenOptionsRes = getUniqueOptionsFromPok(
+        tempAllPok,
+        "kd_komponen",
+        "nama_komponen"
+      );
+      setFilteredKomponenOptions(komponenOptionsRes);
+    }
+  }, [selectedRo]);
+
+  if (isLoading || loadingPok)
+    return <LoadingSpinner className="mx-auto" size={24} />;
+  if (errorPok) return <div>Terjadi Error: {errorPok.message}</div>;
+  if (error) return <div>An error has occurred: {error.message}</div>;
 
   return (
     <div className="flex">
@@ -523,6 +538,7 @@ export default function PermintaanForm() {
                   <FormLabel>Ruangan</FormLabel>
                   <FormControl>
                     <Select
+                      className="text-xs md:text-base"
                       options={ruanganOptions}
                       onChange={(selectedOption) => {
                         field.onChange(
@@ -560,9 +576,11 @@ export default function PermintaanForm() {
                   <FormLabel>Program</FormLabel>
                   <FormControl>
                     <Select
-                      options={programOptions}
-                      value={programOptions.find(
-                        (item) => item.value === field.value
+                      className="text-xs md:text-base"
+                      options={filteredProgramOptions}
+                      value={filteredProgramOptions.find(
+                        (item: { value: string; label: string }) =>
+                          item.value === selectedProgram
                       )}
                       onChange={(selectedOption) => {
                         const value = selectedOption
@@ -570,7 +588,127 @@ export default function PermintaanForm() {
                           : "";
                         field.onChange(value);
                         form.setValue("kd_program", value);
+                        console.log("selected program", value);
                         setSelectedProgram(value); // ✅ ini dia yang kurang
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="kd_kegiatan"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kegiatan</FormLabel>
+                  <FormControl>
+                    <Select
+                      className="text-xs md:text-base"
+                      options={
+                        selectedProgram !== "" ? filteredKegiatanOptions : []
+                      }
+                      value={filteredKegiatanOptions.find(
+                        (item: { value: string; label: string }) =>
+                          item.value === selectedKegiatan
+                      )}
+                      onChange={(selectedOption) => {
+                        const value = selectedOption
+                          ? selectedOption.value
+                          : "";
+                        field.onChange(value);
+                        form.setValue("kd_kegiatan", value);
+                        setSelectedKegiatan(value); // ✅ ini dia yang kurang
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="kd_kro"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Klasifikasi Rincian Output</FormLabel>
+                  <FormControl>
+                    <Select
+                      className="text-xs md:text-base"
+                      options={
+                        selectedKegiatan !== "" ? filteredKroOptions : []
+                      } // filteredKroOptions}
+                      value={filteredKroOptions.find(
+                        (item: { value: string; label: string }) =>
+                          item.value === selectedKro
+                      )}
+                      onChange={(selectedOption) => {
+                        const value = selectedOption
+                          ? selectedOption.value
+                          : "";
+                        field.onChange(value);
+                        form.setValue("kd_kro", value);
+
+                        setSelectedKro(value); // ✅ ini dia yang kurang
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="kd_ro"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rincian Output</FormLabel>
+                  <FormControl>
+                    <Select
+                      className="text-xs md:text-base"
+                      options={selectedKro !== "" ? filteredRoOptions : []} // filteredRoOptions}
+                      value={filteredRoOptions.find(
+                        (item: { value: string; label: string }) =>
+                          item.value === selectedRo
+                      )}
+                      onChange={(selectedOption) => {
+                        const value = selectedOption
+                          ? selectedOption.value
+                          : "";
+                        field.onChange(value);
+                        form.setValue("kd_ro", value);
+                        setSelectedRo(value); // ✅ ini dia yang kurang
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="kd_komponen"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Komponen</FormLabel>
+                  <FormControl>
+                    <Select
+                      className="text-xs md:text-base"
+                      options={selectedRo !== "" ? filteredKomponenOptions : []} // filteredKomponenOptions}
+                      value={filteredKomponenOptions.find(
+                        (item: { value: string; label: string }) =>
+                          item.value === selectedKomponen
+                      )}
+                      onChange={(selectedOption) => {
+                        const value = selectedOption
+                          ? selectedOption.value
+                          : "";
+                        field.onChange(value);
+                        form.setValue("kd_komponen", value);
+                        console.log("selected program", value);
+                        setSelectedKomponen(value); // ✅ ini dia yang kurang
                       }}
                     />
                   </FormControl>
@@ -683,7 +821,12 @@ export default function PermintaanForm() {
                 <FormItem>
                   <FormLabel>Kategori Barang</FormLabel>
                   <FormControl>
-                    <Input disabled placeholder="Kategori Barang" {...field} />
+                    <Input
+                      disabled
+                      placeholder="Kategori Barang"
+                      {...field}
+                      className="text-xs md:text-base"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -710,10 +853,16 @@ export default function PermintaanForm() {
                   <FormLabel>Jumlah Permintaan</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
+                      // type="number"
                       placeholder="Jumlah Permintaan"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.onChange(
+                          !isNaN(Number(e.target.value))
+                            ? Number(e.target.value)
+                            : 0
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />
