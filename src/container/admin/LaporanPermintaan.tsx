@@ -93,7 +93,7 @@ export default function LaporanPermintaan() {
     const responseTable = await base.post('/summary_karken',formatedValues);
     // setDataTable(responseTable.data.data);
 
-    setDataCetak(responsePrint.data.download_url);
+    setDataCetak(responsePrint.data.data);
     setDataTable(responseTable.data.data);
     // console.log('cek',dataTable);
     // console.log('karken',responsePrint.data.download_url);
