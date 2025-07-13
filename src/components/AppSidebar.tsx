@@ -5,7 +5,8 @@ import {
   adminPembelian,
   viewer,
   adminGudang,
-  adminPengadaan
+  adminPengadaan,
+  ketuaTim
 } from "@/lib/items/sidebar-items";
 import {
   Collapsible,
@@ -44,7 +45,9 @@ export default function AppSidebar({ role }: { role: string }) {
   } else if (role === "admin_gudang") {
     sidebarItems = adminGudang;
   } else if (role === "admin_pengadaan") {
-    sidebarItems = adminPengadaan; // Assuming admin_pengadaan has similar items to superAdmin
+    sidebarItems = adminPengadaan;
+  } else if (role === "ketua_tim") {
+    sidebarItems = ketuaTim; 
   }
   return (
     <Sidebar collapsible="icon">

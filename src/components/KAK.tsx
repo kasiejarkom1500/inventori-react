@@ -624,20 +624,25 @@ export const KAK = ({ data }: { data: KAKLampiran1Props[] }) => {
           );
         })}
 
-        <Text style={{ textAlign: "right", fontWeight: "bold", marginTop: 18 }}>
-          Lampiran 2
-        </Text>
-        <Text
-          style={{
-            textAlign: "center",
-            fontWeight: "bold",
-            marginVertical: 18,
-          }}
-        >
-          Spesifikasi Teknis
-        </Text>
-        <Text style={{ fontSize: 14, textAlign: "right", fontWeight: "bold" }}>
-          {/* (
+        <View wrap={false}>
+          <Text
+            style={{ textAlign: "right", fontWeight: "bold", marginTop: 18 }}
+          >
+            Lampiran 2
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              marginVertical: 18,
+            }}
+          >
+            Spesifikasi Teknis
+          </Text>
+          <Text
+            style={{ fontSize: 14, textAlign: "right", fontWeight: "bold" }}
+          >
+            {/* (
           {formatedPrice(
             data.list_barang.reduce(
               (total, barang) => total + barang.total_harga,
@@ -645,72 +650,72 @@ export const KAK = ({ data }: { data: KAKLampiran1Props[] }) => {
             )
           )}
           ) */}
-        </Text>
-        <Text style={{ fontWeight: "bold", marginVertical: 18 }}>
-          Daftar Barang dan Perlengkapan yang diperlukan:
-        </Text>
-
-        <View style={styles.table}>
-          <View style={styles.tableRowHeader}>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "5%" }]}
-            >
-              No
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "30%" }]}
-            >
-              Nama Barang
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "12%" }]}
-            >
-              Satuan
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "12%" }]}
-            >
-              Volume
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "20%" }]}
-            >
-              Harga Satuan (Rp)
-            </Text>
-            <Text
-              style={[styles.tableCol, styles.tableHeader, { width: "20%" }]}
-            >
-              Total Harga (Rp)
-            </Text>
+          </Text>
+          <Text style={{ fontWeight: "bold", marginVertical: 18 }}>
+            Daftar Barang dan Perlengkapan yang diperlukan:
+          </Text>
+          <View style={styles.table} wrap={false}>
+            <View style={styles.tableRowHeader}>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "5%" }]}
+              >
+                No
+              </Text>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "30%" }]}
+              >
+                Nama Barang
+              </Text>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "12%" }]}
+              >
+                Satuan
+              </Text>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "12%" }]}
+              >
+                Volume
+              </Text>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "20%" }]}
+              >
+                Harga Satuan (Rp)
+              </Text>
+              <Text
+                style={[styles.tableCol, styles.tableHeader, { width: "20%" }]}
+              >
+                Total Harga (Rp)
+              </Text>
+            </View>
+            {/* Iterate Here */}
+            {uniqueBarang.size > 0 &&
+              Array.from(uniqueBarang).map((item, index) => {
+                console.log("item", item);
+                const barang = item[1];
+                return (
+                  <View style={styles.tableRow}>
+                    <Text style={[styles.tableCol, { width: "5%" }]}>
+                      {index + 1}
+                    </Text>
+                    <Text style={[styles.tableCol, { width: "30%" }]}>
+                      {toTitleCase(barang.nama_barang)}
+                    </Text>
+                    <Text style={[styles.tableCol, { width: "12%" }]}>
+                      {toTitleCase(barang.satuan)}
+                    </Text>
+                    <Text style={[styles.tableCol, { width: "12%" }]}>
+                      {barang.jumlah}
+                    </Text>
+                    <Text style={[styles.tableCol, { width: "20%" }]}>
+                      {formatedPrice(barang.harga_satuan)}
+                    </Text>
+                    <Text style={[styles.tableCol, { width: "20%" }]}>
+                      {formatedPrice(barang.total_harga)}
+                    </Text>
+                  </View>
+                );
+              })}
           </View>
-          {/* Iterate Here */}
-          {uniqueBarang.size > 0 &&
-            Array.from(uniqueBarang).map((item, index) => {
-              console.log("item", item);
-              const barang = item[1];
-              return (
-                <View style={styles.tableRow}>
-                  <Text style={[styles.tableCol, { width: "5%" }]}>
-                    {index + 1}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "30%" }]}>
-                    {toTitleCase(barang.nama_barang)}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "12%" }]}>
-                    {toTitleCase(barang.satuan)}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "12%" }]}>
-                    {barang.jumlah}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "20%" }]}>
-                    {formatedPrice(barang.harga_satuan)}
-                  </Text>
-                  <Text style={[styles.tableCol, { width: "20%" }]}>
-                    {formatedPrice(barang.total_harga)}
-                  </Text>
-                </View>
-              );
-            })}
         </View>
       </Page>
     </Document>
