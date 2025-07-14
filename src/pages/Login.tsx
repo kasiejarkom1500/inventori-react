@@ -125,8 +125,8 @@ export default function Login() {
                 </Link>
               </div>
 
-              <Button className="w-full" type="submit">
-                Login
+              <Button className="w-full" type="submit" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
             </form>
           </Form>
