@@ -114,7 +114,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
                 </DialogContent>
               </Dialog>
             </div>
-              {user.role === "ketua_tim" && (
+              {(user.role === "ketua_tim" || user.role === "admin") && (
                     <div className="flex space-x-3 justify-center items-center">
                       <div
                         className={`p-1 rounded-md cursor-pointer transition-colors ${

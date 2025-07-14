@@ -205,6 +205,7 @@ export const adminGudang = [
       // {title: 'Barang Keluar', url: 'barang-keluar'},
       { title: "Permintaan Barang", url: "permintaan-barang" },
       { title: "Input Barang Masuk", url: "input-barang-masuk" },
+      { title: "Input Permintaan Barang", url: "input-permintaan-barang" },
     ],
   },
   {
