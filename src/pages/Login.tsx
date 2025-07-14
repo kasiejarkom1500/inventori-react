@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { normalizeRole } from "@/lib/utils";
 import { base } from "@/lib/network/base";
+import { useState } from "react";
 // import {normalizeRole} from '@/lib/utils';
 
 const loginFormSchema = z.object({
@@ -34,6 +35,7 @@ const loginFormSchema = z.object({
 export default function Login() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -43,6 +45,7 @@ export default function Login() {
     },
   });
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
+    setIsLoading(true);
     try {
       const { data } = await base.post("/login", values);
       // console.log("datdata", data);
@@ -66,6 +69,8 @@ export default function Login() {
     } catch (err) {
       // console.error("Login failed:", err);
       form.setError("username", { message: "Invalid username or passwords" });
+    } finally {
+      setIsLoading(false); // ⬅️ selesai loading
     }
   };
 
