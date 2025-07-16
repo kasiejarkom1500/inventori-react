@@ -15,6 +15,8 @@ import {
   approveTransaksi,
 } from "@/lib/services/permintaanService";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+
 // aa
 
 export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
@@ -82,6 +84,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
     {
       header: "Action",
       cell: (row) => {
+        const queryClient = useQueryClient();
         const id_ruangan = row.row.original.id_ruangan;
         const tanggal = row.row.original.tanggal;
         const id_transaksi = row.row.original.id_transaksi;
@@ -100,6 +103,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
             const result = await approveTransaksi(id_transaksi, newStatus);
             console.log("Status updated:", result);
             setApproved(newStatus === "1");
+            queryClient.invalidateQueries({ queryKey: ["data-permintaan-user"] });
             // Optionally show toast
           } catch (error) {
             console.error("Gagal update status:", error);
@@ -111,6 +115,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
             const result = await approveGudang(id_transaksi, newStatusGudang);
             console.log("Status updated:", result);
             setApprovedGudang(newStatusGudang === "1");
+            queryClient.invalidateQueries({ queryKey: ["data-permintaan-user"] });
             // Optionally show toast
           } catch (error) {
             console.error("Gagal update status:", error);
