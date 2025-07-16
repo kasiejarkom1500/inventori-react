@@ -165,8 +165,8 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
                           : "bg-blue-500 hover:bg-blue-300")
                       : "bg-blue-300 cursor-not-allowed"
                   }`}
-                  onClick={hasApproved ? onApproveGudangClick : undefined}
-                  title={!hasApproved ? "Belum disetujui oleh Tim" : ""}
+                  onClick={(hasApproved || hasApprovedGudang) ? onApproveGudangClick : undefined}
+                  title={!(hasApproved || hasApprovedGudang) ? "Belum disetujui oleh Tim" : ""}
                 >
                   {approvedGudang ? (
                     <XCircle size={18} color="white" />
