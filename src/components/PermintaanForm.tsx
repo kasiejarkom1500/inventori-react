@@ -140,7 +140,7 @@ function BarangInputSwitcher({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Nama Barang Baru" {...field} />
+                  <Input placeholder="Nama Barang Baru" {...field} onChange={(e) => field.onChange(e.target.value.toUpperCase())}/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
