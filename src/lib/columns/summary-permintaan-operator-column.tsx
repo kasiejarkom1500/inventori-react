@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { SummaryPermintaan } from "@/lib/types/barang";
-import { ArrowUpDown, CircleCheckBig, Eye, XCircle} from "lucide-react";
+import { ArrowUpDown, CircleCheckBig, Eye, XCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,10 @@ import {
 import DetailPermintaan from "@/container/operator-ruangan/DetailPermintaan";
 import { Button } from "@/components/ui/button";
 import { getUser } from "../network/authServices";
-import { approveTransaksi } from "@/lib/services/permintaanService";
+import {
+  approveGudang,
+  approveTransaksi,
+} from "@/lib/services/permintaanService";
 import { useState } from "react";
 // aa
 
@@ -81,18 +84,34 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
         const id_ruangan = row.row.original.id_ruangan;
         const tanggal = row.row.original.tanggal;
         const id_transaksi = row.row.original.id_transaksi;
-        const status = row.row.original.approve_tim;
+        const approve_tim = row.row.original.approve_tim;
+        const approve_gudang = row.row.original.approve_gudang;
         const user = getUser();
-        const [approved, setApproved] = useState(status === '1');
+        const [approved, setApproved] = useState(approve_tim === "1");
+        const [approvedGudang, setApprovedGudang] = useState(
+          approve_gudang === "1"
+        );
+        const hasApproved = row.row.original.Approved > 0;
         const onApproveClick = async () => {
-          const newStatus = approved ? '0' : '1'; // toggle status
+          const newStatus = approved ? "0" : "1"; // toggle status
           try {
             const result = await approveTransaksi(id_transaksi, newStatus);
-            console.log('Status updated:', result);
-            setApproved(newStatus === '1');
+            console.log("Status updated:", result);
+            setApproved(newStatus === "1");
             // Optionally show toast
           } catch (error) {
-            console.error('Gagal update status:', error);
+            console.error("Gagal update status:", error);
+          }
+        };
+        const onApproveGudangClick = async () => {
+          const newStatusGudang = approvedGudang ? "0" : "1"; // toggle status
+          try {
+            const result = await approveGudang(id_transaksi, newStatusGudang);
+            console.log("Status updated:", result);
+            setApprovedGudang(newStatusGudang === "1");
+            // Optionally show toast
+          } catch (error) {
+            console.error("Gagal update status:", error);
           }
         };
         return (
@@ -114,22 +133,47 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
                 </DialogContent>
               </Dialog>
             </div>
-              {(user.role === "ketua_tim" || user.role === "admin") && (
-                    <div className="flex space-x-3 justify-center items-center">
-                      <div
-                        className={`p-1 rounded-md cursor-pointer transition-colors ${
-                          approved ? 'bg-red-500 hover:bg-red-300' : 'bg-purple-500 hover:bg-purple-300'
-                        }`}
-                        onClick={onApproveClick}
-                      >
-                        {approved ? (
-                          <XCircle size={18} color="white" />
-                        ) : (
-                          <CircleCheckBig size={18} color="white" />
-                        )}
-                      </div>
-                    </div>
+            {(user.role === "ketua_tim" || user.role === "admin") && (
+              <div className="flex space-x-3 justify-center items-center">
+                <div
+                  className={`p-1 rounded-md cursor-pointer transition-colors ${
+                    approved
+                      ? "bg-red-500 hover:bg-red-300"
+                      : "bg-purple-500 hover:bg-purple-300"
+                  }`}
+                  onClick={onApproveClick}
+                >
+                  {approved ? (
+                    <XCircle size={18} color="white" />
+                  ) : (
+                    <CircleCheckBig size={18} color="white" />
                   )}
+                </div>
+              </div>
+            )}
+
+            {(user.role === "ketua_gudang" || user.role === "admin") && (
+              <div className="flex space-x-3 justify-center items-center">
+                <div
+                  className={`p-1 rounded-md transition-colors ${
+                    hasApproved
+                      ? "cursor-pointer " +
+                        (approvedGudang
+                          ? "bg-red-500 hover:bg-red-300"
+                          : "bg-blue-500 hover:bg-blue-300")
+                      : "bg-blue-300 cursor-not-allowed"
+                  }`}
+                  onClick={hasApproved ? onApproveGudangClick : undefined}
+                  title={!hasApproved ? "Belum disetujui oleh Tim" : ""}
+                >
+                  {approvedGudang ? (
+                    <XCircle size={18} color="white" />
+                  ) : (
+                    <CircleCheckBig size={18} color="white" />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
       },

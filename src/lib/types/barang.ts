@@ -73,6 +73,7 @@ export type SummaryPermintaan = {
   id_ruangan: string;
   id_transaksi: string;
   approve_tim: string;
+  approve_gudang: string;
   tanggal: string;
   ruangan: string;
   jumlah_permintaan: number;

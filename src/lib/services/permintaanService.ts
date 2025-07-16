@@ -34,3 +34,8 @@ export const approveTransaksi = async (id_transaksi: string, status: string) => 
   const response = await base.get(`/approve_transaksi/${id_transaksi}/${status}`);
   return response.data;
 };
+
+export const approveGudang = async (id_transaksi: string, status: string) => {
+  const response = await base.get(`/approve_gudang/${id_transaksi}/${status}`);
+  return response.data;
+};
