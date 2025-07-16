@@ -59,7 +59,10 @@ const router = createBrowserRouter(
                 { path: "pengajuan-barang", element: <PengajuanBarang /> },
                 { path: "permintaan-barang", element: <PermintaanBarang /> },
                 { path: "input-barang-masuk", element: <InputBarangMasuk /> },
-                { path: "input-permintaan-barang", element: <SummaryPermintaan /> },
+                {
+                  path: "input-permintaan-barang",
+                  element: <SummaryPermintaan />,
+                },
 
                 { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
                 { path: "kartu-kendali", element: <LaporanPermintaan /> },
@@ -180,6 +183,7 @@ const router = createBrowserRouter(
 
                 { path: "permintaan-barang", element: <PermintaanBarang /> },
                 { path: "input-barang-masuk", element: <InputBarangMasuk /> },
+                { path: "input-pengajuan-barang", element: <SummaryPengajuan /> },
 
                 { path: "kartu-kendali", element: <LaporanPermintaan /> },
                 { path: "laporan-stok", element: <LaporanStok /> },
@@ -187,7 +191,23 @@ const router = createBrowserRouter(
             },
           ],
         },
-        
+        {
+          path: "ketua-gudang",
+          element: <RoleAuth requiredRole="ketua_gudang" />,
+          children: [
+            {
+              path: "",
+              element: <LayoutDashboard />,
+              children: [
+                { path: "dashboard", element: <DashboardOperator /> },
+                { path: "data-barang-atk", element: <DataBarangATKOp /> },
+                { path: "data-barang-ark", element: <DataBarangARKOp /> },
+                { path: "permintaan-barang", element: <SummaryPermintaan /> },
+                { path: "pengajuan-barang", element: <SummaryPengajuan /> },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],

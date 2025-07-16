@@ -48,6 +48,8 @@ export default function AppSidebar({ role }: { role: string }) {
     sidebarItems = adminPengadaan;
   } else if (role === "ketua_tim") {
     sidebarItems = ketuaTim; 
+  } else if (role === "ketua_gudang") {
+    sidebarItems = ketuaTim; 
   }
   return (
     <Sidebar collapsible="icon">
