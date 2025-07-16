@@ -18,6 +18,8 @@ const badgeVariants = cva(
           "border-transparent bg-red-500 text-slate-50 hover:bg-red-500/80 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/80",
         Pengadaan:
           "border-transparent bg-blue-500 text-slate-50 hover:bg-blue-500/80 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/80",
+        "Approved Gudang":
+          "border-transparent bg-purple-500 text-slate-50 hover:bg-purple-500/80 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/80",
       },
     },
     defaultVariants: {

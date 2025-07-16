@@ -62,6 +62,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
       },
       cell: (row) => {
         const status = {
+          ApproveGudang: row.row.original.ApprovedGudang,
           Approved: row.row.original.Approved,
           Pending: row.row.original.Pending,
           Rejected: row.row.original.Rejected,
@@ -91,6 +92,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
         const [approvedGudang, setApprovedGudang] = useState(
           approve_gudang === "1"
         );
+        const hasApprovedGudang = row.row.original.ApprovedGudang > 0;
         const hasApproved = row.row.original.Approved > 0;
         const onApproveClick = async () => {
           const newStatus = approved ? "0" : "1"; // toggle status
@@ -156,7 +158,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
               <div className="flex space-x-3 justify-center items-center">
                 <div
                   className={`p-1 rounded-md transition-colors ${
-                    hasApproved
+                    (hasApprovedGudang || hasApproved)
                       ? "cursor-pointer " +
                         (approvedGudang
                           ? "bg-red-500 hover:bg-red-300"

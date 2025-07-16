@@ -66,6 +66,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
     },
     cell: (row) => {
       const status = {
+        ApproveGudang: row.row.original.ApprovedGudang,
         Approved: row.row.original.Approved,
         Pending: row.row.original.Pending,
         Rejected: row.row.original.Rejected,

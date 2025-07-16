@@ -81,6 +81,7 @@ export type SummaryPermintaan = {
   Pending: number;
   Rejected: number;
   Pengadaan: number;
+  ApprovedGudang: number;
 };
 export type SummaryPengajuan = {
   id_user: number;

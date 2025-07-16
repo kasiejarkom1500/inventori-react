@@ -142,7 +142,7 @@ export const barangPermintaanColumns = (
         (item) => item.id_permintaan === row.row.original.id_permintaan
       )?.status;
       return (
-        <Badge variant={status as "Pending" | "Approved" | "Rejected" | "Pengadaan"}>
+        <Badge variant={status as "Pending" | "Approved" | "Rejected" | "Pengadaan" | "Approved Gudang"}>
           {status}
         </Badge>
       );
@@ -173,10 +173,11 @@ export const barangPermintaanColumns = (
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Ubah Status</SelectLabel>
-              <SelectItem value="Approved">Approved</SelectItem>
+              {/* <SelectItem value="Approved">Approved</SelectItem> */}
+              <SelectItem value="Approved Gudang">Approved Gudang</SelectItem>
               <SelectItem value="Rejected">Rejected</SelectItem>
               <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="Pengadaan">Pengadaan</SelectItem>
+              {/* <SelectItem value="Pengadaan">Pengadaan</SelectItem> */}
             </SelectGroup>
           </SelectContent>
         </Select>
