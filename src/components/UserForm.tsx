@@ -13,16 +13,31 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { dataAdmin } from "@/lib/data/admin-dummy";
+import { fetchKabupaten } from "@/lib/services/fetch";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "./ui/select";
+import { base } from "@/lib/network/base";
+import { useToast } from "@/hooks/use-toast";
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchPegawai } from "@/lib/network/userService";
 // import { LoadingSpinner } from "./ui/loading";
 
 const userSchema = z.object({
+  nip_lama: z
+    .string()
+    .min(1, { message: "NIP Lama tidak boleh kosong." })
+    .max(9, { message: "NIP Lama tidak boleh lebih dari 9 karakter." }),
   nama: z
     .string()
     .min(1, { message: "Nama tidak boleh kosong." })
     .max(100, { message: "Nama tidak boleh lebih dari 100 karakter." }),
-  satker: z
+  id_satker: z
     .string()
     .min(1, { message: "Satker tidak boleh kosong." })
     .max(50, { message: "Satker tidak boleh lebih dari 1500 karakter." }),
@@ -64,7 +79,7 @@ export default function UserForm({
     defaultValues: {
       nama: "",
       jabatan: "",
-      satker: "",
+      id_satker: "",
       ruangan: "",
       username: "",
       password: "",
@@ -72,6 +87,8 @@ export default function UserForm({
   });
 
   const { setValue } = form;
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
   // const {
   //     // data: dataAllPegawai,
@@ -82,6 +99,15 @@ export default function UserForm({
   //     queryKey: ['pegawai'],
   //     queryFn: fetchPegawai,
   //   });
+
+
+  const { data: kabupatenData, isLoading: kabupatenLoading } = useQuery({
+      queryKey: ["kabupaten"],
+      queryFn: async () => {
+        const result = await fetchKabupaten(); // ini tetap pakai fungsi lama
+        return result.data; // <-- ambil array dari response di sini saja
+      },
+    });
 
   useEffect(() => {
     if (id) {
@@ -94,14 +120,28 @@ export default function UserForm({
     }
   }, [id, setValue]);
 
-  function onSubmit(values: z.infer<typeof userSchema>) {
-    if (type === "add") {
-      console.log("add", values);
+  async function onSubmit(values: z.infer<typeof userSchema>) {
+      try {
+        const endpoint = type === "add" ? "/add_user" : `/update_user`;
+        const method = type === "add" ? "post" : "put";
+        console.log(endpoint, method);
+        console.log(values);
+        const response = await base[method](endpoint, values);
+        toast.toast({
+          title: "Berhasil",
+          description: response.data.message || "Data berhasil diproses.",
+        });
+  
+        queryClient.invalidateQueries({ queryKey: ["data-users"] });
+      } catch (error) {
+        toast.toast({
+          variant: "destructive",
+          title: "Gagal",
+          description: "Gagal menyimpan pengguna baru",
+        });
+        console.error(error);
+      }
     }
-    if (type === "edit") {
-      console.log("edit", values);
-    }
-  }
 
   // if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
   // if (error) return <div>An error has occurred: {error.message}</div>;
@@ -109,6 +149,19 @@ export default function UserForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-8">
+         <FormField
+          control={form.control}
+          name="nip_lama"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>NIP Lama</FormLabel>
+              <FormControl>
+                <Input placeholder="NIP Lama" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="nama"
@@ -124,12 +177,29 @@ export default function UserForm({
         />
         <FormField
           control={form.control}
-          name="satker"
+          name="id_satker"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Satker</FormLabel>
+              <FormLabel>Kabupaten</FormLabel>
               <FormControl>
-                <Input placeholder="Satker" {...field} />
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih Kabupaten" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {kabupatenLoading ? (
+                      <SelectItem value="loading" disabled>
+                        Loading...
+                      </SelectItem>
+                    ) : (
+                      kabupatenData?.map((item: any) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.nama_kabupaten}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,45 +213,6 @@ export default function UserForm({
               <FormLabel>Jabatan</FormLabel>
               <FormControl>
                 <Input placeholder="Jabatan" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ruangan"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ruangan</FormLabel>
-              <FormControl>
-                <Input placeholder="Ruangan" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
