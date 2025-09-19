@@ -112,7 +112,7 @@ export default function UserForm({
 
   useEffect(() => {
     if (id) {
-      const detailAdmin = dataAdmin.find((admin) => admin.id === id);
+      const detailAdmin = dataAdmin.find((admin) => admin.id_user === id);
       if (detailAdmin) {
         Object.entries(detailAdmin).forEach(([key, value]) => {
           setValue(key as keyof z.infer<typeof userSchema>, value);
