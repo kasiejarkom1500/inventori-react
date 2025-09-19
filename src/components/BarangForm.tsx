@@ -169,8 +169,8 @@ export default function BarangForm({
                       </SelectItem>
                     ) : (
                       subkategoriData?.map((item: any) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.nama}
+                        <SelectItem key={item.id} value={item.kd_subkategori}>
+                          {item.sub_kategori}
                         </SelectItem>
                       ))
                     )}
@@ -213,7 +213,7 @@ export default function BarangForm({
                     ) : (
                       kabupatenData?.map((item: any) => (
                         <SelectItem key={item.id} value={item.id}>
-                          {item.nama}
+                          {item.nama_kabupaten}
                         </SelectItem>
                       ))
                     )}
