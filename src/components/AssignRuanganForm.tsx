@@ -39,7 +39,7 @@ export default function AssignRuanganForm({ idUser }: { idUser: string }) {
 
   async function handleSubmit() {
     try {
-      await base.post("/assign_ruangan_post", {
+      await base.post("/assign_ruangan", {
         id_user: idUser,
         id_ruangan: selectedRuangan,
       });
