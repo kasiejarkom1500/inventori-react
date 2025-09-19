@@ -11,6 +11,15 @@ export async function fetchDetailPermintaaan(
   return response.data;
 }
 
+export async function fetchListRuangan(
+  satkerID: string,
+) {
+  const response = await base.get(
+    `/list_ruangan/${satkerID}`
+  );
+  return response.data;
+}
+
 export async function fetchBarangMasuk() {
   const response = await base.get("/get_barang_masuk");
   return response.data;

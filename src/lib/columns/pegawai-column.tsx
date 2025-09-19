@@ -1,30 +1,31 @@
-import {ColumnDef} from '@tanstack/react-table';
-import {Pencil, Trash2} from 'lucide-react';
-import {User} from '@/lib/types/user';
+import { ColumnDef } from "@tanstack/react-table";
+import { Pencil, Trash2 } from "lucide-react";
+import { User } from "@/lib/types/user";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import {Button} from '@/components/ui/button';
-import UserForm from '@/components/UserForm';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import UserForm from "@/components/UserForm";
+import AssignRuanganForm from "@/components/AssignRuanganForm";
 export const operatorColumns: ColumnDef<User>[] = [
   {
-    header: 'No',
+    header: "No",
     cell: (row) => row.row.index + 1,
   },
   {
-    accessorKey: 'nama',
-    header: 'Nama',
+    accessorKey: "nama",
+    header: "Nama",
   },
   {
-    accessorKey: 'id_satker',
-    header: 'Satker',
+    accessorKey: "id_satker",
+    header: "Satker",
   },
   {
-    accessorKey: 'jabatan',
-    header: 'Jabatan',
+    accessorKey: "jabatan",
+    header: "Jabatan",
   },
   // {
   //   accessorKey: 'ruangan',
@@ -35,26 +36,45 @@ export const operatorColumns: ColumnDef<User>[] = [
   //   header: 'Username',
   // },
   {
-    header: 'Action',
+    header: "Action",
     cell: (row) => {
-      const detail = row.row.original.id;
+      const detail = row.row.original.id; // id_user
+
       return (
-        <Dialog>
-          <div className='flex space-x-3 justify-center items-center'>
-            <DialogTrigger className='bg-yellow-500 p-1 rounded-md hover:bg-yellow-900/90'>
-              <Pencil size={18} color='white' />
+        <div className="flex space-x-3 justify-center items-center">
+          {/* Edit */}
+          <Dialog>
+            <DialogTrigger className="bg-yellow-500 p-1 rounded-md hover:bg-yellow-900/90">
+              <Pencil size={18} color="white" />
             </DialogTrigger>
             <DialogContent>
-              <DialogTitle className='text-xl font-semibold'>
+              <DialogTitle className="text-xl font-semibold">
                 Edit Operator
               </DialogTitle>
-              <UserForm id={detail} type='edit' />
+              <UserForm id={detail} type="edit" />
             </DialogContent>
-            <Button className='bg-red-500 p-1 h-fit rounded-md hover:bg-red-900/90'>
-              <Trash2 size={18} color='white' />
-            </Button>
-          </div>
-        </Dialog>
+          </Dialog>
+
+          {/* Assign Ruangan */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-500 p-1 h-fit rounded-md hover:bg-blue-900/90">
+                Assign Ruangan
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle className="text-xl font-semibold">
+                Assign Ruangan
+              </DialogTitle>
+              <AssignRuanganForm idUser={detail} />
+            </DialogContent>
+          </Dialog>
+
+          {/* Delete */}
+          <Button className="bg-red-500 p-1 h-fit rounded-md hover:bg-red-900/90">
+            <Trash2 size={18} color="white" />
+          </Button>
+        </div>
       );
     },
   },
