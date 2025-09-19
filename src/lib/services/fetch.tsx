@@ -28,13 +28,19 @@ export async function fetchAllSumber() {
 
 export async function fetchDataKarken() {
   const response = await base.post("/generate");
-  console.log("karken", response.data);
+  // console.log("karken", response.data);
   return response.data;
 }
 
 export async function fetchSubkategori() {
   const response = await base.get("/get_subkategori");
-  console.log("subkategori", response.data);
+  // console.log("subkategori", response.data);
+  return response.data;
+}
+
+export async function fetchKabupaten() {
+  const response = await base.get("/get_kabupaten");
+  // console.log("subkategori", response.data);
   return response.data;
 }
 
