@@ -26,14 +26,14 @@ export const operatorColumns: ColumnDef<User>[] = [
     accessorKey: 'jabatan',
     header: 'Jabatan',
   },
-  {
-    accessorKey: 'ruangan',
-    header: 'Ruangan',
-  },
-  {
-    accessorKey: 'username',
-    header: 'Username',
-  },
+  // {
+  //   accessorKey: 'ruangan',
+  //   header: 'Ruangan',
+  // },
+  // {
+  //   accessorKey: 'username',
+  //   header: 'Username',
+  // },
   {
     header: 'Action',
     cell: (row) => {
