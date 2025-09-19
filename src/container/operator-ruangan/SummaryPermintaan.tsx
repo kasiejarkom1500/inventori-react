@@ -52,7 +52,7 @@ const user = getUser();
         >
           Data Permintaan Barang
         </h1>
-        {user.role === "user" &&         <TooltipProvider>
+        {["user", "admin"].includes(user.role) && <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className="mr-auto lg:mr-0">
               <Dialog
