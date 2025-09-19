@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { UserTable } from '@/components/UserTable';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -24,13 +25,14 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function DataOperator() {
   const { handleExcel } = useExcel();
+  const [open, setOpen] = useState(false); // ⬅️ kontrol dialog
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['data-users'],
     queryFn: fetchUser,
   });
 
-  if (isLoading) return <LoadingSpinner size={50} className='mx-auto mt-[25%]' />;
+  if (isLoading) return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
   if (error)
     return (
       <div>
@@ -41,58 +43,59 @@ export default function DataOperator() {
   const dataUser = data?.data ?? [];
 
   return (
-    <>
-      <Card className='p-6'>
-        <div className='flex flex-col lg:flex-row lg:justify-between'>
-          <h1
-            className={`mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
-          >
-            Data Operator Ruangan
-          </h1>
-          <div className='flex items-start flex-col lg:flex-row gap-2'>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button variant={'green'}>
-                    <Upload /> Import
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Import Excel</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button
-                    onClick={() => handleExcel(dataAdmin, 'data_pegawai')}
-                    variant={'blue'}
-                  >
-                    <Download /> Download
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Download Format Excel</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button>
-                        <PlusCircle /> Tambah Operator
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader className='text-xl font-semibold'>
-                        Tambah Operator
-                      </DialogHeader>
-                      <UserForm type='add' />
-                    </DialogContent>
-                  </Dialog>
-                </TooltipTrigger>
-                <TooltipContent>Tambah Operator</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+    <Card className="p-6">
+      <div className="flex flex-col lg:flex-row lg:justify-between">
+        <h1
+          className={`mb-6 ml-5 text-2xl font-semibold relative before:absolute before:-left-5 before:w-1 before:bg-violet-500  before:border-0 before:h-full before:rounded-md`}
+        >
+          Data Operator Ruangan
+        </h1>
+        <div className="flex items-start flex-col lg:flex-row gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant={'green'}>
+                  <Upload /> Import
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Import Excel</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  onClick={() => handleExcel(dataAdmin, 'data_pegawai')}
+                  variant={'blue'}
+                >
+                  <Download /> Download
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Download Format Excel</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <PlusCircle /> Tambah Operator
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader className="text-xl font-semibold">
+                      Tambah Operator
+                    </DialogHeader>
+                    <UserForm 
+                      type="add" 
+                      onSuccess={() => setOpen(false)} // ⬅️ tutup dialog setelah submit
+                    />
+                  </DialogContent>
+                </Dialog>
+              </TooltipTrigger>
+              <TooltipContent>Tambah Operator</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-        <UserTable data={dataUser} columns={operatorColumns} />
-      </Card>
-    </>
+      </div>
+      <UserTable data={dataUser} columns={operatorColumns} />
+    </Card>
   );
 }

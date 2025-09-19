@@ -70,9 +70,11 @@ const userSchema = z.object({
 export default function UserForm({
   id,
   type,
+  onSuccess, // ⬅️ tambahkan
 }: {
   id?: string;
   type: "edit" | "add";
+  onSuccess?: () => void;
 }) {
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
@@ -94,20 +96,19 @@ export default function UserForm({
   //     // data: dataAllPegawai,
   //     isLoading,
   //     error
-  //   } 
-    // = useQuery({
+  //   }
+  // = useQuery({
   //     queryKey: ['pegawai'],
   //     queryFn: fetchPegawai,
   //   });
 
-
   const { data: kabupatenData, isLoading: kabupatenLoading } = useQuery({
-      queryKey: ["kabupaten"],
-      queryFn: async () => {
-        const result = await fetchKabupaten(); // ini tetap pakai fungsi lama
-        return result.data; // <-- ambil array dari response di sini saja
-      },
-    });
+    queryKey: ["kabupaten"],
+    queryFn: async () => {
+      const result = await fetchKabupaten(); // ini tetap pakai fungsi lama
+      return result.data; // <-- ambil array dari response di sini saja
+    },
+  });
 
   useEffect(() => {
     if (id) {
@@ -121,27 +122,28 @@ export default function UserForm({
   }, [id, setValue]);
 
   async function onSubmit(values: z.infer<typeof userSchema>) {
-      try {
-        const endpoint = type === "add" ? "/add_user" : `/update_user`;
-        const method = type === "add" ? "post" : "put";
-        console.log(endpoint, method);
-        console.log(values);
-        const response = await base[method](endpoint, values);
-        toast.toast({
-          title: "Berhasil",
-          description: response.data.message || "Data berhasil diproses.",
-        });
-  
-        queryClient.invalidateQueries({ queryKey: ["data-users"] });
-      } catch (error) {
-        toast.toast({
-          variant: "destructive",
-          title: "Gagal",
-          description: "Gagal menyimpan pengguna baru",
-        });
-        console.error(error);
-      }
+    try {
+      const endpoint = type === "add" ? "/add_user" : `/update_user`;
+      const method = type === "add" ? "post" : "put";
+
+      const response = await base[method](endpoint, values);
+      toast.toast({
+        title: "Berhasil",
+        description: response.data.message || "Data berhasil diproses.",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["data-users"] });
+
+      if (onSuccess) onSuccess(); // ⬅️ tutup dialog
+    } catch (error) {
+      toast.toast({
+        variant: "destructive",
+        title: "Gagal",
+        description: "Gagal menyimpan pengguna baru",
+      });
+      console.error(error);
     }
+  }
 
   // if (isLoading) return <LoadingSpinner className="mx-auto" size={24} />;
   // if (error) return <div>An error has occurred: {error.message}</div>;
@@ -149,7 +151,7 @@ export default function UserForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-8">
-         <FormField
+        <FormField
           control={form.control}
           name="nip_lama"
           render={({ field }) => (
