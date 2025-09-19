@@ -12,18 +12,18 @@ export const superAdmin = [
     contents: [
       // {title: 'Data Admin', url: 'data-admin'},
       { title: "Data Operator Ruangan", url: "data-pegawai" },
-      // {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
+      {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
       { title: "Data Barang ATK", url: "data-barang-atk" },
-      // {title: 'Data Barang ARK', url: 'data-barang-ark'},
-      // {title: 'Data Ruangan', url: 'data-ruangan'},
+      {title: 'Data Barang ARK', url: 'data-barang-ark'},
+      {title: 'Data Ruangan', url: 'data-ruangan'},
     ],
   },
   {
     label: "Transaksi",
     icon: ScrollText,
     contents: [
-      // {title: 'Barang Masuk', url: 'barang-masuk'},
-      // {title: 'Barang Keluar', url: 'barang-keluar'},
+      {title: 'Barang Masuk', url: 'barang-masuk'},
+      {title: 'Barang Keluar', url: 'barang-keluar'},
       { title: "Input Barang Masuk", url: "input-barang-masuk" },
       { title: "Pengajuan Barang", url: "pengajuan-barang" },
       { title: "Permintaan Barang", url: "permintaan-barang" },
