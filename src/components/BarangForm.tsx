@@ -94,6 +94,8 @@ export default function BarangForm({
   const form = useForm<z.infer<typeof barangSchema>>({
     resolver: zodResolver(barangSchema),
     defaultValues: {
+      kd_subkategori: "",
+      kabupaten_id: "",
       kd_barang: "",
       nama_barang: "",
       satuan: "",

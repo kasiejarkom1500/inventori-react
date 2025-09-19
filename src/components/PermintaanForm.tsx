@@ -116,7 +116,7 @@ function BarangInputSwitcher({
               </FormItem>
             )}
           />
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="sm"
@@ -130,7 +130,7 @@ function BarangInputSwitcher({
             }}
           >
             Barang tidak ditemukan?
-          </Button>
+          </Button> */}
         </>
       ) : (
         <>
