@@ -77,12 +77,18 @@ export default function BarangForm({
 
   const { data: subkategoriData, isLoading: subkategoriLoading } = useQuery({
     queryKey: ["subkategori"],
-    queryFn: fetchSubkategori,
+    queryFn: async () => {
+      const result = await fetchSubkategori(); // ini tetap pakai fungsi lama
+      return result.data; // <-- ambil array dari response di sini saja
+    },
   });
 
   const { data: kabupatenData, isLoading: kabupatenLoading } = useQuery({
     queryKey: ["kabupaten"],
-    queryFn: fetchKabupaten,
+    queryFn: async () => {
+      const result = await fetchKabupaten(); // ini tetap pakai fungsi lama
+      return result.data; // <-- ambil array dari response di sini saja
+    },
   });
 
   const form = useForm<z.infer<typeof barangSchema>>({
