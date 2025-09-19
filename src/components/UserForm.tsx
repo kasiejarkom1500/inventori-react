@@ -45,22 +45,22 @@ const userSchema = z.object({
     .string()
     .min(1, { message: "Jabatan tidak boleh kosong." })
     .max(50, { message: "Jabatan tidak boleh lebih dari 50 karakter." }),
-  ruangan: z
-    .string()
-    .min(1, { message: "Ruangan tidak boleh kosong." })
-    .max(50, { message: "Ruangan tidak boleh lebih dari 50 karakter." }),
-  username: z
-    .string()
-    .min(5, { message: "Username harus memiliki minimal 5 karakter." })
-    .max(20, { message: "Username tidak boleh lebih dari 20 karakter." })
-    .regex(/^[a-zA-Z0-9._]+$/, {
-      message:
-        "Username hanya boleh mengandung huruf, angka, titik, atau underscore.",
-    }),
-  password: z
-    .string()
-    .min(8, { message: "Password harus memiliki minimal 8 karakter." })
-    .max(50, { message: "Password tidak boleh lebih dari 50 karakter." }),
+  // ruangan: z
+  //   .string()
+  //   .min(1, { message: "Ruangan tidak boleh kosong." })
+  //   .max(50, { message: "Ruangan tidak boleh lebih dari 50 karakter." }),
+  // username: z
+  //   .string()
+  //   .min(5, { message: "Username harus memiliki minimal 5 karakter." })
+  //   .max(20, { message: "Username tidak boleh lebih dari 20 karakter." })
+  //   .regex(/^[a-zA-Z0-9._]+$/, {
+  //     message:
+  //       "Username hanya boleh mengandung huruf, angka, titik, atau underscore.",
+  //   }),
+  // password: z
+  //   .string()
+  //   .min(8, { message: "Password harus memiliki minimal 8 karakter." })
+  //   .max(50, { message: "Password tidak boleh lebih dari 50 karakter." }),
   // .regex(/[A-Z]/, { message: 'Password harus memiliki setidaknya satu huruf besar.' })
   // .regex(/[a-z]/, { message: 'Password harus memiliki setidaknya satu huruf kecil.' })
   // .regex(/[0-9]/, { message: 'Password harus memiliki setidaknya satu angka.' })
@@ -80,9 +80,9 @@ export default function UserForm({
       nama: "",
       jabatan: "",
       id_satker: "",
-      ruangan: "",
-      username: "",
-      password: "",
+      // ruangan: "",
+      // username: "",
+      // password: "",
     },
   });
 
