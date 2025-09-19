@@ -29,7 +29,7 @@ export const adminColumns: ColumnDef<User>[] = [
   {
     header: 'Action',
     cell: (row) => {
-      const detail = row.row.original.id;
+      const detail = row.row.original.id_user;
       return (
         <Dialog>
           <div className='flex space-x-3 justify-center items-center'>
