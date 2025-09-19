@@ -1,5 +1,5 @@
 export type User = {
-  id: string;
+  id_user: string;
   nama: string;
   ruangan: string;
   jabatan: string;

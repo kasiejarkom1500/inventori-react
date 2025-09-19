@@ -38,7 +38,7 @@ export const operatorColumns: ColumnDef<User>[] = [
   {
     header: "Action",
     cell: (row) => {
-      const detail = row.row.original.id; // id_user
+      const detail = row.row.original.id_user; // id_user
 
       return (
         <div className="flex space-x-3 justify-center items-center">
