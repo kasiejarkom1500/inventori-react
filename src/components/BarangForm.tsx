@@ -164,7 +164,7 @@ export default function BarangForm({
                   </SelectTrigger>
                   <SelectContent>
                     {subkategoriLoading ? (
-                      <SelectItem value="" disabled>
+                      <SelectItem value="loading" disabled>
                         Loading...
                       </SelectItem>
                     ) : (
@@ -207,7 +207,7 @@ export default function BarangForm({
                   </SelectTrigger>
                   <SelectContent>
                     {kabupatenLoading ? (
-                      <SelectItem value="" disabled>
+                      <SelectItem value="loading" disabled>
                         Loading...
                       </SelectItem>
                     ) : (
