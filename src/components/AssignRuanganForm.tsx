@@ -79,7 +79,7 @@ export default function AssignRuanganForm({ idUser }: { idUser: string }) {
             ) : (
               kabupatenData?.map((k: any) => (
                 <SelectItem key={k.id} value={k.id}>
-                  {k.nama}
+                  {k.nama_kabupaten}
                 </SelectItem>
               ))
             )}
@@ -96,22 +96,27 @@ export default function AssignRuanganForm({ idUser }: { idUser: string }) {
           ) : (
             <div className="flex flex-col gap-2 max-h-48 overflow-y-auto border p-2 rounded">
               {ruangan?.map((r: any) => (
-                <label key={r.id} className="flex items-center gap-2">
+                <label key={r.id_ruangan} className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    value={r.id}
-                    checked={selectedRuangan.includes(r.id)}
+                    value={String(r.id_ruangan)}
+                    checked={selectedRuangan.includes(String(r.id_ruangan))}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedRuangan([...selectedRuangan, r.id]);
+                        setSelectedRuangan([
+                          ...selectedRuangan,
+                          String(r.id_ruangan),
+                        ]);
                       } else {
                         setSelectedRuangan(
-                          selectedRuangan.filter((id) => id !== r.id)
+                          selectedRuangan.filter(
+                            (id) => id !== String(r.id_ruangan)
+                          )
                         );
                       }
                     }}
                   />
-                  {r.nama_ruangan}
+                  {r.ruangan}
                 </label>
               ))}
             </div>
