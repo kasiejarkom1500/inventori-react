@@ -179,7 +179,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
                       ? "bg-red-500 hover:bg-red-300"
                       : "bg-purple-500 hover:bg-purple-300"
                   }`}
-                  onClick={!hasPengadaan || hasApprovedGudang || hasApproved ? onApproveClick : undefined}
+                  onClick={!hasPengadaan || !hasApprovedGudang || !hasApproved ? onApproveClick : undefined}
                 >
                   {approved ? (
                     <XCircle size={18} color="white" />
