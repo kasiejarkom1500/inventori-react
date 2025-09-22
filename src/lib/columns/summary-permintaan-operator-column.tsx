@@ -172,14 +172,19 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
             {(user.role === "ketua_tim" || user.role === "admin") && (
               <div className="flex space-x-3 justify-center items-center">
                 <div
-                  className={`p-1 rounded-md cursor-pointer transition-colors ${
+                  className={`p-1 rounded-md transition-colors ${
                     hasPengadaan || hasApprovedGudang || hasApproved
-                      ? "bg-gray-400 cursor-not-allowed" // kalau sudah ada pengadaan
-                      : approved
-                      ? "bg-red-500 hover:bg-red-300"
-                      : "bg-purple-500 hover:bg-purple-300"
+                      ? "cursor-pointer " +
+                        (approvedGudang
+                          ? "bg-red-500 hover:bg-red-300"
+                          : "bg-purple-500 hover:bg-purple-300")
+                      : "bg-blue-300 cursor-not-allowed"
                   }`}
-                  onClick={hasPengadaan || hasApprovedGudang || hasApproved ? undefined : onApproveClick}
+                  onClick={
+                    hasPengadaan || hasApprovedGudang || hasApproved
+                      ? undefined
+                      : onApproveClick
+                  }
                 >
                   {approved ? (
                     <XCircle size={18} color="white" />
