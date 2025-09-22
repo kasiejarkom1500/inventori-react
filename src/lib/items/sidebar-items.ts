@@ -202,7 +202,7 @@ export const adminGudang = [
     label: "Pengajuan & Permintaan",
     icon: ScrollText,
     contents: [
-      { title: "Pengajuan Barang", url: "pengajuan-barang" },
+      { title: "Pengajuan Barang", url: "input-pengajuan-barang" },
       // {title: 'Barang Keluar', url: 'barang-keluar'},
       { title: "Permintaan Barang", url: "permintaan-barang" },
       { title: "Input Barang Masuk", url: "input-barang-masuk" },
