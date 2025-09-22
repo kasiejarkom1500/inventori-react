@@ -175,7 +175,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
                   className={`p-1 rounded-md transition-colors ${
                     hasPengadaan || hasApprovedGudang || hasApproved
                       ? "cursor-pointer " +
-                        (approvedGudang
+                        (approved
                           ? "bg-red-500 hover:bg-red-300"
                           : "bg-purple-500 hover:bg-purple-300")
                       : "bg-blue-300 cursor-not-allowed"
