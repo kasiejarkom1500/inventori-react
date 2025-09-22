@@ -63,6 +63,7 @@ const router = createBrowserRouter(
                   path: "input-permintaan-barang",
                   element: <SummaryPermintaan />,
                 },
+                { path: "input-pengajuan-barang", element: <SummaryPengajuan /> },
 
                 { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
                 { path: "kartu-kendali", element: <LaporanPermintaan /> },

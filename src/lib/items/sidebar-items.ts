@@ -28,6 +28,7 @@ export const superAdmin = [
       { title: "Pengajuan Barang", url: "pengajuan-barang" },
       { title: "Permintaan Barang", url: "permintaan-barang" },
       { title: "Input Permintaan Barang", url: "input-permintaan-barang" },
+      { title: "Input Pengajuan Barang", url: "input-pengajuan-barang" },
     ],
   },
   {
