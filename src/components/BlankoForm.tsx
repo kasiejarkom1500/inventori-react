@@ -62,6 +62,8 @@ export default function BlankoForm({
     );
   }
   const dataDetailPermintaan = data?.data ?? [];
+  const signerGudang = data?.signerGudang ?? { jabatan: "", nama: "", nip_baru: "" };
+  const signerApprover = data?.signerApprover ?? { jabatan: "", nama: "", nip_baru: "" };
   function onSubmit(values: z.infer<typeof blankoSchema>) {
     const formattedData = {
       ...values,
@@ -74,7 +76,7 @@ export default function BlankoForm({
     );
     // console.log('Formatted Data:', formattedData);
     // console.log('Detail Permintaan:', filteredDetail);
-    generateBlanko({ letterData: filteredDetail, letterDesc: formattedData });
+    generateBlanko({ letterData: filteredDetail, letterDesc: formattedData, signerGudang, signerApprover });
   }
 
   return (

@@ -93,12 +93,20 @@ export interface DataItem {
   keterangan: string;
 }
 
+export interface Signer {
+  nip_baru: string; 
+  jabatan: string;
+  nama: string;
+}
+
 export interface BlankoProps {
   data: DataItem[];
   desc: Desc;
+  signerGudang: Signer;
+  signerApprover: Signer;
 }
 
-export const Blanko = ({ data, desc }: BlankoProps) => (
+export const Blanko = ({ data, desc, signerApprover, signerGudang }: BlankoProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
@@ -170,8 +178,8 @@ export const Blanko = ({ data, desc }: BlankoProps) => (
           <Text>Jambi, {desc.tanggal}</Text>
           <Text>Yang menyerahkan ATK</Text>
           <Text>Bagian Umum</Text>
-          <Text style={styles.signatureText}>Asni Junita S.E.</Text>
-          <Text>198606292005022001</Text>
+          <Text style={styles.signatureText}>{signerGudang.nama}</Text>
+          <Text>{signerGudang.nip_baru}</Text>
         </View>
       </View>
 
@@ -179,9 +187,9 @@ export const Blanko = ({ data, desc }: BlankoProps) => (
         <Text>Disetujui oleh:</Text>
         <Text>Arsiparis Ahli Madya,</Text>
         <Text style={[styles.underline, { marginTop: 60 }]}>
-          Sutino, SE.
+          {signerApprover.nama}
         </Text>
-        <Text>196902101994031006</Text>
+        <Text>{signerApprover.nip_baru}</Text>
       </View>
     </Page>
   </Document>

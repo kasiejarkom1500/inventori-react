@@ -1,10 +1,10 @@
-import { Blanko, DataItem, Desc } from "@/components/Blanko";
+import { Blanko, DataItem, Desc, Signer } from "@/components/Blanko";
 import { PDFViewer } from "@react-pdf/renderer";
 import ReactDOM from "react-dom";
 
 
 
-export const generateBlanko = ({letterData,letterDesc} : {letterData : DataItem[], letterDesc: Desc}) => {
+export const generateBlanko = ({letterData,letterDesc,signerGudang,signerApprover} : {letterData : DataItem[], letterDesc: Desc, signerGudang: Signer, signerApprover: Signer}) => {
   const newWindow = window.open('', '_blank');
   if (newWindow) {
     newWindow.document.write(`
@@ -27,7 +27,7 @@ export const generateBlanko = ({letterData,letterDesc} : {letterData : DataItem[
 
       ReactDOM.render(
         <PDFViewer width='100%' height='100%'>
-          <Blanko data={letterData} desc={letterDesc}/>
+          <Blanko data={letterData} desc={letterDesc} signerGudang={signerGudang} signerApprover={signerApprover}/>
         </PDFViewer>,
         root
       );
