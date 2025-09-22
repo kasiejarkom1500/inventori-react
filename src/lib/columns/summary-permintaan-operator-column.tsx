@@ -173,13 +173,13 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
               <div className="flex space-x-3 justify-center items-center">
                 <div
                   className={`p-1 rounded-md cursor-pointer transition-colors ${
-                    hasPengadaan
+                    hasPengadaan || hasApprovedGudang || hasApproved
                       ? "bg-gray-400 cursor-not-allowed" // kalau sudah ada pengadaan
                       : approved
                       ? "bg-red-500 hover:bg-red-300"
                       : "bg-purple-500 hover:bg-purple-300"
                   }`}
-                  onClick={!hasPengadaan ? onApproveClick : undefined}
+                  onClick={!hasPengadaan || hasApprovedGudang || hasApproved ? onApproveClick : undefined}
                 >
                   {approved ? (
                     <XCircle size={18} color="white" />
