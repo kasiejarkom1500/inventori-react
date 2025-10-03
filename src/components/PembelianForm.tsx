@@ -27,6 +27,7 @@ const pembelianSchema = z.object({
   nama_barang: z.string(),
   id_sumber: z.string().min(1, { message: "Sumber harus dipilih." }),
   nama_sumber: z.string(),
+  catatan: z.string().optional(),
   jumlah: z
     .number()
     .positive({ message: "Jumlah permintaan harus lebih dari 0." }),
@@ -41,6 +42,7 @@ export default function PembelianForm() {
     Array<{
       id_barang: string;
       nama_barang: string;
+      catatan?: string;
       nama_sumber: string;
       jumlah: number;
     }>
@@ -49,6 +51,7 @@ export default function PembelianForm() {
   const [requestData, setRequestData] = useState<
     Array<{
       id_barang: string;
+      catatan?: string;
       jumlah: number;
       harga: number;
     }>
@@ -103,6 +106,7 @@ export default function PembelianForm() {
       no_kuitansi: "",
       id_barang: "",
       nama_barang: "",
+      catatan: "",
       id_sumber: "",
       nama_sumber: "",
     },
@@ -162,6 +166,7 @@ export default function PembelianForm() {
     }
     const newData = {
       id_barang: values.id_barang,
+      catatan: values.catatan,
       jumlah: values.jumlah,
       harga: values.harga,
     };
@@ -299,6 +304,19 @@ export default function PembelianForm() {
             />
             <FormField
               control={form.control}
+              name="catatan"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Merk Barang/Detail Barang</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Merk Barang/Detail Barang" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="id_sumber"
               render={({ field }) => (
                 <FormItem>
@@ -361,6 +379,7 @@ export default function PembelianForm() {
         <DataTable
           columns={[
             { header: "Nama Barang", accessorKey: "nama_barang" },
+            { header: "Detail Barang", accessorKey: "catatan" },
             { header: "Jumlah", accessorKey: "jumlah" },
             { header: "Harga", accessorKey: "harga" },
             {
