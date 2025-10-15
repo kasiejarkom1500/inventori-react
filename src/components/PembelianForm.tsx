@@ -180,6 +180,7 @@ export default function PembelianForm() {
     const newBatchData = {
       id_barang: values.id_barang,
       nama_barang: values.nama_barang,
+      catatan: values.catatan,
       nama_sumber: values.nama_sumber,
       jumlah: values.jumlah,
       harga: values.harga,
