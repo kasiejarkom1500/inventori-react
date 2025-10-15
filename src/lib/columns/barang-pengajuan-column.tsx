@@ -11,6 +11,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import ProgramKomponenDrawer from "@/components/ProgramKomponenDrawer";
 
 export const barangPengajuanColumns = (
   handleDataChange: (
@@ -19,7 +20,14 @@ export const barangPengajuanColumns = (
     newJumlah: string | undefined,
     newHarga: string | undefined,
     newStatus: string | undefined,
-    newKdSubkategori: string | undefined
+    newKdSubkategori: string | undefined,
+    programData?: {
+      kd_program?: string;
+      kd_kegiatan?: string;
+      kd_kro?: string;
+      kd_ro?: string;
+      kd_komponen?: string;
+    } 
   ) => void,
   newData: {
     id_pengajuan: string;
@@ -28,6 +36,11 @@ export const barangPengajuanColumns = (
     harga_satuan: string;
     status: string;
     kd_subkategori: string;
+    kd_program?: string;
+    kd_kegiatan?: string;
+    kd_kro?: string;
+    kd_ro?: string;
+    kd_komponen?: string;
   }[],
   subkategoriList: { kd_subkategori: string; sub_kategori: string }[]
 ): ColumnDef<BarangPengajuan>[] => [
@@ -231,6 +244,31 @@ export const barangPengajuanColumns = (
             </SelectGroup>
           </SelectContent>
         </Select>
+      );
+    },
+  },
+  {
+    header: "Program / Komponen",
+    cell: (row) => {
+      const currentBarang = newData.find(
+        (item) => item.id_pengajuan === row.row.original.id_pengajuan
+      );
+
+      return (
+        <ProgramKomponenDrawer
+          currentBarang={currentBarang}
+          onSave={(programData) =>
+            handleDataChange(
+              row.row.original.id_pengajuan,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              programData
+            )
+          }
+        />
       );
     },
   },

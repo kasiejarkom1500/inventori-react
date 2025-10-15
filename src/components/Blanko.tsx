@@ -104,9 +104,11 @@ export interface BlankoProps {
   desc: Desc;
   signerGudang: Signer;
   signerApprover: Signer;
+  alamat: string;
+  kontak: string;
 }
 
-export const Blanko = ({ data, desc, signerApprover, signerGudang }: BlankoProps) => (
+export const Blanko = ({ data, desc, signerApprover, signerGudang, alamat, kontak }: BlankoProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>

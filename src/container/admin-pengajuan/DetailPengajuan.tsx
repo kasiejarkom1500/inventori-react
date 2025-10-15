@@ -58,7 +58,8 @@ export default function DetailPengajuan({
     );
   }
 
-  if (subkategoriLoading) return <LoadingSpinner size={40} className="mx-auto mt-10" />;
+  if (subkategoriLoading)
+    return <LoadingSpinner size={40} className="mx-auto mt-10" />;
 
   const dataPengajuanBarang = data?.data ?? [];
   // console.log(dataPengajuanBarang);
@@ -69,7 +70,14 @@ export default function DetailPengajuan({
     newJumlah: string | undefined,
     newHarga: string | undefined,
     newStatus: string | undefined,
-    newKdSubkategori: string | undefined
+    newKdSubkategori: string | undefined,
+    programData?: {
+      kd_program?: string;
+      kd_kegiatan?: string;
+      kd_kro?: string;
+      kd_ro?: string;
+      kd_komponen?: string;
+    }
   ) {
     setNewData((prev) =>
       prev.map((item) =>
@@ -85,6 +93,7 @@ export default function DetailPengajuan({
                 newKdSubkategori !== undefined
                   ? newKdSubkategori
                   : item.kd_subkategori,
+              ...programData,
             }
           : item
       )
@@ -118,7 +127,11 @@ export default function DetailPengajuan({
   return (
     <>
       <DataTable
-        columns={barangPengajuanColumns(handleDataChange, newData, subkategoriList)}
+        columns={barangPengajuanColumns(
+          handleDataChange,
+          newData,
+          subkategoriList
+        )}
         data={dataPengajuanBarang} // Use original data here
         search_placeholder="barang"
         column_name="nama_barang"

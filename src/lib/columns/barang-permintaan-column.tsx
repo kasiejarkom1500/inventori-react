@@ -166,6 +166,7 @@ export const barangPermintaanColumns = (
               undefined
             )
           }
+          disabled={currentStatus === "Approved"}
         >
           <SelectTrigger>
             <SelectValue placeholder="Pilih status" />
