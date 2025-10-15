@@ -12,7 +12,7 @@ export const superAdmin = [
     contents: [
       // {title: 'Data Admin', url: 'data-admin'},
       { title: "Data Operator Ruangan", url: "data-pegawai" },
-      {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
+      // {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
       { title: "Data Barang ATK", url: "data-barang-atk" },
       {title: 'Data Barang ARK', url: 'data-barang-ark'},
       // {title: 'Data Ruangan', url: 'data-ruangan'},
