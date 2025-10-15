@@ -15,7 +15,7 @@ export const superAdmin = [
       {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
       { title: "Data Barang ATK", url: "data-barang-atk" },
       {title: 'Data Barang ARK', url: 'data-barang-ark'},
-      {title: 'Data Ruangan', url: 'data-ruangan'},
+      // {title: 'Data Ruangan', url: 'data-ruangan'},
     ],
   },
   {
