@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { base } from "@/lib/network/base";
@@ -11,11 +11,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { fetchKabupaten } from "@/lib/services/fetch";
+import { Ruangan } from "@/lib/types/user";
+import { useEffect } from "react";
 
-export default function AssignRuanganForm({ idUser }: { idUser: string }) {
+
+
+
+
+export default function AssignRuanganForm({ idUser, ruanganUser, onSuccess }: { idUser: string, ruanganUser: Ruangan[], onSuccess?: () => void}) {
   const { toast } = useToast();
   const [selectedKabupaten, setSelectedKabupaten] = useState<string>("");
   const [selectedRuangan, setSelectedRuangan] = useState<string[]>([]);
+  const queryClient = useQueryClient();
+
+  // console.log("ruanganUser di AssignRuanganForm :", ruanganUser);
 
   // ambil daftar kabupaten
   const { data: kabupatenData, isLoading: kabupatenLoading } = useQuery({
@@ -44,6 +53,10 @@ export default function AssignRuanganForm({ idUser }: { idUser: string }) {
         id_ruangan: selectedRuangan,
       });
 
+      queryClient.invalidateQueries({ queryKey: ["data-users"] });
+
+      if (onSuccess) onSuccess();
+
       toast({
         title: "Berhasil",
         description: "Ruangan berhasil di-assign.",
@@ -57,6 +70,25 @@ export default function AssignRuanganForm({ idUser }: { idUser: string }) {
       console.error(err);
     }
   }
+
+  // Auto-check ruangan jika user sudah punya ruangan di kabupaten terpilih
+useEffect(() => {
+  if (!ruangan || !selectedKabupaten) return;
+
+  // Ambil id ruangan dari ruanganUser yang sesuai dengan kabupaten terpilih
+  const ruanganUserInSelectedKabupaten = ruanganUser
+    .filter((r) => r.id_satker === selectedKabupaten)
+    .map((r) => String(r.id_ruangan));
+
+  // Ambil hanya yang ada di ruangan hasil query (ruangan yang tersedia)
+  const availableRuanganIds = ruangan.map((r: any) => String(r.id_ruangan));
+  const preCheckedRuangan = ruanganUserInSelectedKabupaten.filter((id) =>
+    availableRuanganIds.includes(id)
+  );
+
+  setSelectedRuangan(preCheckedRuangan);
+}, [ruangan, selectedKabupaten, ruanganUser]);
+
 
   return (
     <div className="space-y-4">
