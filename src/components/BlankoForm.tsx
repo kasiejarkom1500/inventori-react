@@ -64,6 +64,12 @@ export default function BlankoForm({
   const dataDetailPermintaan = data?.data ?? [];
   const signerGudang = data?.signerGudang ?? { jabatan: "", nama: "", nip_baru: "" };
   const signerApprover = data?.signerApprover ?? { jabatan: "", nama: "", nip_baru: "" };
+ const alamat = data?.headerSurat?.[0]?.alamat ?? "";
+ const kontak = data?.headerSurat?.[0]?.kontak ?? "";
+ const kantor = data?.headerSurat?.[0]?.nama_kabupaten ?? "";
+  
+
+
   function onSubmit(values: z.infer<typeof blankoSchema>) {
     const formattedData = {
       ...values,
@@ -76,7 +82,7 @@ export default function BlankoForm({
     );
     // console.log('Formatted Data:', formattedData);
     // console.log('Detail Permintaan:', filteredDetail);
-    generateBlanko({ letterData: filteredDetail, letterDesc: formattedData, signerGudang, signerApprover });
+    generateBlanko({ letterData: filteredDetail, letterDesc: formattedData, signerGudang, signerApprover, alamat, kontak, kantor });
   }
 
   return (

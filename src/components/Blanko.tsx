@@ -106,19 +106,20 @@ export interface BlankoProps {
   signerApprover: Signer;
   alamat: string;
   kontak: string;
+  kantor: string;
 }
 
-export const Blanko = ({ data, desc, signerApprover, signerGudang, alamat, kontak }: BlankoProps) => (
+export const Blanko = ({ data, desc, signerApprover, signerGudang, alamat, kontak, kantor }: BlankoProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
         <Image src="/logo-bps.png" style={styles.logo} />
         <View>
-          <Text>BADAN PUSAT STATISTIK PROVINSI JAMBI</Text>
+          <Text>BADAN PUSAT STATISTIK {kantor.toUpperCase()}</Text>
           <Text>
-            Jl. A. Yani No. 4 Telanaipura - Jambi 36122 Telp. (0741) 60497
+            {alamat}
           </Text>
-          <Text>Fax (0741) 60802 E-mail: BPS1500@mailhost.bps.go.id</Text>
+          <Text>{kontak}</Text>
         </View>
       </View>
 
