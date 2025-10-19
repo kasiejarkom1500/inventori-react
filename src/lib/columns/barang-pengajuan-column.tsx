@@ -27,7 +27,7 @@ export const barangPengajuanColumns = (
       kd_kro?: string;
       kd_ro?: string;
       kd_komponen?: string;
-    } 
+    }
   ) => void,
   newData: {
     id_pengajuan: string;
@@ -41,6 +41,13 @@ export const barangPengajuanColumns = (
     kd_kro?: string;
     kd_ro?: string;
     kd_komponen?: string;
+    programData?: {
+      kd_program?: string;
+      kd_kegiatan?: string;
+      kd_kro?: string;
+      kd_ro?: string;
+      kd_komponen?: string;
+    };
   }[],
   subkategoriList: { kd_subkategori: string; sub_kategori: string }[]
 ): ColumnDef<BarangPengajuan>[] => [
@@ -250,25 +257,46 @@ export const barangPengajuanColumns = (
   {
     header: "Program / Komponen",
     cell: (row) => {
-      const currentBarang = newData.find(
-        (item) => item.id_pengajuan === row.row.original.id_pengajuan
-      );
+      let currentBarang = newData.find((item) => {
+        return item.id_pengajuan == row.row.original.id_pengajuan;
+      });
 
+      currentBarang = {
+        ...currentBarang,
+        programData: {
+          kd_program: row.row.original.kd_program,
+          kd_kegiatan: row.row.original.kd_kegiatan,
+          kd_komponen: row.row.original.kd_komponen,
+          kd_kro: row.row.original.kd_kro,
+          kd_ro: row.row.original.kd_ro,
+        },
+      };
+
+      // console.log("row original", row.row.original);
+      // console.log("new data from barang pengajuan column", newData);
+      // console.log("current barang from table", currentBarang);
       return (
-        <ProgramKomponenDrawer
-          currentBarang={currentBarang}
-          onSave={(programData) =>
-            handleDataChange(
-              row.row.original.id_pengajuan,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              programData
-            )
-          }
-        />
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            console.log("current barang clicked", currentBarang);
+          }}
+        >
+          <ProgramKomponenDrawer
+            currentBarang={currentBarang}
+            onSave={(programData) =>
+              handleDataChange(
+                row.row.original.id_pengajuan,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                programData
+              )
+            }
+          />
+        </div>
       );
     },
   },

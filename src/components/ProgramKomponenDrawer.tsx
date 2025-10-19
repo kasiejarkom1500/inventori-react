@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllPok } from "@/lib/services/fetch";
 
@@ -17,6 +17,10 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
   const [selectedKro, setSelectedKro] = useState("");
   const [selectedRo, setSelectedRo] = useState("");
   const [selectedKomponen, setSelectedKomponen] = useState("");
+  const [masterPok, setMasterPok] = useState<any>([]);
+  // console.log("current barang", currentBarang);
+  // console.log("currentbarang", currentBarang);
+  // console.log("onsave", onSave);
 
   type PokItem = {
     kd_program: string;
@@ -59,21 +63,33 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
     queryKey: ["program"],
     queryFn: async () => {
       const res = await fetchAllPok({});
-      setFilteredProgramOptions(
-        getUniqueOptionsFromPok(res, "kd_program", "nama_program")
-      );
-      setFilteredKegiatanOptions(
-        getUniqueOptionsFromPok(res, "kd_kegiatan", "nama_kegiatan")
-      );
-      setFilteredRoOptions(getUniqueOptionsFromPok(res, "kd_ro", "nama_ro"));
-      setFilteredKroOptions(getUniqueOptionsFromPok(res, "kd_kro", "nama_kro"));
-      setFilteredKomponenOptions(
-        getUniqueOptionsFromPok(res, "kd_komponen", "nama_komponen")
-      );
+      // console.log(res);
+      console.log("res", res);
       return res as PokItem[];
     },
   });
-
+  // console.log("datapok", dataPok);
+  useEffect(() => {
+    if (dataPok) {
+      console.log("dataPok", dataPok);
+      setMasterPok(dataPok);
+      setFilteredProgramOptions(
+        getUniqueOptionsFromPok(dataPok, "kd_program", "nama_program")
+      );
+      setFilteredKegiatanOptions(
+        getUniqueOptionsFromPok(dataPok, "kd_kegiatan", "nama_kegiatan")
+      );
+      setFilteredRoOptions(
+        getUniqueOptionsFromPok(dataPok, "kd_ro", "nama_ro")
+      );
+      setFilteredKroOptions(
+        getUniqueOptionsFromPok(dataPok, "kd_kro", "nama_kro")
+      );
+      setFilteredKomponenOptions(
+        getUniqueOptionsFromPok(dataPok, "kd_komponen", "nama_komponen")
+      );
+    }
+  }, [dataPok]);
   if (loadingPok) return <span>Loading...</span>;
 
   // 🔧 Fungsi bantu buat unique options
@@ -84,7 +100,12 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
       label: data.find((d) => d[key] === v)?.[label] || v,
     }));
   };
-
+  // useEffect(() => {
+  //   if (masterPok) {
+  //     setSelectedKegiatan;
+  //   }
+  // }, []);
+  // console.log("filteredKegiatanOptions", filteredKegiatanOptions);
   const programOptions = getUniqueOptions(
     dataPok,
     "kd_program",
@@ -120,6 +141,7 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
     : [];
 
   const handleSave = () => {
+    // console.log("handle save clicked");
     const programData = {
       kd_program: selectedProgram,
       kd_kegiatan: selectedKegiatan,
@@ -127,12 +149,16 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
       kd_ro: selectedRo,
       kd_komponen: selectedKomponen,
     };
+    console.log("programData", programData);
     // TODO: panggil handleDataChange() kalau mau update ke newData state
-    console.log("Saved Program Data:", programData);
+    // console.log("Saved Program Data:", programData);
 
     if (onSave) onSave(programData);
   };
-
+  // console.log("programData", currentBarang?.programData);
+  // console.log("kegiatanOptions", kegiatanOptions);
+  // console.log("filteredProgramOptions", filteredProgramOptions);
+  // console.log("currentBarang", currentBarang);
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -144,14 +170,31 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
       <SheetContent side="right" className="w-[400px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Atur Program / Komponen</SheetTitle>
+          {/* <p>current barang {JSON.stringify(currentBarang)}</p> */}
         </SheetHeader>
 
         <div className="mt-4 space-y-4">
           <div>
             <label className="text-sm font-medium">Program</label>
+
             <Select
               options={programOptions}
-              value={programOptions.find((o) => o.value === selectedProgram)}
+              value={filteredProgramOptions.find(
+                (o) => o.value === selectedProgram
+              )}
+              defaultValue={
+                currentBarang?.programData
+                  ? {
+                      value: currentBarang?.programData.kd_program,
+                      label: filteredProgramOptions.find(
+                        (item) =>
+                          item.value == currentBarang.programData.kd_program
+                      )?.label,
+                    }
+                  : null
+              }
+              isLoading={!filteredProgramOptions.length}
+              isDisabled={!filteredProgramOptions.length}
               onChange={(opt) => {
                 setSelectedProgram(opt?.value || "");
                 setSelectedKegiatan("");
@@ -166,14 +209,28 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
             <label className="text-sm font-medium">Kegiatan</label>
             <Select
               options={kegiatanOptions}
-              value={kegiatanOptions.find((o) => o.value === selectedKegiatan)}
+              value={filteredKegiatanOptions.find(
+                (o) => o.value === selectedKegiatan
+              )}
+              defaultValue={
+                currentBarang?.programData
+                  ? {
+                      value: currentBarang?.programData.kd_kegiatan,
+                      label: filteredKegiatanOptions.find(
+                        (item) =>
+                          item.value == currentBarang.programData.kd_kegiatan
+                      )?.label,
+                    }
+                  : null
+              }
+              isLoading={!filteredKegiatanOptions.length}
               onChange={(opt) => {
                 setSelectedKegiatan(opt?.value || "");
                 setSelectedKro("");
                 setSelectedRo("");
                 setSelectedKomponen("");
               }}
-              isDisabled={!selectedProgram}
+              isDisabled={!selectedProgram || !filteredKegiatanOptions.length}
             />
           </div>
 
@@ -181,13 +238,24 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
             <label className="text-sm font-medium">KRO</label>
             <Select
               options={kroOptions}
-              value={kroOptions.find((o) => o.value === selectedKro)}
+              value={filteredKroOptions.find((o) => o.value === selectedKro)}
+              defaultValue={
+                currentBarang?.programData
+                  ? {
+                      value: currentBarang?.programData.kd_kro,
+                      label: filteredKroOptions.find(
+                        (item) => item.value == currentBarang.programData.kd_kro
+                      )?.label,
+                    }
+                  : null
+              }
+              isLoading={!filteredKroOptions.length}
               onChange={(opt) => {
                 setSelectedKro(opt?.value || "");
                 setSelectedRo("");
                 setSelectedKomponen("");
               }}
-              isDisabled={!selectedKegiatan}
+              isDisabled={!selectedKegiatan || !filteredKroOptions.length}
             />
           </div>
 
@@ -195,12 +263,23 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
             <label className="text-sm font-medium">RO</label>
             <Select
               options={roOptions}
-              value={roOptions.find((o) => o.value === selectedRo)}
+              value={filteredRoOptions.find((o) => o.value === selectedRo)}
+              defaultValue={
+                currentBarang?.programData
+                  ? {
+                      value: currentBarang?.programData.kd_kro,
+                      label: filteredRoOptions.find(
+                        (item) => item.value == currentBarang.programData.kd_ro
+                      )?.label,
+                    }
+                  : null
+              }
+              isLoading={!filteredRoOptions.length}
               onChange={(opt) => {
-                setSelectedRo(opt?.value || "");
+                setSelectedRo(opt.value || "");
                 setSelectedKomponen("");
               }}
-              isDisabled={!selectedKro}
+              isDisabled={!selectedKro || !filteredRoOptions.length}
             />
           </div>
 
@@ -208,13 +287,38 @@ export default function ProgramKomponenDrawer({ currentBarang, onSave }) {
             <label className="text-sm font-medium">Komponen</label>
             <Select
               options={komponenOptions}
-              value={komponenOptions.find((o) => o.value === selectedKomponen)}
+              value={filteredKomponenOptions.find(
+                (o) => o.value === selectedKomponen
+              )}
+              defaultValue={
+                currentBarang?.programData
+                  ? {
+                      value: currentBarang?.programData.kd_komponen,
+                      label: filteredKomponenOptions.find(
+                        (item) =>
+                          item.value == currentBarang.programData.kd_komponen
+                      )?.label,
+                    }
+                  : null
+              }
+              isLoading={!filteredKomponenOptions.length}
               onChange={(opt) => setSelectedKomponen(opt?.value || "")}
-              isDisabled={!selectedRo}
+              isDisabled={!selectedRo || !filteredKomponenOptions.length}
             />
           </div>
 
-          <Button className="w-full mt-6" onClick={handleSave}>
+          <Button
+            className="w-full mt-6"
+            onClick={handleSave}
+            disabled={
+              !filteredProgramOptions.length ||
+              !filteredKegiatanOptions.length ||
+              !filteredKomponenOptions.length ||
+              !filteredKroOptions.length ||
+              !filteredRoOptions.length ||
+              !filteredKegiatanOptions.length
+            }
+          >
             Simpan
           </Button>
         </div>

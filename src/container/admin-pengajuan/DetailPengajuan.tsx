@@ -79,6 +79,25 @@ export default function DetailPengajuan({
       kd_komponen?: string;
     }
   ) {
+    console.log("program data handledatachange", programData);
+    const temp = newData.map((item) =>
+      item.id_pengajuan === id
+        ? {
+            ...item,
+            kategori: newKategori !== undefined ? newKategori : item.kategori,
+            jumlah: newJumlah !== undefined ? newJumlah : item.jumlah,
+            harga_satuan: newHarga != undefined ? newHarga : item.harga_satuan,
+            status: newStatus !== undefined ? newStatus : item.status,
+            kd_subkategori:
+              newKdSubkategori !== undefined
+                ? newKdSubkategori
+                : item.kd_subkategori,
+            ...programData,
+          }
+        : item
+    );
+    console.log("temp", temp);
+    console.log("programData", programData);
     setNewData((prev) =>
       prev.map((item) =>
         item.id_pengajuan === id
@@ -93,7 +112,7 @@ export default function DetailPengajuan({
                 newKdSubkategori !== undefined
                   ? newKdSubkategori
                   : item.kd_subkategori,
-              ...programData,
+              programData,
             }
           : item
       )
