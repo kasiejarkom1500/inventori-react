@@ -1,8 +1,6 @@
-import {UserTable} from '@/components/UserTable';
+
 import {Button} from '@/components/ui/button';
 import {Card} from '@/components/ui/card';
-import {adminColumns} from '@/lib/columns/admin-column';
-import {dataAdmin} from '@/lib/data/admin-dummy';
 import {PlusCircle} from 'lucide-react';
 import {
   Tooltip,
@@ -49,7 +47,7 @@ export default function DataAdmin() {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <UserTable data={dataAdmin} columns={adminColumns} />
+        {/* <UserTable data={dataAdmin} columns={adminColumns} /> */}
       </Card>
     </>
   );

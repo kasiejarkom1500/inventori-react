@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Warehouse,UserCog } from "lucide-react";
 import { User } from "@/lib/types/user";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import UserForm from "@/components/UserForm";
 import AssignRuanganForm from "@/components/AssignRuanganForm";
+import { useState } from "react";
 export const operatorColumns: ColumnDef<User>[] = [
   {
     header: "No",
@@ -39,6 +40,8 @@ export const operatorColumns: ColumnDef<User>[] = [
     header: "Action",
     cell: (row) => {
       const detail = row.row.original.id_user; // id_user
+      const ruangan = row.row.original.ruangan; // ruangan
+      const [open, setOpen] = useState(false);
 
       return (
         <div className="flex space-x-3 justify-center items-center">
@@ -56,17 +59,32 @@ export const operatorColumns: ColumnDef<User>[] = [
           </Dialog>
 
           {/* Assign Ruangan */}
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="bg-blue-500 p-1 h-fit rounded-md hover:bg-blue-900/90">
-                Assign Ruangan
+                <Warehouse size={18} color="white"/>
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogTitle className="text-xl font-semibold">
                 Assign Ruangan
               </DialogTitle>
-              <AssignRuanganForm idUser={detail} />
+              <AssignRuanganForm idUser={detail} ruanganUser={ruangan} onSuccess={() => setOpen(false)}/>
+            </DialogContent>
+          </Dialog>
+
+           {/* Assign Role */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-500 p-1 h-fit rounded-md hover:bg-blue-900/90">
+                <UserCog size={18} color="white"/>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle className="text-xl font-semibold">
+                Assign Role
+              </DialogTitle>
+              {/* <AssignRuanganForm idUser={detail, ruangan} /> */}
             </DialogContent>
           </Dialog>
 

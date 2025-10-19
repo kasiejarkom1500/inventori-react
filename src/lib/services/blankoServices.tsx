@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 
 
-export const generateBlanko = ({letterData,letterDesc,signerGudang,signerApprover, alamat,kontak} : {letterData : DataItem[], letterDesc: Desc, signerGudang: Signer, signerApprover: Signer, alamat: string, kontak: string}) => {
+export const generateBlanko = ({letterData,letterDesc,signerGudang,signerApprover, alamat,kontak,kantor} : {letterData : DataItem[], letterDesc: Desc, signerGudang: Signer, signerApprover: Signer, alamat: string, kontak: string, kantor: string}) => {
   const newWindow = window.open('', '_blank');
   if (newWindow) {
     newWindow.document.write(`
@@ -27,7 +27,7 @@ export const generateBlanko = ({letterData,letterDesc,signerGudang,signerApprove
 
       ReactDOM.render(
         <PDFViewer width='100%' height='100%'>
-          <Blanko data={letterData} desc={letterDesc} signerGudang={signerGudang} signerApprover={signerApprover} alamat={alamat} kontak={kontak}/>
+          <Blanko data={letterData} desc={letterDesc} signerGudang={signerGudang} signerApprover={signerApprover} alamat={alamat} kontak={kontak} kantor={kantor}/>
         </PDFViewer>,
         root
       );
