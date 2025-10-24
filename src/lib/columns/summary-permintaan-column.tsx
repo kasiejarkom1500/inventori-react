@@ -87,13 +87,16 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
     header: "Action",
     cell: (row) => {
       const hasPending = row.row.original.Pending > 0;
-      const hasPengadaan = row.row.original.Pengadaan > 0;
-      const approve_gudang = row.row.original.approve_gudang === '0';
+      // const hasPengadaan = row.row.original.Pengadaan > 0;
+      // const approve_gudang = row.row.original.approve_gudang === '0';
       const id_ruangan = row.row.original.id_ruangan;
       const ruangan = row.row.original.ruangan;
       const tanggal = row.row.original.tanggal;
       const id_permintaan = row.row.original.id_permintaan;
       const id_transaksi = row.row.original.id_transaksi;
+      const has_approved = row.row.original.Approved > 0;
+
+
       return (
         <div className="flex space-x-3 justify-center items-center">
           <Dialog>
@@ -109,9 +112,9 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
           </Dialog>
           <Dialog>
             <DialogTrigger
-              disabled={hasPending || hasPengadaan || approve_gudang}
+              disabled={!has_approved || hasPending}
               className={`bg-violet-500 p-1 rounded-md hover:bg-yellow-900/90 ${
-                (hasPending || hasPengadaan || approve_gudang) &&
+                (!has_approved || hasPending) &&
                 "cursor-not-allowed bg-violet-500/40 hover:bg-violet-500/40"
               }`}
             >
