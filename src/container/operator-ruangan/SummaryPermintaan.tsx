@@ -35,20 +35,9 @@ export default function PermintaanBarang() {
     queryKey: ["data-permintaan-user"],
     queryFn: fetchPermintaanByUser,
   });
-const user = getUser();
+  const user = getUser();
 
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
-
-  if (isLoading) {
-    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
-  }
-  if (error) {
-    return (
-      <div>
-        Error: {error instanceof Error ? error.message : "Unknown error"}
-      </div>
-    );
-  }
 
   const dataSummaryPermintaan = data?.data ?? [];
 
@@ -80,9 +69,15 @@ const user = getUser();
       });
   }, [dataSummaryPermintaan]);
 
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
-    () => monthOptions[0]?.value
-  );
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
+
+  // Set default bulan ke terbaru saat opsi berubah
+  useEffect(() => {
+    if (!monthOptions.length) return;
+    if (!selectedMonth || !monthOptions.find((m) => m.value === selectedMonth)) {
+      setSelectedMonth(monthOptions[0]?.value);
+    }
+  }, [monthOptions, selectedMonth]);
 
   const filteredData = useMemo(() => {
     if (!selectedMonth) return dataSummaryPermintaan;
@@ -92,6 +87,18 @@ const user = getUser();
       return d.getFullYear() === year && d.getMonth() === month - 1;
     });
   }, [dataSummaryPermintaan, selectedMonth]);
+
+  if (isLoading) {
+    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
+  }
+  if (error) {
+    return (
+      <div>
+        Error: {error instanceof Error ? error.message : "Unknown error"}
+      </div>
+    );
+  }
+
   console.log(dataSummaryPermintaan);
   return (
     <Card className="p-6">
