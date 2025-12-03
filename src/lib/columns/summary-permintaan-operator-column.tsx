@@ -50,7 +50,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
     {
       accessorKey: "tanggal",
       header: "Tanggal Permintaan",
-      cell: (row) => formatDate(row.getValue("tanggal") as string),
+      cell: ({ getValue }) => formatDate(getValue() as string),
     },
     {
       accessorKey: "jumlah_permintaan",

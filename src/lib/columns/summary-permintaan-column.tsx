@@ -42,7 +42,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         </Button>
       );
     },
-    cell: (row) => formatDate(row.getValue("tanggal") as string),
+    cell: ({ getValue }) => formatDate(getValue() as string),
   },
   {
     accessorKey: "jumlah_permintaan",
