@@ -21,7 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPermintaanByUser } from "@/lib/services/permintaanService";
 import { useDialog } from "@/context/dialog";
 import {getUser} from '@/lib/network/authServices';
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Select,
   SelectContent,

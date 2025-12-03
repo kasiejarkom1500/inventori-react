@@ -3,7 +3,7 @@ import {Card} from '@/components/ui/card';
 import {LoadingSpinner} from '@/components/ui/loading';
 import {summaryPermintaanColumns} from '@/lib/columns/summary-permintaan-column';
 import {base} from '@/lib/network/base';
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {
   Select,
