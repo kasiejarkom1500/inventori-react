@@ -35,7 +35,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         <Button
           variant="ghost"
           className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting()}
         >
           Tanggal Permintaan
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -55,7 +55,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         <Button
           variant="ghost"
           className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting()}
         >
           Ruangan
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -70,7 +70,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         <Button
           variant="ghost"
           className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting()}
         >
           Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
