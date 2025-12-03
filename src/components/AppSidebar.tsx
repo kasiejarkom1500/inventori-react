@@ -63,7 +63,7 @@ export default function AppSidebar({ role }: { role: string }) {
           <h1 className="font-medium">SIENTA (Smart Inventory System)</h1>
         </SidebarMenuButton>
       </SidebarHeader>
-      <SidebarContent className="overflow-y-hidden">
+      <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
