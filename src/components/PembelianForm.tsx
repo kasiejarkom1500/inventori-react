@@ -28,6 +28,7 @@ const pembelianSchema = z.object({
   id_sumber: z.string().min(1, { message: "Sumber harus dipilih." }),
   nama_sumber: z.string(),
   catatan: z.string().optional(),
+  satuan: z.string().min(1, { message: "Satuan tidak boleh kosong." }),
   jumlah: z
     .number()
     .positive({ message: "Jumlah permintaan harus lebih dari 0." }),
@@ -44,6 +45,7 @@ export default function PembelianForm() {
       nama_barang: string;
       catatan?: string;
       nama_sumber: string;
+      satuan: string;
       jumlah: number;
     }>
   >([]);
@@ -106,6 +108,7 @@ export default function PembelianForm() {
       no_kuitansi: "",
       id_barang: "",
       nama_barang: "",
+      satuan: "",
       catatan: "",
       id_sumber: "",
       nama_sumber: "",
@@ -124,8 +127,10 @@ export default function PembelianForm() {
     // Jika barang ditemukan, update kategori, satuan, dan stok
     if (selectedBarang) {
       form.setValue("nama_barang", selectedBarang.nama_barang || "");
+      form.setValue("satuan", selectedBarang.satuan || "");
     } else {
       form.setValue("nama_barang", "");
+      form.setValue("satuan", "");
     }
 
     // Update nilai barang yang dipilih
@@ -182,6 +187,7 @@ export default function PembelianForm() {
       nama_barang: values.nama_barang,
       catatan: values.catatan,
       nama_sumber: values.nama_sumber,
+      satuan: values.satuan,
       jumlah: values.jumlah,
       harga: values.harga,
     };
@@ -305,6 +311,19 @@ export default function PembelianForm() {
             />
             <FormField
               control={form.control}
+              name="satuan"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Satuan</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Satuan" {...field} disabled />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="catatan"
               render={({ field }) => (
                 <FormItem>
@@ -381,6 +400,7 @@ export default function PembelianForm() {
           columns={[
             { header: "Nama Barang", accessorKey: "nama_barang" },
             { header: "Detail Barang", accessorKey: "catatan" },
+            { header: "Satuan", accessorKey: "satuan" },
             { header: "Jumlah", accessorKey: "jumlah" },
             { header: "Harga", accessorKey: "harga" },
             {

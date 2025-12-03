@@ -21,6 +21,14 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPermintaanByUser } from "@/lib/services/permintaanService";
 import { useDialog } from "@/context/dialog";
 import {getUser} from '@/lib/network/authServices';
+import { useMemo, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function PermintaanBarang() {
   const { data, isLoading, error } = useQuery({
@@ -43,6 +51,47 @@ const user = getUser();
   }
 
   const dataSummaryPermintaan = data?.data ?? [];
+
+  const monthOptions = useMemo(() => {
+    const set = new Set<string>();
+    dataSummaryPermintaan.forEach((item: any) => {
+      const d = new Date(item.tanggal);
+      if (!Number.isNaN(d.getTime())) {
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}`;
+        set.add(key);
+      }
+    });
+    return Array.from(set)
+      .sort((a, b) => (a > b ? -1 : 1))
+      .map((key) => {
+        const [year, month] = key.split("-");
+        const label = new Date(
+          Number(year),
+          Number(month) - 1,
+          1
+        ).toLocaleDateString("id-ID", {
+          month: "long",
+          year: "numeric",
+        });
+        return { value: key, label };
+      });
+  }, [dataSummaryPermintaan]);
+
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
+    () => monthOptions[0]?.value
+  );
+
+  const filteredData = useMemo(() => {
+    if (!selectedMonth) return dataSummaryPermintaan;
+    const [year, month] = selectedMonth.split("-").map((v) => Number(v));
+    return dataSummaryPermintaan.filter((item: any) => {
+      const d = new Date(item.tanggal);
+      return d.getFullYear() === year && d.getMonth() === month - 1;
+    });
+  }, [dataSummaryPermintaan, selectedMonth]);
   console.log(dataSummaryPermintaan);
   return (
     <Card className="p-6">
@@ -82,10 +131,28 @@ const user = getUser();
       </div>
       <DataTable
         columns={summaryPermintaanOperatorColumns}
-        data={dataSummaryPermintaan}
+        data={filteredData}
         search_placeholder="nama ruangan"
         column_name="ruangan"
       />
+      <div className="mt-4 flex gap-3 items-center">
+        <span className="text-sm text-slate-600">Filter bulan:</span>
+        <Select
+          value={selectedMonth}
+          onValueChange={(val) => setSelectedMonth(val)}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Pilih bulan" />
+          </SelectTrigger>
+          <SelectContent>
+            {monthOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </Card>
   );
 }

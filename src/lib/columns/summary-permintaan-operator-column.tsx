@@ -30,6 +30,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+const formatDate = (value?: string) => {
+  if (!value) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
   [
     {
@@ -39,6 +50,7 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
     {
       accessorKey: "tanggal",
       header: "Tanggal Permintaan",
+      cell: (row) => formatDate(row.getValue("tanggal") as string),
     },
     {
       accessorKey: "jumlah_permintaan",

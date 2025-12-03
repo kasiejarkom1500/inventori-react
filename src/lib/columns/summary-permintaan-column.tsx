@@ -12,6 +12,17 @@ import BlankoForm from "@/components/BlankoForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const formatDate = (value?: string) => {
+  if (!value) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
   {
     header: "No",
@@ -31,6 +42,7 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
         </Button>
       );
     },
+    cell: (row) => formatDate(row.getValue("tanggal") as string),
   },
   {
     accessorKey: "jumlah_permintaan",
