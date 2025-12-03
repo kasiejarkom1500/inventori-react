@@ -417,7 +417,8 @@ export default function PermintaanForm() {
         title: "Berhasil",
         description: response.data.message,
       });
-      queryClient.invalidateQueries({ queryKey: "data-permintaan-user" });
+      // Refresh summary list after submit so data langsung ter-update
+      queryClient.invalidateQueries({ queryKey: ["data-permintaan-user"] });
       closeDialog();
     } catch (error) {
       console.error("Gagal mengupdate data:", error);
@@ -568,154 +569,156 @@ export default function PermintaanForm() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="kd_program"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Program</FormLabel>
-                  <FormControl>
-                    <Select
-                      className="text-xs md:text-base"
-                      options={filteredProgramOptions}
-                      value={filteredProgramOptions.find(
-                        (item: { value: string; label: string }) =>
-                          item.value === selectedProgram
-                      )}
-                      onChange={(selectedOption) => {
-                        const value = selectedOption
-                          ? selectedOption.value
-                          : "";
-                        field.onChange(value);
-                        form.setValue("kd_program", value);
-                        console.log("selected program", value);
-                        setSelectedProgram(value); // ✅ ini dia yang kurang
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kd_kegiatan"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kegiatan</FormLabel>
-                  <FormControl>
-                    <Select
-                      className="text-xs md:text-base"
-                      options={
-                        selectedProgram !== "" ? filteredKegiatanOptions : []
-                      }
-                      value={filteredKegiatanOptions.find(
-                        (item: { value: string; label: string }) =>
-                          item.value === selectedKegiatan
-                      )}
-                      onChange={(selectedOption) => {
-                        const value = selectedOption
-                          ? selectedOption.value
-                          : "";
-                        field.onChange(value);
-                        form.setValue("kd_kegiatan", value);
-                        setSelectedKegiatan(value); // ✅ ini dia yang kurang
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="hidden">
+              <FormField
+                control={form.control}
+                name="kd_program"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Program</FormLabel>
+                    <FormControl>
+                      <Select
+                        className="text-xs md:text-base"
+                        options={filteredProgramOptions}
+                        value={filteredProgramOptions.find(
+                          (item: { value: string; label: string }) =>
+                            item.value === selectedProgram
+                        )}
+                        onChange={(selectedOption) => {
+                          const value = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          field.onChange(value);
+                          form.setValue("kd_program", value);
+                          setSelectedProgram(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="kd_kegiatan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kegiatan</FormLabel>
+                    <FormControl>
+                      <Select
+                        className="text-xs md:text-base"
+                        options={
+                          selectedProgram !== "" ? filteredKegiatanOptions : []
+                        }
+                        value={filteredKegiatanOptions.find(
+                          (item: { value: string; label: string }) =>
+                            item.value === selectedKegiatan
+                        )}
+                        onChange={(selectedOption) => {
+                          const value = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          field.onChange(value);
+                          form.setValue("kd_kegiatan", value);
+                          setSelectedKegiatan(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="kd_kro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Klasifikasi Rincian Output</FormLabel>
-                  <FormControl>
-                    <Select
-                      className="text-xs md:text-base"
-                      options={
-                        selectedKegiatan !== "" ? filteredKroOptions : []
-                      } // filteredKroOptions}
-                      value={filteredKroOptions.find(
-                        (item: { value: string; label: string }) =>
-                          item.value === selectedKro
-                      )}
-                      onChange={(selectedOption) => {
-                        const value = selectedOption
-                          ? selectedOption.value
-                          : "";
-                        field.onChange(value);
-                        form.setValue("kd_kro", value);
+              <FormField
+                control={form.control}
+                name="kd_kro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Klasifikasi Rincian Output</FormLabel>
+                    <FormControl>
+                      <Select
+                        className="text-xs md:text-base"
+                        options={
+                          selectedKegiatan !== "" ? filteredKroOptions : []
+                        }
+                        value={filteredKroOptions.find(
+                          (item: { value: string; label: string }) =>
+                            item.value === selectedKro
+                        )}
+                        onChange={(selectedOption) => {
+                          const value = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          field.onChange(value);
+                          form.setValue("kd_kro", value);
 
-                        setSelectedKro(value); // ✅ ini dia yang kurang
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kd_ro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rincian Output</FormLabel>
-                  <FormControl>
-                    <Select
-                      className="text-xs md:text-base"
-                      options={selectedKro !== "" ? filteredRoOptions : []} // filteredRoOptions}
-                      value={filteredRoOptions.find(
-                        (item: { value: string; label: string }) =>
-                          item.value === selectedRo
-                      )}
-                      onChange={(selectedOption) => {
-                        const value = selectedOption
-                          ? selectedOption.value
-                          : "";
-                        field.onChange(value);
-                        form.setValue("kd_ro", value);
-                        setSelectedRo(value); // ✅ ini dia yang kurang
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kd_komponen"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Komponen</FormLabel>
-                  <FormControl>
-                    <Select
-                      className="text-xs md:text-base"
-                      options={selectedRo !== "" ? filteredKomponenOptions : []} // filteredKomponenOptions}
-                      value={filteredKomponenOptions.find(
-                        (item: { value: string; label: string }) =>
-                          item.value === selectedKomponen
-                      )}
-                      onChange={(selectedOption) => {
-                        const value = selectedOption
-                          ? selectedOption.value
-                          : "";
-                        field.onChange(value);
-                        form.setValue("kd_komponen", value);
-                        console.log("selected program", value);
-                        setSelectedKomponen(value); // ✅ ini dia yang kurang
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                          setSelectedKro(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="kd_ro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rincian Output</FormLabel>
+                    <FormControl>
+                      <Select
+                        className="text-xs md:text-base"
+                        options={selectedKro !== "" ? filteredRoOptions : []}
+                        value={filteredRoOptions.find(
+                          (item: { value: string; label: string }) =>
+                            item.value === selectedRo
+                        )}
+                        onChange={(selectedOption) => {
+                          const value = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          field.onChange(value);
+                          form.setValue("kd_ro", value);
+                          setSelectedRo(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="kd_komponen"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Komponen</FormLabel>
+                    <FormControl>
+                      <Select
+                        className="text-xs md:text-base"
+                        options={
+                          selectedRo !== "" ? filteredKomponenOptions : []
+                        }
+                        value={filteredKomponenOptions.find(
+                          (item: { value: string; label: string }) =>
+                            item.value === selectedKomponen
+                        )}
+                        onChange={(selectedOption) => {
+                          const value = selectedOption
+                            ? selectedOption.value
+                            : "";
+                          field.onChange(value);
+                          form.setValue("kd_komponen", value);
+                          setSelectedKomponen(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             {/* <FormField
               control={form.control}
               name="kd_kegiatan"
