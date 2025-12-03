@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,14 +81,34 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
           Rejected: row.row.original.Rejected,
           Pengadaan: row.row.original.Pengadaan,
         };
+        const colorMap: Record<string, string> = {
+          ApproveGudang: "bg-blue-100 text-blue-800",
+          Approved: "bg-green-100 text-green-800",
+          Pending: "bg-yellow-100 text-yellow-800",
+          Rejected: "bg-red-100 text-red-800",
+          Pengadaan: "bg-purple-100 text-purple-800",
+        };
+        const shortLabel: Record<string, string> = {
+          ApproveGudang: "Gudang",
+          Approved: "Approved",
+          Pending: "Pending",
+          Rejected: "Rejected",
+          Pengadaan: "Pengadaan",
+        };
+
         return (
-          <ul className="list-disc list-inside first:marker:text-green-500 [&:nth-child(2)]:marker:text-yellow-500 last:marker:text-red-500">
-            {Object.entries(status).map(([key, value]) => (
-              <li key={key}>
-                {key} : {value}
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {Object.entries(status)
+              .filter(([, value]) => value > 0)
+              .map(([key, value]) => (
+                <Badge
+                  key={key}
+                  className={`${colorMap[key] ?? ""} border-0 px-2 py-1`}
+                >
+                  {shortLabel[key] ?? key}: {value}
+                </Badge>
+              ))}
+          </div>
         );
       },
     },

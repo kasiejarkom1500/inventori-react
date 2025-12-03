@@ -51,6 +51,7 @@ export const barangPermintaanColumns = (
     header: "Jenis Barang",
   },
   {
+    id: "sub_kategori",
     header: "Sub Kategori",
     cell: (row) => {
       const currentSubKategori = newData.find(

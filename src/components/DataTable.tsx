@@ -35,6 +35,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   column_name?: string;
   search_placeholder?: string;
+  hiddenColumns?: string[];
 }
 
 export default function DataTable<TData, TValue>({
@@ -42,12 +43,18 @@ export default function DataTable<TData, TValue>({
   data,
   column_name= 'name',
   search_placeholder = 'nama',
+  hiddenColumns = [],
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(
+      hiddenColumns.reduce<VisibilityState>((acc, colId) => {
+        acc[colId] = false;
+        return acc;
+      }, {})
+    );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({

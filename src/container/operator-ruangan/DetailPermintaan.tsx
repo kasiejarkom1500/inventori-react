@@ -36,9 +36,14 @@ export default function DetailPermintaan({
 
 
   return (
-    <DataTable
-      columns={detailPermintaanOperatorColumns}
-      data={dataPermintaanBarang}
-    />
+    <div className="max-h-[70vh] overflow-auto">
+      <div className="overflow-x-auto">
+        <DataTable
+          columns={detailPermintaanOperatorColumns}
+          data={dataPermintaanBarang}
+          hiddenColumns={["tanggal", "kategori"]}
+        />
+      </div>
+    </div>
   );
 }

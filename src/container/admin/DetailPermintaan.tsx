@@ -131,16 +131,21 @@ export default function DetailPermintaan({
 
   return (
     <>
-      <DataTable
-        columns={barangPermintaanColumns(
-          handleDataChange,
-          newData,
-          subkategoriList
-        )}
-        data={dataPermintaanBarang} // Use original data here
-        search_placeholder="barang"
-        column_name="nama_barang"
-      />
+      <div className="max-h-[70vh] overflow-auto">
+        <div className="overflow-x-auto">
+          <DataTable
+            columns={barangPermintaanColumns(
+              handleDataChange,
+              newData,
+              subkategoriList
+            )}
+            data={dataPermintaanBarang} // Use original data here
+            search_placeholder="barang"
+            column_name="nama_barang"
+            hiddenColumns={["tanggal", "kd_barang", "kategori", "sub_kategori"]}
+          />
+        </div>
+      </div>
       <Button className="w-fit px-8 ml-auto" onClick={submitForm}>
         Submit
       </Button>
