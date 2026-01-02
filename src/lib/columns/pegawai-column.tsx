@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Building2, ShieldPlus } from "lucide-react";
 import { User } from "@/lib/types/user";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import UserForm from "@/components/UserForm";
 import AssignRuanganForm from "@/components/AssignRuanganForm";
+import AssignRoleForm from "@/components/AssignRoleForm";
 export const operatorColumns: ColumnDef<User>[] = [
   {
     header: "No",
@@ -51,15 +52,28 @@ export const operatorColumns: ColumnDef<User>[] = [
               <DialogTitle className="text-xl font-semibold">
                 Edit Operator
               </DialogTitle>
-              <UserForm id={detail} type="edit" />
+              <UserForm
+                id={detail}
+                type="edit"
+                initialData={{
+                  nip_lama: row.row.original.nip_lama,
+                  nama: row.row.original.nama,
+                  id_satker: row.row.original.id_satker,
+                  jabatan: row.row.original.jabatan,
+                }}
+              />
             </DialogContent>
           </Dialog>
 
           {/* Assign Ruangan */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-blue-500 p-1 h-fit rounded-md hover:bg-blue-900/90">
-                Assign Ruangan
+              <Button
+                className="bg-blue-500 p-2 h-fit rounded-md hover:bg-blue-900/90"
+                title="Assign Ruangan"
+                aria-label="Assign Ruangan"
+              >
+                <Building2 size={16} color="white" />
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -67,6 +81,28 @@ export const operatorColumns: ColumnDef<User>[] = [
                 Assign Ruangan
               </DialogTitle>
               <AssignRuanganForm idUser={detail} />
+            </DialogContent>
+          </Dialog>
+
+          {/* Assign Role */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className="bg-purple-500 p-2 h-fit rounded-md hover:bg-purple-900/90"
+                title="Assign Role"
+                aria-label="Assign Role"
+              >
+                <ShieldPlus size={16} color="white" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle className="text-xl font-semibold">
+                Assign Role
+              </DialogTitle>
+              <AssignRoleForm
+                idUser={detail}
+                currentRoles={row.row.original.role}
+              />
             </DialogContent>
           </Dialog>
 

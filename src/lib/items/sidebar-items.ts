@@ -255,3 +255,40 @@ export const ketuaTim = [
     ],
   },
 ];
+
+export const adminKabupaten = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    contents: [{ title: "Dashboard admin", url: "dashboard" }],
+  },
+  {
+    label: "Data Master",
+    icon: Package,
+    contents: [
+      { title: "Data Operator Ruangan", url: "data-pegawai" },
+      { title: "Data Barang ATK", url: "data-barang-atk" },
+      {title: 'Data Barang ARK', url: 'data-barang-ark'},
+    ],
+  },
+  {
+    label: "Transaksi",
+    icon: ScrollText,
+    contents: [
+      { title: "Input Barang Masuk", url: "input-barang-masuk" },
+      { title: "Pengajuan Barang", url: "pengajuan-barang" },
+      { title: "Permintaan Barang", url: "permintaan-barang" },
+      { title: "Input Permintaan Barang", url: "input-permintaan-barang" },
+      { title: "Input Pengajuan Barang", url: "input-pengajuan-barang" },
+    ],
+  },
+  {
+    label: "Laporan",
+    icon: FileText,
+    contents: [
+      { title: "Laporan Pengajuan", url: "laporan-pengajuan" },
+      { title: "Kartu Kendali", url: "kartu-kendali" },
+      { title: "Laporan Stok", url: "laporan-stok" },
+    ],
+  },
+];

@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
-import { dataAdmin } from "@/lib/data/admin-dummy";
 import { fetchKabupaten } from "@/lib/services/fetch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -71,14 +70,17 @@ export default function UserForm({
   id,
   type,
   onSuccess, // ⬅️ tambahkan
+  initialData,
 }: {
   id?: string;
   type: "edit" | "add";
   onSuccess?: () => void;
+  initialData?: Partial<z.infer<typeof userSchema>>;
 }) {
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
     defaultValues: {
+      nip_lama: "",
       nama: "",
       jabatan: "",
       id_satker: "",
@@ -111,22 +113,28 @@ export default function UserForm({
   });
 
   useEffect(() => {
-    if (id) {
-      const detailAdmin = dataAdmin.find((admin) => admin.id_user === id);
-      if (detailAdmin) {
-        Object.entries(detailAdmin).forEach(([key, value]) => {
-          setValue(key as keyof z.infer<typeof userSchema>, value);
-        });
-      }
+    if (initialData) {
+      Object.entries(initialData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          setValue(key as keyof z.infer<typeof userSchema>, value as any);
+        }
+      });
     }
-  }, [id, setValue]);
+  }, [initialData, setValue]);
 
   async function onSubmit(values: z.infer<typeof userSchema>) {
     try {
       const endpoint = type === "add" ? "/add_user" : `/update_user`;
-      const method = type === "add" ? "post" : "put";
+      // Backend expects POST for both add/update_user
+      const payload =
+        type === "add"
+          ? values
+          : {
+              ...values,
+              id,
+            };
 
-      const response = await base[method](endpoint, values);
+      const response = await base.post(endpoint, payload);
       toast.toast({
         title: "Berhasil",
         description: response.data.message || "Data berhasil diproses.",

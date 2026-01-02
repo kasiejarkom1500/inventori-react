@@ -209,6 +209,33 @@ const router = createBrowserRouter(
             },
           ],
         },
+                {
+          path: "admin-kabupaten",
+          element: <RoleAuth requiredRole="admin_kabupaten" />,
+          children: [
+            {
+              path: "",
+              element: <LayoutDashboard />,
+              children: [
+                { path: "dashboard", element: <Dashboard /> },
+                { path: "data-pegawai", element: <DataPegawai /> },
+                { path: "data-barang-atk", element: <DataBarangATK /> },
+                { path: "data-barang-ark", element: <DataBarangARK /> },
+                { path: "data-ruangan", element: <DataRuangan /> },
+
+                { path: "pengajuan-barang", element: <PengajuanBarang /> },
+                { path: "permintaan-barang", element: <PermintaanBarang /> },
+                { path: "input-barang-masuk", element: <InputBarangMasuk /> },
+                { path: "input-permintaan-barang", element: <SummaryPermintaan />,},
+                { path: "input-pengajuan-barang", element: <SummaryPengajuan /> },
+
+                { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
+                { path: "kartu-kendali", element: <LaporanPermintaan /> },
+                { path: "laporan-stok", element: <LaporanStok /> },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
