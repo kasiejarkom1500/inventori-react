@@ -3,6 +3,17 @@ import {Pencil} from 'lucide-react';
 import {BarangTrans} from '@/lib/types/barang';
 import {Link} from 'react-router-dom';
 
+const formatDate = (value?: string) => {
+  if (!value) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
 export const barangMasukColumns: ColumnDef<BarangTrans>[] = [
   {
     header: 'No',
@@ -11,6 +22,7 @@ export const barangMasukColumns: ColumnDef<BarangTrans>[] = [
   {
     accessorKey: 'tanggal',
     header: 'Tanggal Masuk',
+    cell: ({getValue}) => formatDate(getValue() as string),
   },
   {
     accessorKey: 'kd_barang',

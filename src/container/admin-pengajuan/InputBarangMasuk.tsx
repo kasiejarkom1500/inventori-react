@@ -22,6 +22,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PlusCircle, Upload } from "lucide-react";
 import { base } from "@/lib/network/base";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect, useMemo, useState } from "react";
 
 export default function InputBarangMasuk() {
   const { data, isLoading } = useQuery({
@@ -76,7 +77,43 @@ export default function InputBarangMasuk() {
   };
 
   const dataSummaryPembelian = data?.data ?? [];
-  console.log(dataSummaryPembelian);
+
+  // Filter bulan (default bulan terbaru)
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const monthOptions = useMemo(() => {
+    const months = new Set<string>();
+    dataSummaryPembelian.forEach((item: { tgl_masuk?: string }) => {
+      if (!item?.tgl_masuk) return;
+      const d = new Date(item.tgl_masuk);
+      if (Number.isNaN(d.getTime())) return;
+      months.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+    });
+    const arr = Array.from(months).sort();
+    return arr.map((m) => ({
+      value: m,
+      label: new Date(`${m}-01`).toLocaleDateString("id-ID", {
+        month: "short",
+        year: "numeric",
+      }),
+    }));
+  }, [dataSummaryPembelian]);
+
+  useEffect(() => {
+    if (!selectedMonth && monthOptions.length > 0) {
+      setSelectedMonth(monthOptions[monthOptions.length - 1].value);
+    }
+  }, [monthOptions, selectedMonth]);
+
+  const filteredData = useMemo(() => {
+    if (!selectedMonth) return dataSummaryPembelian;
+    return dataSummaryPembelian.filter((item: { tgl_masuk?: string }) => {
+      if (!item?.tgl_masuk) return false;
+      const d = new Date(item.tgl_masuk);
+      if (Number.isNaN(d.getTime())) return false;
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      return key === selectedMonth;
+    });
+  }, [dataSummaryPembelian, selectedMonth]);
 
   return (
     <Card className="p-6">
@@ -85,6 +122,20 @@ export default function InputBarangMasuk() {
       >
         Data Barang Masuk
       </h1>
+      <div className="mb-4 flex items-center gap-3">
+        <label className="text-sm text-muted-foreground">Filter Bulan</label>
+        <select
+          className="border rounded-md px-3 py-1 text-sm"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
+          {monthOptions.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger className="mr-auto lg:mr-0">
@@ -133,7 +184,7 @@ export default function InputBarangMasuk() {
       </TooltipProvider>
       <DataTable
         columns={summaryInputKuitansiColumns}
-        data={dataSummaryPembelian}
+        data={filteredData}
         column_name="no_kuitansi"
       />
     </Card>

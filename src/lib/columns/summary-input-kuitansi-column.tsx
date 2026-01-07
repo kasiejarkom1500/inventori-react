@@ -10,6 +10,17 @@ import {
 import { Button } from '@/components/ui/button';
 import DetailPembelian from '@/container/admin-pengajuan/DetailPembelian';
 
+const formatDate = (value?: string) => {
+  if (!value) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
 export const summaryInputKuitansiColumns: ColumnDef<InputKuitansi>[] = [
   {
     header: 'No',
@@ -28,6 +39,7 @@ export const summaryInputKuitansiColumns: ColumnDef<InputKuitansi>[] = [
         </Button>
       )
     },
+    cell: ({ getValue }) => formatDate(getValue() as string),
   },
   {
     accessorKey: 'no_kuitansi',
