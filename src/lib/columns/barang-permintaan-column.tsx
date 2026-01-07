@@ -12,23 +12,31 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import ReactSelect from "react-select";
+
+type EditedRow = {
+  id_permintaan: number;
+  id_barang: string;
+  kd_barang?: string;
+  nama_barang?: string;
+  kategori?: string;
+  satuan?: string;
+  stok?: number | string;
+  jumlah_approved: string | number;
+  status: string;
+  is_buat_pengajuan: boolean;
+  kd_subkategori?: string;
+};
 
 export const barangPermintaanColumns = (
   handleDataChange: (
     id_permintaan: number,
-    newJumlah: string | undefined,
-    newStatus: string | undefined,
-    is_buat_pengajuan: boolean | undefined,
-    newKdSubkategori: string | undefined
+    changes: Partial<EditedRow>
   ) => void,
-  newData: {
-    id_permintaan: number;
-    jumlah_approved: string;
-    status: string;
-    is_buat_pengajuan: boolean;
-    kd_subkategori: string;
-  }[],
-  subkategoriList: { kd_subkategori: string; sub_kategori: string }[]
+  newData: EditedRow[],
+  subkategoriList: { kd_subkategori: string; sub_kategori: string }[],
+  barangList: any[],
+  portalTarget?: HTMLElement
 ): ColumnDef<BarangPermintaan>[] => [
   {
     header: "No",
@@ -41,14 +49,87 @@ export const barangPermintaanColumns = (
   {
     accessorKey: "kd_barang",
     header: "Kode Barang",
+    cell: (row) => {
+      const current = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      );
+      return current?.kd_barang || row.row.original.kd_barang;
+    },
   },
   {
     accessorKey: "nama_barang",
     header: "Nama Barang",
+    cell: (row) => {
+      const current = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      );
+      const barangOptions = barangList.map((item: any) => ({
+        value: String(item.id_barang),
+        label: item.nama_barang,
+        kd_barang: item.kd_barang,
+        nama_barang: item.nama_barang,
+        kategori: item.kategori,
+        satuan: item.satuan,
+        stok: item.stok,
+      }));
+
+      const selectedValue =
+        current?.id_barang || String(row.row.original.id_barang);
+      const selectedOption = barangOptions.find(
+        (opt) => opt.value === selectedValue
+      );
+      const portalTargetFinal =
+        portalTarget ||
+        (typeof document !== "undefined" ? document.body : undefined);
+
+      return (
+        <div
+          className="min-w-[220px]"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          data-permintaan-portal={row.row.original.id_permintaan}
+        >
+          <ReactSelect
+            classNamePrefix="select"
+            options={barangOptions}
+            value={selectedOption}
+            isSearchable
+            isDisabled={(current?.status || row.row.original.status) === "Approved"}
+            menuPortalTarget={portalTargetFinal}
+            menuPosition="fixed"
+            styles={{
+              menuPortal: (base) => ({
+                ...base,
+                zIndex: 99999,
+                pointerEvents: "auto",
+              }),
+              control: (base) => ({ ...base, minHeight: "38px" }),
+            }}
+            onChange={(selected) => {
+              if (!selected) return;
+              handleDataChange(row.row.original.id_permintaan, {
+                id_barang: selected.value,
+                kd_barang: selected.kd_barang,
+                nama_barang: selected.nama_barang,
+                kategori: selected.kategori,
+                satuan: selected.satuan,
+                stok: selected.stok,
+              });
+            }}
+          />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "kategori",
     header: "Jenis Barang",
+    cell: (row) => {
+      const current = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      );
+      return current?.kategori || row.row.original.kategori;
+    },
   },
   {
     id: "sub_kategori",
@@ -56,24 +137,21 @@ export const barangPermintaanColumns = (
     cell: (row) => {
       const currentSubKategori = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
-      )?.kd_subkategori;
+      )?.kd_subkategori ?? row.row.original.kd_subkategori;
 
       return (
-        <Select
-          value={currentSubKategori}
-          onValueChange={(newKdSubKategori) => {
-            console.log("newSubKategori", newKdSubKategori);
-            handleDataChange(
-              row.row.original.id_permintaan,
-              undefined,
-              undefined,
-              undefined,
-              newKdSubKategori
-            );
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Pilih jenis barang" />
+            <Select
+              value={currentSubKategori}
+              onValueChange={(newKdSubKategori) => {
+                console.log("newSubKategori", newKdSubKategori);
+                handleDataChange(
+                  row.row.original.id_permintaan,
+                  { kd_subkategori: newKdSubKategori }
+                );
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih jenis barang" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -97,10 +175,22 @@ export const barangPermintaanColumns = (
   {
     accessorKey: "satuan",
     header: "Satuan",
+    cell: (row) => {
+      const current = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      );
+      return current?.satuan || row.row.original.satuan;
+    },
   },
   {
     accessorKey: "stok",
     header: "Stok",
+    cell: (row) => {
+      const current = newData.find(
+        (item) => item.id_permintaan === row.row.original.id_permintaan
+      );
+      return current?.stok ?? row.row.original.stok;
+    },
   },
   {
     accessorKey: "jumlah",
@@ -112,7 +202,7 @@ export const barangPermintaanColumns = (
     cell: (row) => {
       const currentJumlah = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
-      )?.jumlah_approved;
+      )?.jumlah_approved ?? row.row.original.jumlah_approved;
       console.log('currentJumlah', currentJumlah);
       return (
         <Input
@@ -121,10 +211,7 @@ export const barangPermintaanColumns = (
           onBlur={(e) =>
             handleDataChange(
               row.row.original.id_permintaan,
-              e.target.value,
-              undefined,
-              undefined,
-              undefined
+              { jumlah_approved: Number(e.target.value) }
             )
           }
         />
@@ -154,17 +241,14 @@ export const barangPermintaanColumns = (
     cell: (row) => {
       const currentStatus = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
-      )?.status;
+      )?.status ?? row.row.original.status;
       return (
         <Select
           value={currentStatus}
           onValueChange={(newStatus) =>
             handleDataChange(
               row.row.original.id_permintaan,
-              undefined,
-              newStatus,
-              undefined,
-              undefined
+              { status: newStatus }
             )
           }
           disabled={currentStatus === "Approved"}
@@ -193,7 +277,7 @@ export const barangPermintaanColumns = (
       // Find the current is_buat_pengajuan value from newData
       const currentIsBuatPengajuan = newData.find(
         (item) => item.id_permintaan === row.row.original.id_permintaan
-      )?.is_buat_pengajuan;
+      )?.is_buat_pengajuan ?? row.row.original.is_buat_pengajuan;
       // console.log("currentIsBuatPengajuan", currentIsBuatPengajuan);
       return (
         <Switch
@@ -201,10 +285,7 @@ export const barangPermintaanColumns = (
           onCheckedChange={(newIsBuatPengajuan) =>
             handleDataChange(
               row.row.original.id_permintaan,
-              undefined,
-              undefined,
-              newIsBuatPengajuan,
-              undefined // Convert boolean to number
+              { is_buat_pengajuan: newIsBuatPengajuan }
             )
           }
         ></Switch>

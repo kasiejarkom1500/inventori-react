@@ -22,12 +22,14 @@ export type BarangTrans = {
 export type BarangPermintaan = {
   id_permintaan: number;
   tanggal: string;
+  id_barang?: string | number;
   kd_barang: string;
   nama_barang: string;
   kategori: string;
   satuan: string;
+  stok?: number;
   jumlah: number;
-  jumlah_approved: number;
+  jumlah_approved: number | string;
   id_ruangan: string;
   status: string;
   is_buat_pengajuan: boolean;

@@ -2,11 +2,29 @@ import DataTable from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { barangPermintaanColumns } from "@/lib/columns/barang-permintaan-column";
 import { useEffect, useState } from "react";
-import { fetchDetailPermintaaan, fetchSubkategori } from "@/lib/services/fetch";
+import {
+  fetchAllBarang,
+  fetchDetailPermintaaan,
+  fetchSubkategori,
+} from "@/lib/services/fetch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { base } from "@/lib/network/base";
 import { useToast } from "@/hooks/use-toast";
+
+type EditedPermintaan = {
+  id_permintaan: number;
+  id_barang: string;
+  kd_barang?: string;
+  nama_barang?: string;
+  kategori?: string;
+  satuan?: string;
+  stok?: number | string;
+  jumlah_approved: string | number;
+  status: string;
+  is_buat_pengajuan: boolean;
+  kd_subkategori?: string;
+};
 
 export default function DetailPermintaan({
   ruanganID,
@@ -31,12 +49,23 @@ export default function DetailPermintaan({
       select: (res) => res.data,
     });
 
-  const [newData, setNewData] = useState<any[]>([]);
+  const { data: barangAll, isLoading: barangLoading } = useQuery({
+    queryKey: ["barang-all"],
+    queryFn: fetchAllBarang,
+  });
+
+  const [newData, setNewData] = useState<EditedPermintaan[]>([]);
 
   useEffect(() => {
     if (data?.data) {
       const formattedData = data.data.map((item: any) => ({
         id_permintaan: item.id_permintaan,
+        id_barang: String(item.id_barang),
+        kd_barang: item.kd_barang,
+        nama_barang: item.nama_barang,
+        kategori: item.kategori,
+        satuan: item.satuan,
+        stok: item.stok,
         jumlah_approved: item.jumlah_approved,
         status: item.status,
         is_buat_pengajuan: item.is_buat_pengajuan == 0 ? false : true,
@@ -47,7 +76,7 @@ export default function DetailPermintaan({
     }
   }, [data]);
 
-  if (isLoading)
+  if (isLoading || barangLoading)
     return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
   if (error) {
     return (
@@ -65,41 +94,45 @@ export default function DetailPermintaan({
 
   function handleDataChange(
     id_permintaan: number,
-    newJumlah: string | undefined,
-    newStatus: string | undefined,
-    newIsBuatPengajuan: boolean | undefined,
-    newKdSubkategori: string | undefined
+    changes: Partial<EditedPermintaan>
   ) {
     setNewData((prev) =>
       prev.map((item) =>
         item.id_permintaan === id_permintaan
           ? {
               ...item,
-              jumlah_approved:
-                newJumlah !== undefined ? newJumlah : item.jumlah_approved,
-              status: newStatus !== undefined ? newStatus : item.status,
-              is_buat_pengajuan:
-                newIsBuatPengajuan !== undefined
-                  ? newIsBuatPengajuan
-                  : item.is_buat_pengajuan,
-              kd_subkategori:
-                newKdSubkategori !== undefined
-                  ? newKdSubkategori
-                  : item.kd_subkategori,
+              ...changes,
             }
           : item
       )
     );
-    console.log("new data disini", newData);
   }
   async function submitForm() {
     try {
-      const dataToSubmit = newData.map((item) => ({
-        ...item,
-        is_buat_pengajuan: item.is_buat_pengajuan ? 1 : 0,
-      }));
+      const dataPermintaanBarang = data?.data ?? [];
 
-      const response = await base.put("/update_status", dataToSubmit, {
+      const dataToSubmit = dataPermintaanBarang.map((row: any) => {
+        const edited = newData.find(
+          (item) => item.id_permintaan === row.id_permintaan
+        );
+
+        const idBarangFinal = edited?.id_barang ?? row.id_barang;
+
+        return {
+          id_permintaan: row.id_permintaan,
+          id_barang: Number(idBarangFinal),
+          kd_subkategori: edited?.kd_subkategori ?? row.kd_subkategori,
+          jumlah_approved: edited?.jumlah_approved ?? row.jumlah_approved,
+          status: edited?.status ?? row.status,
+          is_buat_pengajuan: edited
+            ? edited.is_buat_pengajuan
+              ? 1
+              : 0
+            : row.is_buat_pengajuan,
+        };
+      });
+
+      const response = await base.put("/update_status_admin", dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -137,7 +170,8 @@ export default function DetailPermintaan({
             columns={barangPermintaanColumns(
               handleDataChange,
               newData,
-              subkategoriList
+              subkategoriList,
+              barangAll?.data ?? []
             )}
             data={dataPermintaanBarang} // Use original data here
             search_placeholder="barang"

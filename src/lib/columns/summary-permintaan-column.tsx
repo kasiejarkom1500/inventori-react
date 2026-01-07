@@ -12,6 +12,11 @@ import BlankoForm from "@/components/BlankoForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const isSelectMenuPortal = (target: EventTarget | null) => {
+  const el = target as HTMLElement | null;
+  return el?.closest(".select__menu-portal") || el?.closest(".select__menu");
+};
+
 const formatDate = (value?: string) => {
   if (!value) return value;
   const date = new Date(value);
@@ -136,7 +141,19 @@ export const summaryPermintaanColumns: ColumnDef<SummaryPermintaan>[] = [
             <DialogTrigger className="bg-green-500 p-1 rounded-md hover:bg-yellow-900/90">
               <Eye size={18} color="white" />
             </DialogTrigger>
-            <DialogContent className="max-w-[70%]">
+            <DialogContent
+              className="max-w-[70%]"
+              onInteractOutside={(e) => {
+                if (isSelectMenuPortal(e.target)) {
+                  e.preventDefault();
+                }
+              }}
+              onPointerDownOutside={(e) => {
+                if (isSelectMenuPortal(e.target)) {
+                  e.preventDefault();
+                }
+              }}
+            >
               <DialogHeader className="text-2xl font-semibold">
                 Detail Permintaan
               </DialogHeader>
