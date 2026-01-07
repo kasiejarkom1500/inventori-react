@@ -15,6 +15,7 @@ import LaporanPengajuan from "@/container/admin/LaporanPengajuan";
 import LaporanPermintaan from "@/container/admin/LaporanPermintaan";
 import DataBarangATK from "@/container/admin/DataBarangATK";
 import DataBarangARK from "@/container/admin/DataBarangARK";
+import DataSumber from "@/container/admin/DataSumber";
 import DataBarangATKView from "@/container/admin-pengajuan/DataBarangATK";
 import DataBarangARKView from "@/container/admin-pengajuan/DataBarangARK";
 import DataBarangATKOp from "@/container/operator-ruangan/DataBarangATK";
@@ -52,6 +53,7 @@ const router = createBrowserRouter(
                 },
                 { path: "data-barang-atk", element: <DataBarangATK /> },
                 { path: "data-barang-ark", element: <DataBarangARK /> },
+                { path: "data-sumber", element: <DataSumber /> },
                 { path: "data-ruangan", element: <DataRuangan /> },
 
                 { path: "barang-masuk", element: <BarangMasuk /> },
