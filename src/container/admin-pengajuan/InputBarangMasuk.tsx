@@ -35,10 +35,6 @@ export default function InputBarangMasuk() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  if (isLoading) {
-    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
-  }
-
   const handleImportExcel = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file); // Tambahkan file ke FormData
@@ -114,6 +110,10 @@ export default function InputBarangMasuk() {
       return key === selectedMonth;
     });
   }, [dataSummaryPembelian, selectedMonth]);
+
+  if (isLoading) {
+    return <LoadingSpinner size={50} className="mx-auto mt-[25%]" />;
+  }
 
   return (
     <Card className="p-6">
