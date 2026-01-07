@@ -94,11 +94,11 @@ export const summaryPermintaanOperatorColumns: ColumnDef<SummaryPermintaan>[] =
           Pengadaan: row.row.original.Pengadaan,
         };
         const colorMap: Record<string, string> = {
-          ApproveGudang: "bg-blue-100 text-blue-800",
+          ApproveGudang: "bg-purple-100 text-purple-800",
           Approved: "bg-green-100 text-green-800",
           Pending: "bg-yellow-100 text-yellow-800",
           Rejected: "bg-red-100 text-red-800",
-          Pengadaan: "bg-purple-100 text-purple-800",
+          Pengadaan: "bg-blue-100 text-blue-800",
         };
         const shortLabel: Record<string, string> = {
           ApproveGudang: "Gudang",
