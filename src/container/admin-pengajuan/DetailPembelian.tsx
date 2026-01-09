@@ -58,7 +58,7 @@ export default function DetailPembelian({
   });
 
   const adjustMutation = useMutation({
-    mutationFn: (payload: { id_barang_masuk: number; jumlah_delta: number; catatan?: string }) => adjustBarangMasuk(payload),
+    mutationFn: (payload: { id_barang_masuk: number; jumlah_delta: number; catatan?: string; catatan_penyesuaian?: string }) => adjustBarangMasuk(payload),
     onSuccess: (res) => {
       toast.toast({ title: 'Sukses', description: res?.message || 'Penyesuaian berhasil' });
       queryClient.invalidateQueries({ queryKey: ['detail-pembelian', id_pembelian] });
