@@ -47,10 +47,7 @@ const router = createBrowserRouter(
                 { path: "dashboard", element: <Dashboard /> },
                 { path: "data-admin", element: <DataAdmin /> },
                 { path: "data-pegawai", element: <DataPegawai /> },
-                {
-                  path: "data-admin-pengajuan",
-                  element: <DataAdminPengajuan />,
-                },
+                { path: "data-admin-pengajuan",element: <DataAdminPengajuan />,},
                 { path: "data-barang-atk", element: <DataBarangATK /> },
                 { path: "data-barang-ark", element: <DataBarangARK /> },
                 { path: "data-sumber", element: <DataSumber /> },
@@ -61,10 +58,7 @@ const router = createBrowserRouter(
                 { path: "pengajuan-barang", element: <PengajuanBarang /> },
                 { path: "permintaan-barang", element: <PermintaanBarang /> },
                 { path: "input-barang-masuk", element: <InputBarangMasuk /> },
-                {
-                  path: "input-permintaan-barang",
-                  element: <SummaryPermintaan />,
-                },
+                { path: "input-permintaan-barang", element: <SummaryPermintaan />,},
                 { path: "input-pengajuan-barang", element: <SummaryPengajuan /> },
 
                 { path: "laporan-pengajuan", element: <LaporanPengajuan /> },
@@ -140,6 +134,7 @@ const router = createBrowserRouter(
                 { path: "data-barang-atk", element: <DataBarangATKView /> },
                 { path: "data-barang-ark", element: <DataBarangARKView /> },
                 { path: "input-barang-masuk", element: <InputBarangMasuk /> },
+                { path: "data-sumber", element: <DataSumber /> },
               ],
             },
           ],

@@ -14,7 +14,7 @@ export const superAdmin = [
       { title: "Data Operator Ruangan", url: "data-pegawai" },
       // {title: 'Data Admin Pengajuan', url: 'data-admin-pengajuan'},
       { title: "Data Barang ATK", url: "data-barang-atk" },
-      {title: 'Data Barang ARK', url: 'data-barang-ark'},
+      { title: "Data Barang ARK", url: "data-barang-ark" },
       { title: "Data Sumber", url: "data-sumber" },
       // {title: 'Data Ruangan', url: 'data-ruangan'},
     ],
@@ -138,7 +138,10 @@ export const adminPembelian = [
   {
     label: "Data Master",
     icon: Package,
-    contents: [{ title: "Data Barang ATK", url: "data-barang-atk" }],
+    contents: [
+      { title: "Data Barang ATK", url: "data-barang-atk" },
+      { title: "Data Sumber", url: "data-sumber" },
+    ],
   },
 ];
 export const viewer = [
@@ -269,7 +272,7 @@ export const adminKabupaten = [
     contents: [
       { title: "Data Operator Ruangan", url: "data-pegawai" },
       { title: "Data Barang ATK", url: "data-barang-atk" },
-      {title: 'Data Barang ARK', url: 'data-barang-ark'},
+      { title: "Data Barang ARK", url: "data-barang-ark" },
     ],
   },
   {
