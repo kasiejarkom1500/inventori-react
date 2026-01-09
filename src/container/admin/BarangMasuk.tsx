@@ -95,7 +95,7 @@ export default function BarangMasuk() {
           <h1>asdsad</h1>
         </DialogContent>
       </Dialog>
-      <DataTable columns={barangMasukColumns} data={filteredData} />
+      <DataTable columns={barangMasukColumns()} data={filteredData} />
     </Card>
   );
 }

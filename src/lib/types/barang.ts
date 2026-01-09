@@ -18,6 +18,11 @@ export type BarangTrans = {
   kategori: string;
   jumlah: number;
   ruangan: string;
+  id_barang_masuk?: number;
+  harga?: number;
+  sisa_stok?: number;
+  catatan?: string;
+  id_barang?: string | number;
 };
 export type BarangPermintaan = {
   id_permintaan: number;
@@ -49,6 +54,12 @@ export type BarangPembelian = {
   tanggal: string;
   nama_barang: string;
   jumlah: number;
+  id_barang_masuk?: number;
+  harga?: number;
+  sisa_stok?: number;
+  catatan?: string;
+  catatan_penyesuaian?: string;
+  tgl_masuk?: string;
 };
 
 export type BarangPengajuan = {

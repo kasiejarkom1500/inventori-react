@@ -35,6 +35,28 @@ export async function fetchAllSumber() {
   return response.data;
 }
 
+export async function updateBarangMasuk(id: number, payload: Record<string, unknown>) {
+  const response = await base.put(`/update_barang_masuk/${id}`, payload, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return response.data;
+}
+
+export async function deleteBarangMasuk(id: number) {
+  const response = await base.delete(`/delete_barang_masuk/${id}`);
+  return response.data;
+}
+
+export async function adjustBarangMasuk(payload: {
+  id_barang_masuk: number;
+  jumlah_delta: number;
+  catatan?: string;
+  catatan_penyesuaian?: string;
+}) {
+  const response = await base.post(`/adjust_barang_masuk`, payload);
+  return response.data;
+}
+
 export async function fetchDataKarken() {
   const response = await base.post("/generate");
   // console.log("karken", response.data);

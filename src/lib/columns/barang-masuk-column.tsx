@@ -1,7 +1,7 @@
 import {ColumnDef} from '@tanstack/react-table';
-import {Pencil} from 'lucide-react';
 import {BarangTrans} from '@/lib/types/barang';
-import {Link} from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Pencil, Trash2, Wrench } from 'lucide-react';
 
 const formatDate = (value?: string) => {
   if (!value) return value;
@@ -14,7 +14,13 @@ const formatDate = (value?: string) => {
   });
 };
 
-export const barangMasukColumns: ColumnDef<BarangTrans>[] = [
+export const barangMasukColumns = (
+  handlers?: {
+    onEdit?: (row: BarangTrans) => void;
+    onDelete?: (row: BarangTrans) => void;
+    onAdjust?: (row: BarangTrans) => void;
+  }
+): ColumnDef<BarangTrans>[] => [
   {
     header: 'No',
     cell: (row) => row.row.index + 1,
@@ -49,28 +55,29 @@ export const barangMasukColumns: ColumnDef<BarangTrans>[] = [
     header: 'Ruangan',
   },
   {
+    accessorKey: 'catatan',
+    header: 'Catatan',
+  },
+  {
     header: 'Action',
-    cell: () => (
-      <div className='flex space-x-3 justify-center items-center'>
-        {/* <Link to={'/'} className='bg-green-500 p-1 rounded-md hover:bg-green-900/90'>
-          <CirclePlus size={18} color='white' />
-        </Link> */}
-        <Link
-          to={'/'}
-          className='bg-yellow-500 p-1 rounded-md hover:bg-yellow-900/90'
-        >
-          <Pencil size={18} color='white' />
-        </Link>
-        {/* <Link to={'/'} className='bg-sky-500 p-1 rounded-md hover:bg-sky-900/90'>
-          <Download size={18} color='white' />
-        </Link> */}
-        {/* <Link
-          to={'/'}
-          className='bg-red-500 p-1 rounded-md hover:bg-red-900/90'
-        >
-          <Trash2 size={18} color='white' />
-        </Link> */}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const original = row.original;
+      const onEdit = handlers?.onEdit || (() => {});
+      const onDelete = handlers?.onDelete || (() => {});
+      const onAdjust = handlers?.onAdjust || (() => {});
+      return (
+        <div className='flex space-x-2'>
+          <Button size="icon" variant="outline" onClick={() => onEdit(original)} aria-label="Edit">
+            <Pencil size={16} />
+          </Button>
+          <Button size="icon" variant="destructive" onClick={() => onDelete(original)} aria-label="Hapus">
+            <Trash2 size={16} />
+          </Button>
+          <Button size="icon" variant="secondary" onClick={() => onAdjust(original)} aria-label="Penyesuaian">
+            <Wrench size={16} />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
