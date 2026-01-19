@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { base } from "@/lib/network/base";
 import { useToast } from "@/hooks/use-toast";
@@ -34,9 +35,7 @@ const barangSchema = z.object({
   kd_subkategori: z
     .string()
     .nonempty({ message: "Sub Kategori barang tidak boleh kosong." }),
-  kd_barang: z
-    .string()
-    .nonempty({ message: "Kode barang tidak boleh kosong." }),
+  kd_barang: z.string().optional(),
   kabupaten_id: z
     .string()
     .nonempty({ message: "Kabupaten tidak boleh kosong." }),
@@ -189,19 +188,35 @@ export default function BarangForm({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="kd_barang"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kode Barang</FormLabel>
-              <FormControl>
-                <Input placeholder="Kode Barang" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {type === "edit" && (
+          <FormField
+            control={form.control}
+            name="kd_barang"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kode Barang (Opsional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Kode Barang" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {type === "add" && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="text-sm text-muted-foreground cursor-help">
+                  Kode barang akan dibuat otomatis berdasarkan sub kategori.
+                </p>
+              </TooltipTrigger>
+              <TooltipContent>
+                Kode akan di-generate saat simpan, jadi tidak perlu diisi di sini.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <FormField
           control={form.control}
           name="kabupaten_id"
